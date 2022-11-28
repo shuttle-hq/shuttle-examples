@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 shuttle-service = { version = "0.7.2", features = ["web-warp"] }
-warp = "0.3.2"
+warp = "0.3.3"
