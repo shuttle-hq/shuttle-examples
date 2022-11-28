@@ -6,6 +6,6 @@ edition = "2021"
 [lib]
 
 [dependencies]
-hyper = { version = "0.14", features = ["full"] }
+hyper = { version = "0.14.23", features = ["full"] }
 shuttle-service = { version = "0.7.2", features = ["web-tower"] }
-tower = { version = "0.4", features = ["full"] }
+tower = { version = "0.4.13", features = ["full"] }
