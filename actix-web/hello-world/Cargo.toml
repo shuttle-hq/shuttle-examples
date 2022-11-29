@@ -6,5 +6,5 @@ edition = "2021"
 [dependencies]
 actix-service = "2.0.2"
 actix-web = "4.2.1"
-shuttle-service = { version = '0.7.2', git = "ssh://git@github.com/biryukovmaxim/shuttle.git", branch = "feature/support-actix-web", features = ["web-actix-web"] }
+shuttle-service = { version = '0.7.2', features = ["web-actix-web"] }
 
