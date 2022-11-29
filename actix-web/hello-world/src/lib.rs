@@ -10,6 +10,6 @@ async fn actix_web(
 ) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Sync + Send + Copy + Clone + 'static> {
     let h = hello_world;
     Ok(move |cfg: &mut ServiceConfig| {
-        cfg.service(resource("/").to(h));
+        cfg.service(resource("/hello").to(h));
     })
 }
