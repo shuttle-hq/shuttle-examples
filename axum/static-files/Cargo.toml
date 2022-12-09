@@ -1,0 +1,12 @@
+[package]
+name = "static-files"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+axum = "0.6.1"
+axum-extra = { version = "0.4.2", features = ["spa"] }
+shuttle-service = { version = "0.8.0", features = ["web-axum"] }
+shuttle-static-folder = "0.8.0"
+sync_wrapper = "0.1.1"
