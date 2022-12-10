@@ -1,3 +1,4 @@
+use actix_web::middleware::Logger;
 use actix_web::{
     error, get, post,
     web::{self, Json, ServiceConfig},
@@ -7,10 +8,10 @@ use serde::{Deserialize, Serialize};
 use shuttle_service::{error::CustomError, ShuttleActixWeb};
 use sqlx::{Executor, FromRow, PgPool};
 
-#[get("/todos/{id}")]
-async fn retrieve(id: web::Path<i32>, state: web::Data<AppState>) -> Result<Json<Todo>> {
+#[get("/{id}")]
+async fn retrieve(path: web::Path<i32>, state: web::Data<AppState>) -> Result<Json<Todo>> {
     let todo = sqlx::query_as("SELECT * FROM todos WHERE id = $1")
-        .bind(id.as_ref())
+        .bind(*path)
         .fetch_one(&state.pool)
         .await
         .map_err(|e| error::ErrorBadRequest(e.to_string()))?;
@@ -18,7 +19,7 @@ async fn retrieve(id: web::Path<i32>, state: web::Data<AppState>) -> Result<Json
     Ok(Json(todo))
 }
 
-#[post("/todos")]
+#[post("")]
 async fn add(todo: web::Json<TodoNew>, state: web::Data<AppState>) -> Result<Json<Todo>> {
     let todo = sqlx::query_as("INSERT INTO todos(note) VALUES ($1) RETURNING id, note")
         .bind(&todo.note)
@@ -45,7 +46,13 @@ async fn actix_web(
     let state = web::Data::new(AppState { pool });
 
     Ok(move |cfg: &mut ServiceConfig| {
-        cfg.service(add).service(retrieve).app_data(state);
+        cfg.service(
+            web::scope("/todos")
+                .wrap(Logger::default())
+                .service(retrieve)
+                .service(add)
+                .app_data(state),
+        );
     })
 }
 
