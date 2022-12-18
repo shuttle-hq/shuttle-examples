@@ -6,8 +6,16 @@ edition = "2021"
 [lib]
 
 [dependencies]
+<<<<<<< HEAD
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
 serde = "1.0.148"
 shuttle-service = { version = "0.8.0", features = ["web-rocket"] }
 shuttle-shared-db = { version = "0.8.0", features = ["postgres"] }
 sqlx = { version = "0.6.2", features = ["runtime-tokio-native-tls", "postgres"] }
+=======
+rocket = { version = "0.5.0-rc.1", features = ["json"] }
+serde = "1.0"
+shuttle-service = { version = "0.7.2", features = ["web-rocket"] }
+shuttle-shared-db = { version = "0.7.2", features = ["postgres"] }
+sqlx = { version = "0.6", features = ["runtime-tokio-native-tls", "postgres"] }
+>>>>>>> origin/update#1
