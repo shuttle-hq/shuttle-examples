@@ -1,4 +1,4 @@
-# Serenity Hello World Bot with Shuttle
+# Hello World application using Serenity
 
 In this example we will deploy a Serenity bot with Shuttle that responds to the `!hello` command with `world!`. To run this bot we need a valid Discord Token. To get started log in to the [Discord developer portal](https://discord.com/developers/applications).
 
