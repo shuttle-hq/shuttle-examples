@@ -78,7 +78,7 @@ async fn main(#[shuttle_static_folder::StaticFolder] static_folder: PathBuf) -> 
 
     let router = Router::new()
         .route("/websocket", get(websocket_handler))
-        .fallback(serve_dir)
+        .fallback_service(serve_dir)
         .layer(Extension(state));
 
     let sync_wrapper = SyncWrapper::new(router);
