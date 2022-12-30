@@ -1,12 +1,13 @@
-use std::{sync::Arc, time::Duration};
+use std::{path::PathBuf, sync::Arc, time::Duration};
 
 use axum::{
     extract::{
         ws::{Message, WebSocket},
         WebSocketUpgrade,
     },
-    response::{Html, IntoResponse},
-    routing::get,
+    http::StatusCode,
+    response::IntoResponse,
+    routing::{get, get_service},
     Extension, Router,
 };
 use chrono::{DateTime, Utc};
@@ -20,6 +21,7 @@ use tokio::{
     sync::{watch, Mutex},
     time::sleep,
 };
+use tower_http::services::ServeDir;
 
 struct State {
     clients_count: usize,
@@ -37,7 +39,7 @@ struct Response {
 }
 
 #[shuttle_service::main]
-async fn main() -> ShuttleAxum {
+async fn main(#[shuttle_static_folder::StaticFolder] static_folder: PathBuf) -> ShuttleAxum {
     let (tx, rx) = watch::channel(Message::Text("{}".to_string()));
 
     let state = Arc::new(Mutex::new(State {
@@ -72,14 +74,20 @@ async fn main() -> ShuttleAxum {
         }
     });
 
+    let serve_dir = get_service(ServeDir::new(static_folder)).handle_error(handle_error);
+
     let router = Router::new()
-        .route("/", get(index))
         .route("/websocket", get(websocket_handler))
+        .fallback_service(serve_dir)
         .layer(Extension(state));
 
     let sync_wrapper = SyncWrapper::new(router);
 
     Ok(sync_wrapper)
+}
+
+async fn handle_error(_err: std::io::Error) -> impl IntoResponse {
+    (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong...")
 }
 
 async fn websocket_handler(
@@ -125,8 +133,4 @@ async fn websocket(stream: WebSocket, state: Arc<Mutex<State>>) {
 
     // This client disconnected
     state.lock().await.clients_count -= 1;
-}
-
-async fn index() -> Html<&'static str> {
-    Html(include_str!("../index.html"))
 }
