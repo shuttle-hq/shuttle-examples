@@ -3,6 +3,7 @@ The following example is to present a way to use [poem](https://docs.rs/poem/lat
 This app uses the `shuttle service` attribute and `sqlx` to build a database and define its CRUD operations.
 
 # Run it
+We can start our application using the shuttle CLI.
 Run it locally: `cargo shuttle run`
 Curl it test: `curl localhost:8000/hello`
 

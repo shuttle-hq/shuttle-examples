@@ -3,7 +3,6 @@ This example shows you how to create a hello world application with shuttle and 
 
 ## Run it
 We can start our application using the shuttle CLI.
-
 Run it locally: `cargo shuttle run`
 Curl it to test it: `curl localhost: 8000/hello`
 
