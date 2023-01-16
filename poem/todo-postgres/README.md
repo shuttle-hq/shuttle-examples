@@ -6,9 +6,3 @@ This app uses the `shuttle service` attribute and `sqlx` to build a database and
 We can start our application using the shuttle CLI.
 Run it locally: `cargo shuttle run`
 Curl it test: `curl localhost:8000/hello`
-
-
-
-
-
-

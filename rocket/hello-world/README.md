@@ -5,5 +5,3 @@ This example shows how to launch a hello world app using the [rocket](https://ro
 We can start our application using the shuttle CLI.
 Run it locally: `cargo shuttle run`
 Curl it to test it: `curl localhost:8000/hello`
-
-

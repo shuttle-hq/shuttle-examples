@@ -5,7 +5,3 @@
 We can start our application using the shuttle CLI.
 Run it locally: `cargo shuttle run`
 Curl it to test: `curl localhost:8000/hello`
-
-
-
-

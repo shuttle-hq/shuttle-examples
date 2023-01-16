@@ -6,6 +6,3 @@ The example is to present a network between client and server using tower
 We can start our application using the shuttle CLI.
 Run it locally: `cargo shuttle run`
 Curl it to test it: `curl localhost:8000/hello`
-
-
-

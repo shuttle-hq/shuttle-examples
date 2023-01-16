@@ -6,7 +6,3 @@ The idea is that the `lib.rs` file handles the client and user and http requests
 We can start our application using the shuttle CLI.
 Run it locally: `cargo shuttle run`
 Curl it to test it: `curl localhost:8000/hello`
-
-
-
-
