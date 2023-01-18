@@ -29,12 +29,13 @@ struct State {
 }
 
 const PAUSE_SECS: u64 = 15;
-const STATUS_URI: &str = "https://api.shuttle.rs/status";
+const STATUS_URI: &str = "https://api.shuttle.rs";
 
 #[derive(Serialize)]
 struct Response {
     clients_count: usize,
-    datetime: DateTime<Utc>,
+    #[serde(rename = "dateTime")]
+    date_time: DateTime<Utc>,
     is_up: bool,
 }
 
@@ -61,7 +62,7 @@ async fn main(#[shuttle_static_folder::StaticFolder] static_folder: PathBuf) -> 
 
             let response = Response {
                 clients_count: state_send.lock().await.clients_count,
-                datetime: Utc::now(),
+                date_time: Utc::now(),
                 is_up,
             };
             let msg = serde_json::to_string(&response).unwrap();
