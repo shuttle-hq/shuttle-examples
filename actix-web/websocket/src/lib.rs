@@ -8,15 +8,18 @@ use actix_web_actors::ws;
 use chrono::{DateTime, Utc};
 use serde::Serialize;
 use shuttle_service::ShuttleActixWeb;
-use std::{
-    sync::{atomic::AtomicUsize, Arc},
-    time::Duration,
-};
+use std::{sync::Arc, time::Duration};
+use tokio::sync::{watch, Mutex};
 
 const PAUSE_SECS: u64 = 15;
 const STATUS_URI: &str = "https://api.shuttle.rs";
 
-#[derive(Serialize, actix::Message)]
+struct AppState {
+    clients_count: usize,
+    rx: watch::Receiver<Response>,
+}
+
+#[derive(Serialize, actix::Message, Default, Clone, Debug)]
 #[rtype(result = "()")]
 struct Response {
     clients_count: usize,
@@ -24,36 +27,30 @@ struct Response {
     is_up: bool,
 }
 
-#[derive(Default)]
 struct WsActor {
-    client_count: Arc<AtomicUsize>,
+    app_state: Arc<Mutex<AppState>>,
 }
 
 impl WsActor {
-    fn new(client_count: Arc<AtomicUsize>) -> Self {
-        Self { client_count }
+    fn new(app_state: Arc<Mutex<AppState>>) -> Self {
+        Self { app_state }
     }
 
     fn start(&mut self, ctx: &mut ws::WebsocketContext<Self>) {
         let recipient = ctx.address().recipient();
-        let client_count = self.client_count.clone();
-        client_count.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        let state = self.app_state.clone();
 
         let fut = async move {
-            let duration = Duration::from_secs(PAUSE_SECS);
-            let client = reqwest::Client::default();
+            let mut rx = {
+                let mut state = state.lock().await;
+                state.clients_count += 1;
+                state.rx.clone()
+            };
 
-            loop {
-                let is_up = client.get(STATUS_URI).send().await;
-                let is_up = is_up.is_ok();
-
-                let response = Response {
-                    clients_count: client_count.load(std::sync::atomic::Ordering::SeqCst),
-                    date_time: Utc::now(),
-                    is_up,
-                };
-                recipient.do_send(response);
-                actix::clock::sleep(duration).await;
+            while let Ok(()) = rx.changed().await {
+                let msg = rx.borrow().clone();
+                tracing::info!("WS: Sending {msg:?}");
+                recipient.do_send(msg);
             }
         };
 
@@ -84,8 +81,11 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsActor {
         match msg {
             Ok(ws::Message::Text(text)) => ctx.text(text),
             Ok(ws::Message::Close(reason)) => {
-                self.client_count
-                    .fetch_sub(1, std::sync::atomic::Ordering::SeqCst);
+                let state = self.app_state.clone();
+                tokio::spawn(async move {
+                    let mut state = state.lock().await;
+                    state.clients_count -= 1;
+                });
                 ctx.close(reason)
             }
             _ => (),
@@ -96,13 +96,9 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for WsActor {
 async fn websocket(
     req: HttpRequest,
     stream: web::Payload,
-    client_count: web::Data<AtomicUsize>,
+    app_state: web::Data<Mutex<AppState>>,
 ) -> actix_web::Result<HttpResponse> {
-    let response = ws::start(
-        WsActor::new(client_count.into_inner().clone()),
-        &req,
-        stream,
-    );
+    let response = ws::start(WsActor::new(app_state.into_inner().clone()), &req, stream);
     tracing::info!("New WS: {response:?}");
     response
 }
@@ -116,14 +112,45 @@ async fn index() -> impl Responder {
 #[shuttle_service::main]
 async fn actix_web(
 ) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Sync + Send + Clone + 'static> {
-    let client_count = Arc::new(AtomicUsize::new(0));
-    let client_count = web::Data::from(client_count);
+    let (tx, rx) = watch::channel(Response::default());
+
+    let state = Arc::new(Mutex::new(AppState {
+        clients_count: 0,
+        rx,
+    }));
+
+    // Spawn a thread to continually check the status of the api
+    let state_send = state.clone();
+
+    tokio::spawn(async move {
+        let duration = Duration::from_secs(PAUSE_SECS);
+        let client = reqwest::Client::default();
+
+        loop {
+            let is_up = client.get(STATUS_URI).send().await;
+            let is_up = is_up.is_ok();
+
+            let response = Response {
+                clients_count: state_send.lock().await.clients_count,
+                date_time: Utc::now(),
+                is_up,
+            };
+
+            if tx.send(response).is_err() {
+                break;
+            }
+
+            actix::clock::sleep(duration).await;
+        }
+    });
+
+    let app_state = web::Data::from(state);
 
     Ok(move |cfg: &mut ServiceConfig| {
         cfg.service(web::resource("/").route(web::get().to(index)))
             .service(
                 web::resource("/ws")
-                    .app_data(client_count)
+                    .app_data(app_state)
                     .route(web::get().to(websocket)),
             );
     })
