@@ -8,7 +8,7 @@ publish = false
 
 [dependencies]
 shuttle-service = { version = "0.11.0", features = ["web-actix-web"] }
-shuttle-static-folder = "0.11.0"
+shuttle-static-folder = "0.11.3"
 actix-web = "4.2.1"
 actix-ws = "0.2.5"
 actix-files = "0.6.2"
