@@ -3,8 +3,6 @@ name = "postgres"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-
 [dependencies]
 actix-web = "4.2.1"
 serde = "1.0.148"

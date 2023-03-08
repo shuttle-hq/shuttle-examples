@@ -3,8 +3,6 @@ name = "postgres"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-
 [dependencies]
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
 serde = "1.0.148"

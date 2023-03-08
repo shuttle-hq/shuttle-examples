@@ -3,8 +3,6 @@ name = "hello-world"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-
 [dependencies]
 axum = "0.6.0"
 shuttle-service = { version = "0.11.0", features = ["web-axum"] }

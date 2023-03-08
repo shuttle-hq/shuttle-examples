@@ -3,8 +3,6 @@ name = "serenity-postgres"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-
 [dependencies]
 anyhow = "1.0.66"
 serde = "1.0.148"

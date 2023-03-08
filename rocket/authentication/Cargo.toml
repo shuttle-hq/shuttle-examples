@@ -3,8 +3,6 @@ name = "authentication"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-
 [dependencies]
 chrono = "0.4.23"
 jsonwebtoken = { version = "8.1.1", default-features = false }

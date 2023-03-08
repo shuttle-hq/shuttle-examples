@@ -3,8 +3,6 @@ name = "websocket"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-
 [dependencies]
 axum = { version = "0.6.0", features = ["ws"] }
 chrono = { version = "0.4.23", features = ["serde"] }
