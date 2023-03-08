@@ -2,7 +2,6 @@ use std::path::PathBuf;
 
 use axum::Router;
 use axum_extra::routing::SpaRouter;
-use sync_wrapper::SyncWrapper;
 
 #[shuttle_service::main]
 async fn axum(
@@ -11,7 +10,5 @@ async fn axum(
     let router =
         Router::new().merge(SpaRouter::new("/", static_folder).index_file("index.html"));
 
-    let sync_wrapper = SyncWrapper::new(router);
-
-    Ok(sync_wrapper)
+    Ok(router)
 }

@@ -9,4 +9,3 @@ axum = "0.6.1"
 axum-extra = { version = "0.4.2", features = ["spa"] }
 shuttle-service = { version = "0.11.0", features = ["web-axum"] }
 shuttle-static-folder = "0.11.3"
-sync_wrapper = "0.1.1"

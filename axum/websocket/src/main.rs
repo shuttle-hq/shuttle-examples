@@ -16,7 +16,6 @@ use hyper::{Client, Uri};
 use hyper_tls::HttpsConnector;
 use serde::Serialize;
 use shuttle_service::ShuttleAxum;
-use sync_wrapper::SyncWrapper;
 use tokio::{
     sync::{watch, Mutex},
     time::sleep,
@@ -82,9 +81,7 @@ async fn main(#[shuttle_static_folder::StaticFolder] static_folder: PathBuf) -> 
         .fallback_service(serve_dir)
         .layer(Extension(state));
 
-    let sync_wrapper = SyncWrapper::new(router);
-
-    Ok(sync_wrapper)
+    Ok(router)
 }
 
 async fn handle_error(_err: std::io::Error) -> impl IntoResponse {

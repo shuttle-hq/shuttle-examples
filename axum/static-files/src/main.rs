@@ -2,7 +2,6 @@ use std::path::PathBuf;
 
 use axum::{routing::get, Router};
 use axum_extra::routing::SpaRouter;
-use sync_wrapper::SyncWrapper;
 
 async fn hello_world() -> &'static str {
     "Hello, world!"
@@ -18,7 +17,5 @@ async fn axum(
         .route("/hello", get(hello_world))
         .merge(SpaRouter::new("/assets", static_folder).index_file("index.html"));
 
-    let sync_wrapper = SyncWrapper::new(router);
-
-    Ok(sync_wrapper)
+    Ok(router)
 }
