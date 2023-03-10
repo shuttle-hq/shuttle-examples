@@ -1,12 +1,13 @@
 use axum::{routing::get, Router};
+use shuttle_axum::AxumService;
 
 async fn hello_world() -> &'static str {
     "Hello, world!"
 }
 
-#[shuttle_service::main]
-async fn axum() -> shuttle_service::ShuttleAxum {
+#[shuttle_runtime::main]
+async fn axum() -> shuttle_axum::ShuttleAxum {
     let router = Router::new().route("/hello", get(hello_world));
 
-    Ok(router)
+    Ok(AxumService(router))
 }
