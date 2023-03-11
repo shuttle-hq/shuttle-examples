@@ -28,7 +28,9 @@ impl tower::Service<hyper::Request<hyper::Body>> for HelloWorld {
     }
 }
 
-#[shuttle_service::main]
-async fn tower() -> Result<HelloWorld, shuttle_service::Error> {
-    Ok(HelloWorld)
+#[shuttle_runtime::main]
+async fn tower() -> shuttle_tower::ShuttleTower<HelloWorld> {
+    let service = HelloWorld;
+
+    Ok(service.into())
 }

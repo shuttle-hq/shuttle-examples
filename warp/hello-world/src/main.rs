@@ -1,8 +1,8 @@
 use warp::Filter;
 use warp::Reply;
 
-#[shuttle_service::main]
-async fn warp() -> shuttle_service::ShuttleWarp<(impl Reply,)> {
+#[shuttle_runtime::main]
+async fn warp() -> shuttle_warp::ShuttleWarp<(impl Reply,)> {
     let route = warp::any().map(|| "Hello, World!");
-    Ok(route.boxed())
+    Ok(route.boxed().into())
 }
