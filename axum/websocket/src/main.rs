@@ -15,7 +15,7 @@ use futures::{SinkExt, StreamExt};
 use hyper::{Client, Uri};
 use hyper_tls::HttpsConnector;
 use serde::Serialize;
-use shuttle_service::ShuttleAxum;
+use shuttle_axum::ShuttleAxum;
 use tokio::{
     sync::{watch, Mutex},
     time::sleep,
@@ -38,8 +38,8 @@ struct Response {
     is_up: bool,
 }
 
-#[shuttle_service::main]
-async fn main(#[shuttle_static_folder::StaticFolder] static_folder: PathBuf) -> ShuttleAxum {
+#[shuttle_runtime::main]
+async fn axum(#[shuttle_static_folder::StaticFolder] static_folder: PathBuf) -> ShuttleAxum {
     let (tx, rx) = watch::channel(Message::Text("{}".to_string()));
 
     let state = Arc::new(Mutex::new(State {
@@ -81,7 +81,7 @@ async fn main(#[shuttle_static_folder::StaticFolder] static_folder: PathBuf) -> 
         .fallback_service(serve_dir)
         .layer(Extension(state));
 
-    Ok(router)
+    Ok(router.into())
 }
 
 async fn handle_error(_err: std::io::Error) -> impl IntoResponse {
