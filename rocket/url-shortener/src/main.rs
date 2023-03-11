@@ -7,7 +7,7 @@ use rocket::{
     routes, State,
 };
 use serde::Serialize;
-use shuttle_service::{error::CustomError, ShuttleRocket};
+use shuttle_runtime::CustomError;
 use sqlx::migrate::Migrator;
 use sqlx::{FromRow, PgPool};
 use url::Url;
@@ -70,8 +70,8 @@ async fn shorten(url: String, state: &State<AppState>) -> Result<String, status:
 
 static MIGRATOR: Migrator = sqlx::migrate!();
 
-#[shuttle_service::main]
-async fn rocket(#[shuttle_shared_db::Postgres] pool: PgPool) -> ShuttleRocket {
+#[shuttle_runtime::main]
+async fn rocket(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_rocket::ShuttleRocket {
     MIGRATOR.run(&pool).await.map_err(CustomError::new)?;
 
     let state = AppState { pool };
@@ -79,5 +79,5 @@ async fn rocket(#[shuttle_shared_db::Postgres] pool: PgPool) -> ShuttleRocket {
         .mount("/", routes![redirect, shorten])
         .manage(state);
 
-    Ok(rocket)
+    Ok(rocket.into())
 }

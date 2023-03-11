@@ -50,14 +50,14 @@ async fn retrieve(
     Ok(Json(weather))
 }
 
-#[shuttle_service::main]
+#[shuttle_runtime::main]
 async fn rocket(
     #[shuttle_persist::Persist] persist: PersistInstance,
-) -> shuttle_service::ShuttleRocket {
+) -> shuttle_rocket::ShuttleRocket {
     let state = MyState { persist };
     let rocket = rocket::build()
         .mount("/", routes![retrieve, add])
         .manage(state);
 
-    Ok(rocket)
+    Ok(rocket.into())
 }
