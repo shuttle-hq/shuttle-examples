@@ -5,9 +5,9 @@ async fn hello_world(res: &mut Response) {
     res.render(Text::Plain("Hello, world!"));
 }
 
-#[shuttle_service::main]
-async fn salvo() -> shuttle_service::ShuttleSalvo {
+#[shuttle_runtime::main]
+async fn salvo() -> shuttle_salvo::ShuttleSalvo {
     let router = Router::with_path("hello").get(hello_world);
 
-    Ok(router)
+    Ok(router.into())
 }
