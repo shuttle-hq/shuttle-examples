@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
-use shuttle_service::{error::CustomError, ShuttleTide};
+use shuttle_runtime::{CustomError};
+use shuttle_tide::ShuttleTide;
 use sqlx::{Executor, FromRow, PgPool};
 use tide::{Body, Request};
 
@@ -28,7 +29,7 @@ struct MyState {
     pool: PgPool,
 }
 
-#[shuttle_service::main]
+#[shuttle_runtime::main]
 async fn tide(#[shuttle_aws_rds::Postgres] pool: PgPool) -> ShuttleTide<MyState> {
     pool.execute(include_str!("../schema.sql"))
         .await
@@ -41,7 +42,7 @@ async fn tide(#[shuttle_aws_rds::Postgres] pool: PgPool) -> ShuttleTide<MyState>
     app.at("/todo").post(add);
     app.at("/todo/:id").get(retrieve);
 
-    Ok(app)
+    Ok(app.into())
 }
 
 #[derive(Deserialize)]
