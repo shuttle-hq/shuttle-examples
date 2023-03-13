@@ -3,13 +3,11 @@ name = "postgres"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-crate-type = ["cdylib"]
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
 serde = { version = "1.0.148", features = ["derive"] }
-shuttle-aws-rds = { version = "0.11.0", features = ["postgres"] }
-shuttle-service = { version = "0.11.0", features = ["web-tide"] }
+shuttle-aws-rds = { version = "0.8.0", features = ["postgres"] }
+shuttle-runtime = { version = "0.1.0" }
+shuttle-tide = { version = "0.1.0" }
 sqlx = { version = "0.6.2", features = ["runtime-tokio-native-tls", "postgres"] }
+tokio = { version = "1.26.0" }
 tide = "0.16.0"

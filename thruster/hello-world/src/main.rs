@@ -9,9 +9,11 @@ async fn hello(mut context: Ctx, _next: MiddlewareNext<Ctx>) -> MiddlewareResult
     Ok(context)
 }
 
-#[shuttle_service::main]
-async fn thruster() -> shuttle_service::ShuttleThruster<HyperServer<Ctx, ()>> {
-    Ok(HyperServer::new(
+#[shuttle_runtime::main]
+async fn thruster() -> shuttle_thruster::ShuttleThruster<HyperServer<Ctx, ()>> {
+    let server = HyperServer::new(
         App::<HyperRequest, Ctx, ()>::create(generate_context, ()).get("/hello", m![hello]),
-    ))
+    );
+    
+    Ok(server.into())
 }

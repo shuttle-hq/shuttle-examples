@@ -3,8 +3,9 @@ name = "hello-world"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-
 [dependencies]
 salvo = "0.37.5"
-shuttle-service = { version = "0.11.0", features = ["web-salvo"] }
+shuttle-salvo = { version = "0.1.0" }
+shuttle-runtime = { version = "0.1.0" }
+tokio = { version = "1.26.0" }
+
