@@ -5,6 +5,6 @@ edition = "2021"
 
 [dependencies]
 rocket = "0.5.0-rc.2"
-shuttle-rocket = { version = "0.1.0" }
-shuttle-runtime = { version = "0.1.0" }
+shuttle-rocket = { version = "0.12.0-rc1" }
+shuttle-runtime = { version = "0.12.0-rc1" }
 tokio = { version = "1.26.0" }
