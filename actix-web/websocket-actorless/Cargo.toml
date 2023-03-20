@@ -4,18 +4,17 @@ version = "0.1.0"
 edition = "2021"
 publish = false
 
-[lib]
-
 [dependencies]
-shuttle-service = { version = "0.11.0", features = ["web-actix-web"] }
-shuttle-static-folder = "0.11.3"
-actix-web = "4.2.1"
-actix-ws = "0.2.5"
 actix-files = "0.6.2"
+actix-web = "4.3.1"
+actix-ws = "0.2.5"
+chrono = { version = "0.4.23", features = ["serde"] }
 futures = "0.3"
 reqwest = "0.11"
-tokio = { version = "1", features = ["rt-multi-thread", "sync"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-chrono = { version = "0.4.23", features = ["serde"] }
+shuttle-actix-web = { version = "0.12.0" }
+shuttle-runtime = { version = "0.12.0" }
+shuttle-static-folder = "0.12.0"
+tokio = { version = "1", features = ["rt-multi-thread", "sync"] }
 tracing = "0.1"

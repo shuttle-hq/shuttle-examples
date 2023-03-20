@@ -3,13 +3,13 @@ name = "url-shortener"
 version = "0.1.0"
 edition = "2021"
 
-[lib]
-
 [dependencies]
 nanoid = "0.4.0"
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
+shuttle-rocket = { version = "0.12.0" }
+shuttle-runtime = { version = "0.12.0" }
 serde = "1.0.148"
-shuttle-service = { version = "0.11.0", features = ["web-rocket"] }
-shuttle-shared-db = { version = "0.11.0", features = ["postgres"] }
+shuttle-shared-db = { version = "0.12.0", features = ["postgres"] }
 sqlx = { version = "0.6.2", features = ["runtime-tokio-native-tls", "postgres"] }
+tokio = { version = "1.26.0" }
 url = "2.3.1"

@@ -7,7 +7,7 @@ use actix_ws::Message;
 use chrono::{DateTime, Utc};
 use futures::StreamExt;
 use serde::Serialize;
-use shuttle_service::ShuttleActixWeb;
+use shuttle_actix_web::ShuttleActixWeb;
 use std::{
     sync::{atomic::AtomicUsize, Arc},
     time::Duration,
@@ -104,9 +104,9 @@ async fn index() -> impl Responder {
         .map_err(|e| actix_web::error::ErrorInternalServerError(e))
 }
 
-#[shuttle_service::main]
+#[shuttle_runtime::main]
 async fn actix_web(
-) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Sync + Send + Clone + 'static> {
+) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     // We're going to use channels to communicate between threads.
     // api state channel
     let (tx_api_state, rx_api_state) = watch::channel(ApiStateMessage::default());
@@ -179,14 +179,15 @@ async fn actix_web(
 
     let app_state = web::Data::new((tx_ws_state, rx_api_state));
 
-    Ok(move |cfg: &mut ServiceConfig| {
+    let config = move |cfg: &mut ServiceConfig| {
         cfg.service(web::resource("/").route(web::get().to(index)))
             .service(
                 web::resource("/ws")
                     .app_data(app_state)
                     .route(web::get().to(websocket)),
             );
-    })
+    };
+    Ok(config.into())
 }
 
 async fn get_api_status(client: &reqwest::Client) -> bool {
