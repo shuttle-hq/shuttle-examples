@@ -5,8 +5,9 @@ edition = "2021"
 publish = false
 
 [dependencies]
-axum = "0.6.1"
+axum = "0.6.10"
 axum-extra = { version = "0.4.2", features = ["spa"] }
-shuttle-service = { version = "0.11.0", features = ["web-axum"] }
-shuttle-static-folder = "0.11.3"
-sync_wrapper = "0.1.1"
+shuttle-axum = { version = "0.12.0" }
+shuttle-runtime = { version = "0.12.0" }
+shuttle-static-folder = "0.12.0"
+tokio = { version = "1.26.0" }

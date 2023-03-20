@@ -1,7 +1,7 @@
 use anyhow::Context as _;
 use poise::serenity_prelude as serenity;
 use shuttle_secrets::SecretStore;
-use shuttle_service::ShuttlePoise;
+use shuttle_poise::ShuttlePoise;
 
 struct Data {} // User data, which is stored and accessible in all command invocations
 type Error = Box<dyn std::error::Error + Send + Sync>;
@@ -14,7 +14,7 @@ async fn hello(ctx: Context<'_>) -> Result<(), Error> {
     Ok(())
 }
 
-#[shuttle_service::main]
+#[shuttle_runtime::main]
 async fn poise(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> ShuttlePoise<Data, Error> {
     // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store
@@ -36,7 +36,7 @@ async fn poise(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> Shuttle
         })
         .build()
         .await
-        .map_err(shuttle_service::error::CustomError::new)?;
+        .map_err(shuttle_runtime::CustomError::new)?;
 
-    Ok(framework)
+    Ok(framework.into())
 }

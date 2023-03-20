@@ -69,9 +69,9 @@ fn login(login: Json<LoginRequest>) -> Result<Json<LoginResponse>, Custom<String
     Ok(Json(response))
 }
 
-#[shuttle_service::main]
-async fn rocket() -> shuttle_service::ShuttleRocket {
+#[shuttle_runtime::main]
+async fn rocket() -> shuttle_rocket::ShuttleRocket {
     let rocket = rocket::build().mount("/", routes![public, private, login]);
 
-    Ok(rocket)
+    Ok(rocket.into())
 }

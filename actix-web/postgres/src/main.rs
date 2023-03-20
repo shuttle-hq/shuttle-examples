@@ -5,7 +5,8 @@ use actix_web::{
     Result,
 };
 use serde::{Deserialize, Serialize};
-use shuttle_service::{error::CustomError, ShuttleActixWeb};
+use shuttle_actix_web::ShuttleActixWeb;
+use shuttle_runtime::{CustomError};
 use sqlx::{Executor, FromRow, PgPool};
 
 #[get("/{id}")]
@@ -35,17 +36,17 @@ struct AppState {
     pool: PgPool,
 }
 
-#[shuttle_service::main]
+#[shuttle_runtime::main]
 async fn actix_web(
     #[shuttle_shared_db::Postgres] pool: PgPool,
-) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Sync + Send + Clone + 'static> {
+) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     pool.execute(include_str!("../schema.sql"))
         .await
         .map_err(CustomError::new)?;
 
     let state = web::Data::new(AppState { pool });
 
-    Ok(move |cfg: &mut ServiceConfig| {
+    let config = move |cfg: &mut ServiceConfig| {
         cfg.service(
             web::scope("/todos")
                 .wrap(Logger::default())
@@ -53,7 +54,9 @@ async fn actix_web(
                 .service(add)
                 .app_data(state),
         );
-    })
+    };
+
+    Ok(config.into())
 }
 
 #[derive(Deserialize)]

@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use shuttle_service::error::CustomError;
+use shuttle_runtime::CustomError;
 use sqlx::{Executor, FromRow, PgPool};
 use thruster::{
     context::{
@@ -96,17 +96,19 @@ async fn add(mut context: Ctx, _next: MiddlewareNext<Ctx>) -> MiddlewareResult<C
     Ok(context)
 }
 
-#[shuttle_service::main]
+#[shuttle_runtime::main]
 async fn thruster(
     #[shuttle_aws_rds::Postgres] pool: PgPool,
-) -> shuttle_service::ShuttleThruster<HyperServer<Ctx, ServerConfig>> {
+) -> shuttle_thruster::ShuttleThruster<HyperServer<Ctx, ServerConfig>> {
     pool.execute(include_str!("../schema.sql"))
         .await
         .map_err(CustomError::new)?;
 
-    Ok(HyperServer::new(
+    let server = HyperServer::new(
         App::<HyperRequest, Ctx, ServerConfig>::create(generate_context, ServerConfig { pool })
             .post("/todos", m![add])
             .get("/todos/:id", m![retrieve]),
-    ))
+    );
+    
+    Ok(server.into())
 }
