@@ -31,31 +31,31 @@ The project consists of the following files
 To deploy this app, check out the repository locally
 
 ```bash
-$ git clone https://github.com/shuttle-hq/shuttle.git
+git clone https://github.com/shuttle-hq/shuttle.git
 ```
 
 navigate to `examples/rocket/url-shortener`
 
 ```bash
-$ cd examples/rocket/url-shortener
+cd examples/rocket/url-shortener
 ```
 
 install shuttle
 
 ```bash
-$ cargo install cargo-shuttle
+cargo install cargo-shuttle
 ```
 
 login to shuttle
 
 ```bash
-$ cargo shuttle login
+cargo shuttle login
 ```
 
 Pick a project name that is something unique - in shuttle,
 projects are globally unique. Then run
 
 ```bash
-$ cargo shuttle project new --name=$PROJECT_NAME
-$ cargo shuttle deploy --name=$PROJECT_NAME
+cargo shuttle project start --name=$PROJECT_NAME
+cargo shuttle deploy --name=$PROJECT_NAME
 ```
