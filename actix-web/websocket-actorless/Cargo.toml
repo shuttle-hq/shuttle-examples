@@ -13,8 +13,8 @@ futures = "0.3"
 reqwest = "0.11"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-shuttle-actix-web = { version = "0.13.0" }
-shuttle-runtime = { version = "0.13.0" }
-shuttle-static-folder = "0.13.1"
+shuttle-actix-web = { version = "0.14.0" }
+shuttle-runtime = { version = "0.14.0" }
+shuttle-static-folder = "0.14.0"
 tokio = { version = "1", features = ["rt-multi-thread", "sync"] }
 tracing = "0.1"
