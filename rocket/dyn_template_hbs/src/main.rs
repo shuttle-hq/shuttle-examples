@@ -21,9 +21,9 @@ pub fn hello(name: &str) -> Template {
 #[shuttle_runtime::main]
 async fn rocket(#[shuttle_static_folder::StaticFolder(folder="templates")] static_folder: PathBuf) -> shuttle_rocket::ShuttleRocket {
 
-    /* The provisioned template directory will be different on each deployment
-       so it is necessary to merge the template_dir setting
-       into the configuration at runtime so that dynamic templates work.
+    /* The provisioned static folder template directory will not be a sub folder 
+       of the location of the executable so it is necessary to merge the 
+       template_dir setting into the configuration at runtime so that dynamic templates work.
 
        Note that shuttle does not include Rocket.toml 
        so merging config is the preferred way to modify any settings
