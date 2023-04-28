@@ -17,4 +17,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Check formatting and Clippy
+<<<<<<< HEAD
       run: ./ci.sh
+=======
+      run: sh -x ./ci.sh
+>>>>>>> 5950168159f0e041f24f59bfa9f9e6ee986efa38
