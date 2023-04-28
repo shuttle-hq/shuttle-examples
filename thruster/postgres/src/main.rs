@@ -109,6 +109,6 @@ async fn thruster(
             .post("/todos", m![add])
             .get("/todos/:id", m![retrieve]),
     );
-    
+
     Ok(server.into())
 }

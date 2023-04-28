@@ -7,8 +7,7 @@ use axum_extra::routing::SpaRouter;
 async fn axum(
     #[shuttle_static_folder::StaticFolder] static_folder: PathBuf,
 ) -> shuttle_axum::ShuttleAxum {
-    let router =
-        Router::new().merge(SpaRouter::new("/", static_folder).index_file("index.html"));
+    let router = Router::new().merge(SpaRouter::new("/", static_folder).index_file("index.html"));
 
     Ok(router.into())
 }

@@ -14,6 +14,6 @@ async fn thruster() -> shuttle_thruster::ShuttleThruster<HyperServer<Ctx, ()>> {
     let server = HyperServer::new(
         App::<HyperRequest, Ctx, ()>::create(generate_context, ()).get("/hello", m![hello]),
     );
-    
+
     Ok(server.into())
 }
