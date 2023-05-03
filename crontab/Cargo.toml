@@ -1,0 +1,15 @@
+[package]
+name = "crontab"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.71"
+async-trait = "0.1.68"
+axum = "0.6.18"
+shuttle-runtime = "0.15.0"
+shuttle-service = "0.15.0"
+tokio = "1.28.0"
