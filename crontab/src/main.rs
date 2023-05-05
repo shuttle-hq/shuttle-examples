@@ -1,9 +1,10 @@
 use chrono::Utc;
 use std::{future::Future, str::FromStr};
 use tokio::time::sleep;
+use tracing::info;
 
 use cron::Schedule;
-use shuttle_runtime::async_trait;
+use shuttle_runtime::{async_trait, Service};
 
 // "Run every 2 seconds"
 const SCHEDULE: &str = "*/2 * * * * *";
@@ -11,7 +12,7 @@ const SCHEDULE: &str = "*/2 * * * * *";
 // The function that will be run.
 async fn my_job() {
     let now = chrono::offset::Utc::now();
-    println!("It is {}", now.format("%Y-%m-%d %H:%M:%S"));
+    info!("It is {}", now.format("%Y-%m-%d %H:%M:%S"));
 }
 
 pub struct CronService<F> {
@@ -33,7 +34,7 @@ impl<F: Future> CronService<F> {
 }
 
 #[async_trait]
-impl<F> shuttle_service::Service for CronService<F>
+impl<F> Service for CronService<F>
 where
     F: Future + Send + Sync + 'static,
 {
@@ -42,8 +43,6 @@ where
         _addr: std::net::SocketAddr,
     ) -> Result<(), shuttle_service::error::Error> {
         self.start().await;
-
-        println!("All done.");
 
         Ok(())
     }
