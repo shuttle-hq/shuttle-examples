@@ -1,0 +1,13 @@
+[package]
+name = "postgres-rustls"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+poem = "1.3.55"
+serde = "1.0.148"
+shuttle-poem = { version = "0.15.0" }
+shuttle-runtime = { version = "0.15.0" }
+shuttle-shared-db = { version = "0.15.0", features = ["postgres-rustls"] }
+sqlx = { version = "0.6.2", features = ["runtime-tokio-rustls", "postgres"] }
+tokio = { version = "1.26.0" }
