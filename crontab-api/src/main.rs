@@ -1,10 +1,17 @@
+use std::sync::Arc;
+
 use axum::Router;
-use shuttle_secrets::SecretStore;
+use shuttle_persist::PersistInstance;
 
 mod router;
 
 pub struct CrontabService {
     router: Router,
+    persist: PersistInstance,
+}
+
+pub struct AppState {
+    persist: PersistInstance,
 }
 
 #[shuttle_runtime::async_trait]
@@ -25,9 +32,12 @@ impl shuttle_runtime::Service for CrontabService {
 
 #[shuttle_runtime::main]
 async fn init(
-    #[shuttle_secrets::Secrets] _secrets: SecretStore,
+    #[shuttle_persist::Persist] persist: PersistInstance,
 ) -> Result<CrontabService, shuttle_runtime::Error> {
-    let router = router::build_router();
+    let app_state = Arc::new(AppState {
+        persist: persist.clone(),
+    });
+    let router = router::build_router(app_state);
 
-    Ok(CrontabService { router })
+    Ok(CrontabService { router, persist })
 }
