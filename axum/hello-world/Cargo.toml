@@ -5,6 +5,6 @@ edition = "2021"
 
 [dependencies]
 axum = "0.6.10"
-shuttle-axum = { version = "0.15.0" }
-shuttle-runtime = { version = "0.15.0" }
+shuttle-axum = { version = "0.16.0" }
+shuttle-runtime = { version = "0.16.0" }
 tokio = { version = "1.26.0" }

@@ -5,7 +5,7 @@ shuttle_next::app! {
     use shuttle_next::extract::BodyStream;
     use shuttle_next::response::{Response, IntoResponse};
 
-    #[shuttle_next::endpoint(method = get, route = "/hello")]
+    #[shuttle_next::endpoint(method = get, route = "/")]
     async fn hello() -> &'static str {
         "Hello, World!"
     }
