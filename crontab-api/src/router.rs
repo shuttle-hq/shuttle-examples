@@ -8,7 +8,7 @@ use axum::{extract::Form, Router};
 use serde::Deserialize;
 use shuttle_runtime::tracing::info;
 
-use crate::AppState;
+use crate::{AppState, Crontab, Job};
 
 pub fn build_router(app_state: Arc<AppState>) -> Router {
     Router::new()
@@ -21,22 +21,18 @@ pub async fn hello_world() -> impl IntoResponse {
     (StatusCode::OK, "Hello world!").into_response()
 }
 
-#[derive(Debug, Deserialize)]
-pub struct Schedule {
-    schedule: String,
-    url: String,
-}
-
 pub async fn set_schedule(
     State(app_state): State<Arc<AppState>>,
-    Form(schedule): Form<Schedule>,
+    Form(job): Form<Job>,
 ) -> impl IntoResponse {
-    info!("Setting schedule: {:?}", schedule);
+    info!("Setting new job: {:?}", job);
 
-    app_state.persist.save("some", "key");
+    let mut crontab: Crontab = app_state.persist.load("crontab").unwrap();
 
-    let val: String = app_state.persist.load("some").unwrap();
-    info!("Got state: {:?}", val);
+    crontab.jobs.push(job);
+    info!("Updating state: {:?}", &crontab);
+
+    app_state.persist.save("crontab", crontab).unwrap();
 
     StatusCode::OK
 }
