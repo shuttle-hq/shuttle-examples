@@ -16,26 +16,12 @@ pub async fn hello_world() -> impl IntoResponse {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct ScheduleRaw {
-    schedule: String,
-    url: String,
-}
-
-#[derive(Debug, Deserialize)]
 pub struct Schedule {
     schedule: String,
     url: String,
 }
 
-impl From<ScheduleRaw> for Schedule {
-    fn from(ScheduleRaw { schedule, url }: ScheduleRaw) -> Self {
-        // TODO: Parse & verify
-        Self { schedule, url }
-    }
-}
-
-pub async fn set_schedule(Form(schedule_raw): Form<ScheduleRaw>) -> impl IntoResponse {
-    let schedule: Schedule = schedule_raw.into();
+pub async fn set_schedule(Form(schedule): Form<Schedule>) -> impl IntoResponse {
     info!("Setting schedule: {:?}", schedule);
 
     StatusCode::OK
