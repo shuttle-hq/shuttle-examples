@@ -27,7 +27,10 @@ pub async fn set_schedule(
 ) -> impl IntoResponse {
     info!("Setting new job: {:?}", job);
 
-    let mut crontab: Crontab = app_state.persist.load("crontab").unwrap();
+    let mut crontab = match app_state.persist.load::<Crontab>("crontab") {
+        Ok(tab) => tab,
+        Err(_) => Crontab { jobs: vec![] },
+    };
 
     crontab.jobs.push(job);
     info!("Updating state: {:?}", &crontab);
