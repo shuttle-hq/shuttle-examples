@@ -28,13 +28,13 @@ pub struct CrontabService {
 
 impl CrontabService {
     async fn start(&self) {
-        let tab: Crontab = self.persist.load("crontab").unwrap();
+        if let Ok(tab) = self.persist.load::<Crontab>("crontab") {
+            for Job { schedule, url } in tab.jobs {
+                let schedule = Schedule::from_str(&schedule).unwrap();
+                let job = CronJob { schedule, url };
 
-        for Job { schedule, url } in tab.jobs {
-            let schedule = Schedule::from_str(&schedule).unwrap();
-            let job = CronJob { schedule, url };
-
-            // TODO: spawn blocking thread on tokio::runtime::handle
+                // TODO: spawn blocking thread on tokio::runtime::handle
+            }
         }
     }
 }
