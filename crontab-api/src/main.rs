@@ -6,46 +6,42 @@ use chrono::Utc;
 use cron::Schedule;
 use serde::{Deserialize, Serialize};
 use shuttle_persist::PersistInstance;
-use tokio::time::sleep;
+use shuttle_runtime::tracing::info;
+use tokio::{
+    sync::mpsc::{self, Receiver, Sender},
+    time::sleep,
+};
 
 mod router;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Job {
+pub struct RawJob {
     schedule: String,
     url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Crontab {
-    jobs: Vec<Job>,
+    jobs: Vec<RawJob>,
 }
 
-pub struct CrontabService {
-    router: Router,
-    persist: PersistInstance,
-}
-
-impl CrontabService {
-    async fn start(&self) {
-        if let Ok(tab) = self.persist.load::<Crontab>("crontab") {
-            for Job { schedule, url } in tab.jobs {
-                let schedule = Schedule::from_str(&schedule).unwrap();
-                let job = CronJob { schedule, url };
-
-                // TODO: spawn blocking thread on tokio::runtime::handle
-            }
-        }
-    }
-}
-
+#[derive(Debug)]
 pub struct CronJob {
     schedule: Schedule,
     url: String,
 }
 
 impl CronJob {
-    async fn start(&self) {
+    fn from_raw(raw: &RawJob) -> Self {
+        let schedule = Schedule::from_str(&raw.schedule).expect("Failed to parse schedule");
+        Self {
+            schedule,
+            url: raw.url.clone(),
+        }
+    }
+
+    async fn run(&self) {
+        info!("Running job for: {:?}", self.url);
         while let Some(next_run) = self.schedule.upcoming(Utc).next() {
             let next_run_in = next_run
                 .signed_duration_since(chrono::offset::Utc::now())
@@ -53,27 +49,72 @@ impl CronJob {
                 .unwrap();
             sleep(next_run_in).await;
 
+            info!("Calling {}", self.url);
             // TODO: Use reqwest to call url.
         }
     }
 }
 
-pub struct AppState {
+pub struct CronRunner {
     persist: PersistInstance,
+    receiver: Receiver<RawJob>,
+}
+
+impl CronRunner {
+    async fn run_jobs(&mut self) {
+        if let Ok(tab) = self.persist.load::<Crontab>("crontab") {
+            info!("Found {} jobs", tab.jobs.len());
+            for raw in tab.jobs {
+                info!("Starting job: {:?}", raw);
+                let job = CronJob::from_raw(&raw);
+
+                tokio::spawn(async move {
+                    job.run().await;
+                });
+            }
+        }
+
+        while let Some(raw) = self.receiver.recv().await {
+            info!("Channel received: {:?}", raw);
+            let mut crontab = match self.persist.load::<Crontab>("crontab") {
+                Ok(tab) => tab,
+                Err(_) => Crontab { jobs: vec![] },
+            };
+
+            let job = CronJob::from_raw(&raw);
+
+            crontab.jobs.push(raw);
+
+            info!("Persisting: {:?}", crontab);
+            self.persist.save("crontab", crontab).unwrap();
+
+            // Spawn new job
+            tokio::spawn(async move {
+                job.run().await;
+            });
+        }
+    }
+}
+
+pub struct CrontabService {
+    router: Router,
+    runner: CronRunner,
+}
+
+pub struct AppState {
+    sender: Sender<RawJob>,
 }
 
 #[shuttle_runtime::async_trait]
 impl shuttle_runtime::Service for CrontabService {
     async fn bind(mut self, addr: std::net::SocketAddr) -> Result<(), shuttle_runtime::Error> {
         let router = self.router;
+        let mut runner = self.runner;
 
-        let serve_router = axum::Server::bind(&addr).serve(router.into_make_service());
+        let server = axum::Server::bind(&addr);
 
-        // TODO: Use a channel (?) to be notified about updates to the persisted crontab & rerun `CrontabService.start()`
-        tokio::select!(
-            // _ = self.discord_bot.run() => {},
-            _ = serve_router => {}
-        );
+        let (_runner_hdl, _axum_hdl) =
+            tokio::join!(runner.run_jobs(), server.serve(router.into_make_service()));
 
         Ok(())
     }
@@ -83,11 +124,11 @@ impl shuttle_runtime::Service for CrontabService {
 async fn init(
     #[shuttle_persist::Persist] persist: PersistInstance,
 ) -> Result<CrontabService, shuttle_runtime::Error> {
-    // TODO: `persist` should probably be a channel so `CrontabService` can listen for updates and rerun its `start` method?
-    let app_state = Arc::new(AppState {
-        persist: persist.clone(),
-    });
-    let router = router::build_router(app_state);
+    let (sender, receiver) = mpsc::channel(32);
 
-    Ok(CrontabService { router, persist })
+    let runner = CronRunner { persist, receiver };
+    let state = Arc::new(AppState { sender });
+    let router = router::build_router(state);
+
+    Ok(CrontabService { router, runner })
 }
