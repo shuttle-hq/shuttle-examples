@@ -5,10 +5,9 @@ use axum::http::StatusCode;
 use axum::response::IntoResponse;
 use axum::routing::{get, post};
 use axum::{extract::Form, Router};
-use serde::Deserialize;
 use shuttle_runtime::tracing::info;
 
-use crate::{AppState, Crontab, Job};
+use crate::{AppState, RawJob};
 
 pub fn build_router(app_state: Arc<AppState>) -> Router {
     Router::new()
@@ -22,20 +21,12 @@ pub async fn hello_world() -> impl IntoResponse {
 }
 
 pub async fn set_schedule(
-    State(app_state): State<Arc<AppState>>,
-    Form(job): Form<Job>,
+    State(state): State<Arc<AppState>>,
+    Form(job): Form<RawJob>,
 ) -> impl IntoResponse {
-    info!("Setting new job: {:?}", job);
+    info!("Accepted new job: {:?}", job);
 
-    let mut crontab = match app_state.persist.load::<Crontab>("crontab") {
-        Ok(tab) => tab,
-        Err(_) => Crontab { jobs: vec![] },
-    };
-
-    crontab.jobs.push(job);
-    info!("Updating state: {:?}", &crontab);
-
-    app_state.persist.save("crontab", crontab).unwrap();
+    state.sender.send(job).await.unwrap();
 
     StatusCode::OK
 }
