@@ -7,6 +7,7 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+axum = "0.6.18"
 shuttle-crontab = { version = "0.15.0", path = "../../services/shuttle-crontab" }
 shuttle-persist = "0.16.0"
 shuttle-runtime = "0.16.0"
