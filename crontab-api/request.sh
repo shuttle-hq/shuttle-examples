@@ -1,5 +1,5 @@
 SCHEDULE="*/2 * * * * *"
-URL="example.com"
+URL="https://example.com"
 
 curl -v http://localhost:8000/set-schedule\
   -H "Content-Type: application/x-www-form-urlencoded"\
