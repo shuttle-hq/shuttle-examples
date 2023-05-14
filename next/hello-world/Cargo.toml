@@ -8,6 +8,6 @@ crate-type = [ "cdylib" ]
 
 [dependencies]
 # TODO: bump to 0.9 before merge
-shuttle-next = "0.16.0"
+shuttle-next = "0.17.0"
 tracing = "0.1.37"
 futures = "0.3.25"
