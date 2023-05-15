@@ -1,6 +1,7 @@
 use axum::{response::IntoResponse, routing::get, Router};
-use shuttle_crontab::{CrontabService, ShuttleCrontab};
 use shuttle_persist::{Persist, PersistInstance};
+
+use crontab_api::{CrontabService, ShuttleCrontab};
 
 async fn hello_crontab() -> impl IntoResponse {
     "Hello there, try making a POST request to '/crontab/set' to create a new job.".to_string()
