@@ -19,7 +19,7 @@ Fire a POST request to the `set-schedule` URL to create a new cron job. Use
 `request.sh` for a quick example or use the below snippet:
 
 ```
-curl -v http://localhost:8000/set-schedule\
+curl -v http://localhost:8000/crontab/set\
   -H "Content-Type: application/x-www-form-urlencoded"\
   -d "schedule='*/2 * * * * *'&url='example.com'"
 ```

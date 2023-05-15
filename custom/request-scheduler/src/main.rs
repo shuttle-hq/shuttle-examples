@@ -13,11 +13,13 @@ async fn trigger_me() -> impl IntoResponse {
 
 #[shuttle_runtime::main]
 async fn crontab(#[Persist] persist: PersistInstance) -> ShuttleCrontab {
-    // A userland router, so to speak. `CrontabService` has its own router
+    // A userland router, so to speak. Will be the primary router mounted at "/",
+    // while the `CrontabService` has its own router mounted at "/crontab", as
     // defined in `router.rs`.
-    let router = Router::new()
+    // See lib.rs for more documentation.
+    let user_router = Router::new()
         .route("/", get(hello_crontab))
         .route("/trigger-me", get(trigger_me));
 
-    CrontabService::new(persist, router)
+    CrontabService::new(persist, user_router)
 }
