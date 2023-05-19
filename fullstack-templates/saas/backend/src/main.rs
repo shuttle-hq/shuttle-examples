@@ -23,6 +23,7 @@ use router::create_api_router;
 pub struct AppState {
     pub postgres: PgPool,
     pub stripe_key: String,
+    pub stripe_sub_price: String,
     pub mailgun_key: String,
     pub mailgun_url: String,
     pub domain: String,
@@ -51,6 +52,7 @@ async fn axum(
     let state = AppState {
         postgres,
         stripe_key,
+        stripe_sub_price,
         mailgun_key,
         mailgun_url,
         domain,
@@ -79,6 +81,10 @@ fn grab_secrets(secrets: shuttle_secrets::SecretStore) -> (String, String, Strin
         .get("STRIPE_KEY")
         .unwrap_or_else(|| "None".to_string());
 
+    let stripe_sub_price = secrets
+        .get("STRIPE_SUB_PRICE")
+        .unwrap_or_else(|| "None".to_string());
+
     let mailgun_key = secrets
         .get("MAILGUN_KEY")
         .unwrap_or_else(|| "None".to_string());
@@ -91,5 +97,5 @@ fn grab_secrets(secrets: shuttle_secrets::SecretStore) -> (String, String, Strin
         .get("DOMAIN_URL")
         .unwrap_or_else(|| "None".to_string());
 
-    (stripe_key, mailgun_key, mailgun_url, domain)
+    (stripe_key, stripe_sub_price, mailgun_key, mailgun_url, domain)
 }

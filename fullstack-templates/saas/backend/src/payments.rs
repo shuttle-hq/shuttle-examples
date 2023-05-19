@@ -73,7 +73,7 @@ pub async fn create_checkout(
         pm
     };
 
-    let mut params = create_checkout_params(customer.id);
+    let mut params = create_checkout_params(customer.id, state.stripe_sub_price);
 
     params.default_payment_method = Some(&payment_method.id);
 
@@ -84,10 +84,10 @@ pub async fn create_checkout(
     Ok(StatusCode::OK)
 }
 
-fn create_checkout_params(customer_id: CustomerId) -> CreateSubscription<'static> {
+fn create_checkout_params(customer_id: CustomerId, price: String) -> CreateSubscription<'static> {
     let mut params = CreateSubscription::new(customer_id);
     params.items = Some(vec![CreateSubscriptionItems {
-        price: Some("price_1Mxby1I1KxxteAOMLAMeWgQD".to_string()),
+        price: Some(price),
         ..Default::default()
     }]);
     params.expand = &["items", "items.data.price.product", "schedule"];
