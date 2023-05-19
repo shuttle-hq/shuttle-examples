@@ -1,19 +1,23 @@
-use axum::{routing::get, Router};
+use axum::{routing::get, Router, extract::State};
+use std::sync::Arc;
 
-async fn hello_world() -> &'static str {
-    "Hello, world!"
+
+struct AppState {
+    info: shuttle_dynamodb::DynamoDbReadyInfo
+}
+
+async fn hello_dynamodb(State(state): State<Arc<AppState>>) -> String{
+    format!("{:?}", &state.info)
 }
 
 #[shuttle_runtime::main]
 async fn axum(
     #[shuttle_dynamodb::DynamoDB] info: shuttle_dynamodb::DynamoDbReadyInfo,
 ) -> shuttle_axum::ShuttleAxum {
-    // shuttle_dynamodb::DynamoDB::new();
-    // let router = Router::new().route("/", get(move || async { 
-    //     format!("{:?}", info)
-    //  }));
 
-    let router = Router::new().route("/", get(hello_world));
+    let shared_state = Arc::new(AppState { info });
+
+    let router = Router::new().route("/", get(hello_dynamodb)).with_state(shared_state);
 
     Ok(router.into())
 }
