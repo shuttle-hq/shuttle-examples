@@ -6,6 +6,6 @@ edition = "2021"
 [dependencies]
 rocket = "0.5.0-rc.2"
 shared = { path = "../shared", version = "0.1.0" }
-shuttle-rocket = { version = "0.16.0" }
-shuttle-runtime = { version = "0.16.0" }
+shuttle-rocket = { version = "0.17.0" }
+shuttle-runtime = { version = "0.17.0" }
 tokio = { version = "1.26.0" }
