@@ -1,6 +1,9 @@
 use aws_sdk_dynamodb::types::{
     AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType,
 };
+use aws_sdk_dynamodb::error::SdkError;
+use aws_sdk_dynamodb::operation::create_table::{CreateTableOutput, CreateTableError};
+use aws_sdk_dynamodb::operation::delete_table::{DeleteTableOutput, DeleteTableError};
 use axum::{extract::State, routing::get, Router};
 use std::sync::Arc;
 
@@ -9,36 +12,70 @@ struct AppState {
     prefix: String,
 }
 
-async fn hello_dynamodb(State(state): State<Arc<AppState>>) -> String {
-    let a_name: String = "test".into();
-    let table_name: String = "test".into();
-
-    let ad = AttributeDefinition::builder()
-        .attribute_name(&a_name)
+async fn create_table(dynamodb_client: &aws_sdk_dynamodb::Client, table_name: &str, attribute_name: &str) -> Result<CreateTableOutput, SdkError<CreateTableError>> {
+    let attribute_definition = AttributeDefinition::builder()
+        .attribute_name(attribute_name)
         .attribute_type(ScalarAttributeType::S)
         .build();
 
-    let ks = KeySchemaElement::builder()
-        .attribute_name(&a_name)
+    let key_schema = KeySchemaElement::builder()
+        .attribute_name(attribute_name)
         .key_type(KeyType::Hash)
         .build();
 
-    let pt = ProvisionedThroughput::builder()
+    let provisioned_throughput = ProvisionedThroughput::builder()
         .read_capacity_units(10)
         .write_capacity_units(5)
         .build();
 
-    let create_table_response = state
-        .dynamodb_client
+    let create_table_response = dynamodb_client
         .create_table()
-        .table_name(format!("{}-test", state.prefix))
-        .key_schema(ks)
-        .attribute_definitions(ad)
-        .provisioned_throughput(pt)
+        .table_name(table_name)
+        .key_schema(key_schema)
+        .attribute_definitions(attribute_definition)
+        .provisioned_throughput(provisioned_throughput)
         .send()
         .await;
 
-    format!("{:?}", create_table_response)
+    create_table_response
+}
+
+async fn delete_table(dynamodb_client: &aws_sdk_dynamodb::Client, table_name: &str) -> Result<DeleteTableOutput, SdkError<DeleteTableError>> {
+    let delete_table_response = dynamodb_client
+        .delete_table()
+        .table_name(table_name)
+        .send()
+        .await;
+
+    delete_table_response
+}
+
+
+async fn create_table_route(State(state): State<Arc<AppState>>) -> String {
+    let table_name: String = format!("{}test", state.prefix);
+    let attribute_name: String = "test".into();
+
+    match create_table(&state.dynamodb_client, &table_name, &attribute_name).await {
+        Ok(_) => {
+            "created table!\n".to_string()
+        },
+        Err(e) => {
+            format!("failed to create table\n{:?}\n", e)
+        } 
+    }
+}
+
+async fn delete_table_route(State(state): State<Arc<AppState>>) -> String {
+    let table_name: String = format!("{}test", state.prefix);
+
+    match delete_table(&state.dynamodb_client, &table_name).await {
+        Ok(_) => {
+            "deleted table!\n".to_string()
+        },
+        Err(e) => {
+            format!("failed to delete table\n{:?}\n", e)
+        } 
+    }
 }
 
 #[shuttle_runtime::main]
@@ -59,8 +96,10 @@ async fn axum(
     });
 
     let router = Router::new()
-        .route("/", get(hello_dynamodb))
+        .route("/create_table", get(create_table_route))
+        .route("/delete_table", get(delete_table_route))
         .with_state(shared_state);
 
     Ok(router.into())
 }
+
