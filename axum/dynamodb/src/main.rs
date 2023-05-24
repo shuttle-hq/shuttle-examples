@@ -1,10 +1,12 @@
-use aws_sdk_dynamodb::types::{AttributeDefinition, KeySchemaElement};
+use aws_sdk_dynamodb::types::{
+    AttributeDefinition, KeySchemaElement, KeyType, ProvisionedThroughput, ScalarAttributeType,
+};
 use axum::{extract::State, routing::get, Router};
 use std::sync::Arc;
 
 struct AppState {
     dynamodb_client: aws_sdk_dynamodb::Client,
-    prefix: String
+    prefix: String,
 }
 
 async fn hello_dynamodb(State(state): State<Arc<AppState>>) -> String {
@@ -21,12 +23,18 @@ async fn hello_dynamodb(State(state): State<Arc<AppState>>) -> String {
         .key_type(KeyType::Hash)
         .build();
 
+    let pt = ProvisionedThroughput::builder()
+        .read_capacity_units(10)
+        .write_capacity_units(5)
+        .build();
+
     let create_table_response = state
         .dynamodb_client
         .create_table()
         .table_name(format!("{}-test", state.prefix))
         .key_schema(ks)
         .attribute_definitions(ad)
+        .provisioned_throughput(pt)
         .send()
         .await;
 
@@ -45,7 +53,10 @@ async fn axum(
 
     let dynamodb_client = aws_sdk_dynamodb::Client::new(&aws_config);
 
-    let shared_state = Arc::new(AppState { dynamodb_client, prefix: info.prefix });
+    let shared_state = Arc::new(AppState {
+        dynamodb_client,
+        prefix: info.prefix,
+    });
 
     let router = Router::new()
         .route("/", get(hello_dynamodb))
