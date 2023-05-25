@@ -1,59 +1,64 @@
-use axum::{routing::get, Router};
-use rusqlite::Connection;
-use shuttle_runtime::tracing::info;
 use std::sync::Arc;
-use tokio::sync::Mutex;
+
+use axum::{extract::State, response::IntoResponse};
+use shuttle_runtime::tracing::info;
 
 // TODO: sqlite in memory
 // TODO: sqlite in StaticFile provider
 // TODO: sqlite in provier
 
-async fn hello_world(
-    connection: axum::extract::Extension<Arc<Mutex<Connection>>>,
-) -> impl axum::response::IntoResponse {
-    let c = connection.lock().await;
+async fn hello_world(State(state): State<Arc<AppState>>) -> impl IntoResponse {
+    let _pool = &state.pool;
 
-    let mut stmt = c.prepare("SELECT x FROM foo").unwrap();
+    "Hi there".to_string()
+}
 
-    let items = stmt
-        .query_map([], |row| {
-            let x: i32 = row.get(0).unwrap();
-            Ok(x)
-        })
+pub struct AppState {
+    pool: shuttle_sqlite::SqlitePool,
+}
+
+#[derive(Debug, sqlx::FromRow)]
+pub struct User {
+    id: i64,
+    name: String,
+    email: String,
+}
+
+#[shuttle_runtime::main]
+async fn axum(
+    #[shuttle_sqlite::SQLite(db_name = "my_sqlite.db")] pool: shuttle_sqlite::SqlitePool,
+) -> shuttle_axum::ShuttleAxum {
+    let mut conn = pool.acquire().await.unwrap();
+
+    let res = sqlx::query(
+        "CREATE TABLE IF NOT EXISTS users(id int, name varchar(128), email varchar(128));",
+    )
+    .execute(&pool)
+    .await
+    .expect("Failed to create table");
+
+    let id = 42;
+    let name = "ferris";
+    let email = "foo@bar.com";
+
+    let res = sqlx::query("INSERT INTO users(id, name, email) VALUES (?, ?, ?);")
+        .bind(id)
+        .bind(name)
+        .bind(email)
+        .execute(&pool)
+        .await
+        .expect("Failed to insert user");
+
+    let mut res = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
+        .bind(id)
+        .fetch_one(&mut conn)
+        .await
         .unwrap();
 
-    (
-        axum::http::StatusCode::OK,
-        [("content-type", "text/plain")],
-        items
-            .into_iter()
-            .map(|x| format!("value from db: {:?}\n", x.unwrap()))
-            .collect::<String>(),
-    )
-}
-#[shuttle_runtime::main]
-async fn axum() -> shuttle_axum::ShuttleAxum {
-    let conn = Connection::open("./db.sqlite").unwrap();
-    // open_in_memory().unwrap();
+    info!("Retrieved {res:?}");
 
-    let connection = Arc::new(Mutex::new(conn));
-
-    let c = connection.lock().await;
-    let res = c.execute_batch("CREATE TABLE foo(x INTEGER)");
-    match res {
-        Ok(_) => info!("created table"),
-        Err(_) => info!("table already exists"),
-    }
-
-    let res = c.execute("INSERT INTO foo (x) VALUES (1)", ());
-    match res {
-        Ok(rows) => info!("inserted {:?} rows", rows),
-        Err(err) => info!("error inserting: {:?}", err),
-    }
-
-    let router = Router::new()
-        .route("/", get(hello_world))
-        .layer(axum::extract::Extension(connection.clone()));
+    let state = Arc::new(AppState { pool: pool.clone() });
+    let router = axum::Router::new();
 
     Ok(router.into())
 }
