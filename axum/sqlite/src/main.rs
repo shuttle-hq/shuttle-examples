@@ -2,6 +2,7 @@ use std::sync::Arc;
 
 use axum::{extract::State, response::IntoResponse};
 use shuttle_runtime::tracing::info;
+use shuttle_sqlite::{SQLite, SQLiteConnOpts, SqlitePool};
 
 // TODO: sqlite in memory
 // TODO: sqlite in StaticFile provider
@@ -26,7 +27,8 @@ pub struct User {
 
 #[shuttle_runtime::main]
 async fn axum(
-    #[shuttle_sqlite::SQLite(db_name = "my_sqlite.db")] pool: shuttle_sqlite::SqlitePool,
+    #[SQLite(config = SQLiteConnOpts::new(), filename = "custom.sqlite".to_string() )]
+    pool: SqlitePool,
 ) -> shuttle_axum::ShuttleAxum {
     let mut conn = pool.acquire().await.unwrap();
 
@@ -49,7 +51,7 @@ async fn axum(
         .await
         .expect("Failed to insert user");
 
-    let mut res = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
+    let res = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
         .bind(id)
         .fetch_one(&mut conn)
         .await
