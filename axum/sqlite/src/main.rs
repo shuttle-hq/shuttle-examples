@@ -27,8 +27,7 @@ pub struct User {
 
 #[shuttle_runtime::main]
 async fn axum(
-    #[SQLite(config = SQLiteConnOpts::new(), filename = "custom.sqlite".to_string() )]
-    pool: SqlitePool,
+    #[SQLite(opts = SQLiteConnOpts::new().filename("custom.sqlite"))] pool: SqlitePool,
 ) -> shuttle_axum::ShuttleAxum {
     let mut conn = pool.acquire().await.unwrap();
 
