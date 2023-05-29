@@ -161,7 +161,13 @@ async fn axum(
     std::env::set_var("AWS_SECRET_ACCESS_KEY", info.aws_secret_access_key);
     std::env::set_var("AWS_REGION", info.aws_default_region);
 
-    let aws_config = aws_config::from_env().load().await;
+    let mut aws_config = aws_config::from_env();
+
+    if let Some(endpoint) = info.endpoint { // needed for local run (cargo shuttle run)
+        aws_config = aws_config.endpoint_url(endpoint);
+    }
+
+    let aws_config = aws_config.load().await;
 
     let dynamodb_client = aws_sdk_dynamodb::Client::new(&aws_config);
 
