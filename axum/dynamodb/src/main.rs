@@ -86,7 +86,7 @@ async fn select_from_table(
 }
 
 async fn create_table_route(State(state): State<Arc<AppState>>) -> String {
-    let table_name: String = format!("{}test", state.prefix);
+    let table_name: String = format!("{}-test", state.prefix);
     let attribute_name: String = "test".into();
 
     match create_table(&state.dynamodb_client, &table_name, &attribute_name).await {
@@ -98,7 +98,7 @@ async fn create_table_route(State(state): State<Arc<AppState>>) -> String {
 }
 
 async fn delete_table_route(State(state): State<Arc<AppState>>) -> String {
-    let table_name: String = format!("{}test", state.prefix);
+    let table_name: String = format!("{}-test", state.prefix);
 
     match delete_table(&state.dynamodb_client, &table_name).await {
         Ok(_) => "deleted table!\n".to_string(),
@@ -109,7 +109,7 @@ async fn delete_table_route(State(state): State<Arc<AppState>>) -> String {
 }
 
 async fn insert_into_table_route(State(state): State<Arc<AppState>>) -> String {
-    let table_name: String = format!("{}test", state.prefix);
+    let table_name: String = format!("{}-test", state.prefix);
     let key = "test".to_string();
     let value = format!(
         "{}",
@@ -128,7 +128,7 @@ async fn insert_into_table_route(State(state): State<Arc<AppState>>) -> String {
 }
 
 async fn select_from_table_route(State(state): State<Arc<AppState>>) -> String {
-    let table_name: String = format!("{}test", state.prefix);
+    let table_name: String = format!("{}-test", state.prefix);
     let mut output = String::new();
 
     match select_from_table(&state.dynamodb_client, &table_name).await {
