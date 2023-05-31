@@ -47,7 +47,7 @@ async fn axum(
         .await
         .expect("Had some errors running migrations :(");
 
-    let (stripe_key, mailgun_key, mailgun_url, domain) = grab_secrets(secrets);
+    let (stripe_key, stripe_sub_price, mailgun_key, mailgun_url, domain) = grab_secrets(secrets);
 
     let state = AppState {
         postgres,
@@ -76,7 +76,7 @@ async fn axum(
     Ok(router.into())
 }
 
-fn grab_secrets(secrets: shuttle_secrets::SecretStore) -> (String, String, String, String) {
+fn grab_secrets(secrets: shuttle_secrets::SecretStore) -> (String, String, String, String, String) {
     let stripe_key = secrets
         .get("STRIPE_KEY")
         .unwrap_or_else(|| "None".to_string());
