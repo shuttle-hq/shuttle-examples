@@ -3,15 +3,14 @@ name = "dynamodb"
 version = "0.16.0"
 edition = "2021"
 publish = false
-
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-shuttle-runtime = "0.16.0"
+aws-config = "0.55.2"
+aws-sdk-dynamodb = "0.27.0"
 axum = "0.6.18"
 shuttle-axum = "0.16.0"
-tokio = "1.28.1"
 shuttle-dynamodb = "0.16.0"
+shuttle-runtime = "0.16.0"
+tokio = "1.28.1"
 tracing = "0.1.37"
-aws-sdk-dynamodb = "0.27.0"
-aws-config = "0.55.2"

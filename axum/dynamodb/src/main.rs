@@ -35,29 +35,25 @@ async fn create_table(
         .write_capacity_units(5)
         .build();
 
-    let create_table_response = dynamodb_client
+    dynamodb_client
         .create_table()
         .table_name(table_name)
         .key_schema(key_schema)
         .attribute_definitions(attribute_definition)
         .provisioned_throughput(provisioned_throughput)
         .send()
-        .await;
-
-    create_table_response
+        .await
 }
 
 async fn delete_table(
     dynamodb_client: &aws_sdk_dynamodb::Client,
     table_name: &str,
 ) -> Result<DeleteTableOutput, SdkError<DeleteTableError>> {
-    let delete_table_response = dynamodb_client
+    dynamodb_client
         .delete_table()
         .table_name(table_name)
         .send()
-        .await;
-
-    delete_table_response
+        .await
 }
 
 async fn insert_into_table(
@@ -66,23 +62,19 @@ async fn insert_into_table(
     key: &str,
     value: String,
 ) -> Result<PutItemOutput, SdkError<PutItemError>> {
-    let insert_into_table_response = dynamodb_client
+    dynamodb_client
         .put_item()
         .table_name(table_name)
         .item(key, aws_sdk_dynamodb::types::AttributeValue::S(value))
         .send()
-        .await;
-
-    insert_into_table_response
+        .await
 }
 
 async fn select_from_table(
     dynamodb_client: &aws_sdk_dynamodb::Client,
     table_name: &str,
 ) -> Result<ScanOutput, SdkError<ScanError>> {
-    let select_from_table_response = dynamodb_client.scan().table_name(table_name).send().await;
-
-    select_from_table_response
+    dynamodb_client.scan().table_name(table_name).send().await
 }
 
 async fn create_table_route(State(state): State<Arc<AppState>>) -> String {
@@ -136,7 +128,7 @@ async fn select_from_table_route(State(state): State<Arc<AppState>>) -> String {
             output.push_str("Selected from table\n");
 
             if let Some(items) = result.items {
-                if items.len() > 0 {
+                if !items.is_empty() {
                     for item in items.iter() {
                         output.push_str(&format!("{:?}\n", item));
                     }
@@ -163,7 +155,8 @@ async fn axum(
 
     let mut aws_config = aws_config::from_env();
 
-    if let Some(endpoint) = info.endpoint { // needed for local run (cargo shuttle run)
+    if let Some(endpoint) = info.endpoint {
+        // needed for local run (cargo shuttle run)
         aws_config = aws_config.endpoint_url(endpoint);
     }
 
