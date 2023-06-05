@@ -1,0 +1,10 @@
+[package]
+name = "with-state"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.6.10"
+shuttle-axum = { version = "0.18.0" }
+shuttle-runtime = { version = "0.18.0" }
+tokio = { version = "1.26.0" }
