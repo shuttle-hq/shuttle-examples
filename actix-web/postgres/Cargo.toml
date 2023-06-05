@@ -5,9 +5,9 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4.3.1"
-shuttle-actix-web = { version = "0.17.0" }
-shuttle-runtime = { version = "0.17.0" }
+shuttle-actix-web = { version = "0.18.0" }
+shuttle-runtime = { version = "0.18.0" }
 serde = "1.0.148"
-shuttle-shared-db = { version = "0.17.0", features = ["postgres"] }
+shuttle-shared-db = { version = "0.18.0", features = ["postgres"] }
 sqlx = { version = "0.6.2", features = ["runtime-tokio-native-tls", "postgres"] }
 tokio = { version = "1.26.0" }
