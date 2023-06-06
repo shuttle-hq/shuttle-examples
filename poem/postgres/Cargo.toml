@@ -6,8 +6,8 @@ edition = "2021"
 [dependencies]
 poem = "1.3.55"
 serde = "1.0.148"
-shuttle-poem = { version = "0.18.0" }
-shuttle-runtime = { version = "0.18.0" }
+shuttle-poem = "0.18.0"
+shuttle-runtime = "0.18.0"
 shuttle-shared-db = { version = "0.18.0", features = ["postgres"] }
 sqlx = { version = "0.6.2", features = ["runtime-tokio-native-tls", "postgres"] }
-tokio = { version = "1.26.0" }
+tokio = "1.26.0"
