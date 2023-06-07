@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 salvo = "0.41.0"
-shuttle-salvo = { version = "0.18.0" }
-shuttle-runtime = { version = "0.18.0" }
-tokio = { version = "1.26.0" }
+shuttle-salvo = "0.18.0"
+shuttle-runtime = "0.18.0"
+tokio = "1.26.0"
 
