@@ -5,9 +5,8 @@ use axum::{
         ws::{Message, WebSocket},
         WebSocketUpgrade,
     },
-    http::StatusCode,
     response::IntoResponse,
-    routing::{get, get_service},
+    routing::get,
     Extension, Router,
 };
 use chrono::{DateTime, Utc};
@@ -74,18 +73,12 @@ async fn axum(#[shuttle_static_folder::StaticFolder] static_folder: PathBuf) -> 
         }
     });
 
-    let serve_dir = get_service(ServeDir::new(static_folder)).handle_error(handle_error);
-
     let router = Router::new()
         .route("/websocket", get(websocket_handler))
-        .fallback_service(serve_dir)
+        .nest_service("/", ServeDir::new(static_folder))
         .layer(Extension(state));
 
     Ok(router.into())
-}
-
-async fn handle_error(_err: std::io::Error) -> impl IntoResponse {
-    (StatusCode::INTERNAL_SERVER_ERROR, "Something went wrong...")
 }
 
 async fn websocket_handler(

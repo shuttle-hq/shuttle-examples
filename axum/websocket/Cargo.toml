@@ -4,15 +4,15 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = { version = "0.6.10", features = ["ws"] }
-chrono = { version = "0.4.23", features = ["serde"] }
-futures = "0.3.25"
-hyper = { version = "0.14.23", features = ["client", "http2"] }
+axum = { version = "0.6.18", features = ["ws"] }
+chrono = { version = "0.4.26", features = ["serde"] }
+futures = "0.3.28"
+hyper = { version = "0.14.26", features = ["client", "http2"] }
 hyper-tls = "0.5.0"
-serde = { version = "1.0.148", features = ["derive"] }
-serde_json = "1.0.89"
+serde = { version = "1.0.163", features = ["derive"] }
+serde_json = "1.0.96"
 shuttle-axum = "0.18.0"
 shuttle-runtime = "0.18.0"
 shuttle-static-folder = "0.18.0"
-tokio = "1.26.0"
-tower-http = { version = "0.3.0", features = ["fs"] }
+tokio = "1.28.2"
+tower-http = { version = "0.4.0", features = ["fs"] }
