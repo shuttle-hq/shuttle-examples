@@ -10,3 +10,4 @@ shuttle-runtime = { version = "0.17.0", path = "../../../runtime" }
 shuttle-sqlite = { version = "0.17.0", path = "../../../resources/sqlite" }
 sqlx = { version = "0.6.3", features = ["runtime-tokio-rustls", "sqlite"] }
 tokio = { version = "1.26.0" }
+tracing = "0.1.37"

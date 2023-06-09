@@ -53,6 +53,8 @@ async fn axum(
     .await
     .expect("Failed to create table");
 
+    info!("Table created. Navigate to localhost:8000 to query the database.");
+
     let state = Arc::new(AppState { pool: pool.clone() });
     let router = axum::Router::new()
         .route("/", get(db_ops))
