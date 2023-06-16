@@ -1,0 +1,13 @@
+[package]
+name = "custom-tracing-layer"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tracing = "0.1.37"
+tracing-subscriber = "0.3.17"
+tokio = "1.28.2"
+
+# shuttle-runtime = "0.18.0"
+shuttle-runtime = { path = "../../../../shuttle.git/custom-tracing-layer/runtime" }
+lazy_static = "1.4.0"
