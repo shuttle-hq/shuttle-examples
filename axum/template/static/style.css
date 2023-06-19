@@ -1,0 +1,24 @@
+* {
+    font-family: sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.message {
+    font-size: larger;
+}
+
+#count {
+    font-size: 2rem;
+}
+
+#decrease, #increase {
+    background-color: transparent;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+}
