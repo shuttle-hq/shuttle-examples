@@ -45,10 +45,7 @@ impl MakeWriter<'_> for Logger {
 }
 
 impl Logger {
-    pub fn init<S>() -> impl tracing_subscriber::Layer<S>
-    where
-        S: tracing::Subscriber + for<'a> tracing_subscriber::registry::LookupSpan<'a>,
-    {
+    pub fn init() -> impl tracing_subscriber::Layer<shuttle_runtime::Registry> {
         let logger = Self {
             sender: LOG_CHANNEL.clone(),
         };
