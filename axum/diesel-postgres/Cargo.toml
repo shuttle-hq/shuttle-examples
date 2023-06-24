@@ -1,0 +1,16 @@
+[package]
+name = "blah"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.6"
+shuttle-axum = { path = "/home/robw/repos/shuttle/services/shuttle-axum" }
+shuttle-runtime = { path = "/home/robw/repos/shuttle/runtime" }
+shuttle-shared-db = { path = "/home/robw/repos/shuttle/resources/shared-db", features = ["postgres"] }
+serde = "1.0"
+tokio = "1.28"
+diesel = "2.1.0"
+diesel_migrations = "2.1.0"
+deadpool-diesel = { version = "0.4.1", features = ["postgres"] }
+tracing = "0.1.37"
