@@ -5,9 +5,9 @@ edition = "2021"
 
 [dependencies]
 axum = "0.6"
-shuttle-axum = { path = "/home/robw/repos/shuttle/services/shuttle-axum" }
-shuttle-runtime = { path = "/home/robw/repos/shuttle/runtime" }
-shuttle-shared-db = { path = "/home/robw/repos/shuttle/resources/shared-db", features = ["postgres"] }
+shuttle-axum = { git = "https://github.com/RobWalt/shuttle", branch = "feat/shared-db-diesel" }
+shuttle-runtime = { git = "https://github.com/RobWalt/shuttle", branch = "feat/shared-db-diesel" }
+shuttle-shared-db = { git = "https://github.com/RobWalt/shuttle", branch = "feat/shared-db-diesel", features = ["postgres"] }
 serde = "1.0"
 tokio = "1.28"
 diesel = "2.1.0"
