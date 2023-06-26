@@ -11,7 +11,6 @@ fn row_string_field(r: &Row, index: usize) -> String {
     }
 }
 
-#[axum::debug_handler]
 async fn get_posts(State(client): State<Arc<Client>>) -> Json<Vec<User>> {
     let rows = client.execute("select * from example_users").await.unwrap();
     let users: Vec<_> = rows
@@ -31,7 +30,6 @@ struct User {
     email: String,
 }
 
-#[axum::debug_handler]
 async fn create_users(
     State(client): State<Arc<Client>>,
     extract::Json(user): extract::Json<User>,
