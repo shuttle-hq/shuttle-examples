@@ -6,8 +6,8 @@ edition = "2021"
 [dependencies]
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
 serde = "1.0.148"
-shuttle-shared-db = { version = "0.20.0", features = ["postgres"] }
-shuttle-rocket = "0.20.0"
-shuttle-runtime = "0.20.0"
+shuttle-shared-db = { version = "0.19.0", features = ["postgres"] }
+shuttle-rocket = "0.19.0"
+shuttle-runtime = "0.19.0"
 sqlx = { version = "0.6.2", features = ["runtime-tokio-native-tls", "postgres"] }
 tokio = "1.26.0"
