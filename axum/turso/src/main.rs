@@ -47,10 +47,7 @@ async fn create_users(
 
 #[shuttle_runtime::main]
 async fn axum(
-    #[shuttle_turso::Turso(
-        addr = "libsql://fill-with-yours.turso.io",
-        token = "{secrets.TURSO_DB_TOKEN}"
-    )]
+    #[shuttle_turso::Turso(addr = "libsql://your-db.turso.io", token = "{secrets.TURSO_DB_TOKEN}")]
     client: Client,
 ) -> shuttle_axum::ShuttleAxum {
     let client = Arc::new(client);
