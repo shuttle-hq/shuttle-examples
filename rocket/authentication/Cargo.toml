@@ -9,6 +9,6 @@ jsonwebtoken = { version = "8.1.1", default-features = false }
 lazy_static = "1.4.0"
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
 serde = { version = "1.0.148", features = ["derive"] }
-shuttle-rocket = "0.19.0"
-shuttle-runtime = "0.19.0"
+shuttle-rocket = "0.20.0"
+shuttle-runtime = "0.20.0"
 tokio = "1.26.0"
