@@ -89,6 +89,9 @@ Tide | [postgres](./tide/postgres/) | `cargo shuttle init --from shuttle-hq/shut
 Tower | [hello-world](./tower/hello-world/) | `cargo shuttle init --template tower` | Hello World
 |||
 Warp | [hello-world](./warp/hello-world/) | `cargo shuttle init --template warp` | Hello World
+|||
+*Custom Service* | [none](./custom/none/) | `cargo shuttle init --template none` | No framework - Custom empty service - A barebones minimal Shuttle app that does nothing
+*Custom Service* | [request-scheduler](./custom/request-scheduler/) | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder request-scheduler` | A custom *Request Scheduler* service
 
 ## Community Examples
 
