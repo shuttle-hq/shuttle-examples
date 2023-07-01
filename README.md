@@ -63,7 +63,7 @@ Poem | [mongodb](./poem/mongodb/) | TODO app with MongoDB | `cargo shuttle init 
 Poem | [postgres](./poem/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder poem/postgres`
 Poise | [hello-world](./poise/hello-world/) | Hello World Discord bot | `cargo shuttle init --template poise`
 Rocket | [authentication](./rocket/authentication/) | Use JWT to authenticate API endpoints | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder rocket/authentication`
-Rocket | [dyn_template_hbs](./rocket/dyn_template_hbs/) | Handlebars dynamic templates | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder rocket/dyn_template_hbs`
+Rocket | [dyn-templates](./rocket/dyn-templates/) | Handlebars dynamic templates | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder rocket/dyn-templates`
 Rocket | [hello-world](./rocket/hello-world/) | Hello World | `cargo shuttle init --template rocket`
 Rocket | [persist](./rocket/persist/) | Store weather data with Shuttle Persist | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder rocket/persist`
 Rocket | [postgres](./rocket/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder rocket/postgres`
