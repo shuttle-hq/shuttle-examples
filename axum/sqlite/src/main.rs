@@ -2,7 +2,7 @@ use std::sync::Arc;
 
 use axum::{extract::State, response::IntoResponse, routing::get};
 use shuttle_runtime::tracing::info;
-use shuttle_sqlite::{SQLite, SQLiteConnOpts, SqlitePool};
+use shuttle_sqlite::{ShuttleSqlite, ShuttleSqliteConnOpts, SqlitePool};
 
 async fn db_ops(State(state): State<Arc<AppState>>) -> impl IntoResponse {
     let pool = &state.pool;
@@ -44,7 +44,8 @@ pub struct User {
 
 #[shuttle_runtime::main]
 async fn axum(
-    #[SQLite(opts = SQLiteConnOpts::new().filename("custom.sqlite"))] pool: SqlitePool,
+    #[ShuttleSqlite(opts = ShuttleSqliteConnOpts::new().filename("custom.sqlite"))]
+    pool: SqlitePool,
 ) -> shuttle_axum::ShuttleAxum {
     let _ = sqlx::query(
         "CREATE TABLE IF NOT EXISTS users(id int, name varchar(128), email varchar(128));",
