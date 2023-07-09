@@ -5,9 +5,9 @@ edition = "2021"
 
 [dependencies]
 axum = "0.6.10"
-shuttle-axum = { version = "0.18.0", path = "../../../services/shuttle-axum" }
-shuttle-runtime = { version = "0.18.0", path = "../../../runtime" }
-shuttle-sqlite = { version = "0.18.0", path = "../../../resources/sqlite" }
+shuttle-axum = { version = "0.20.0", path = "../../../services/shuttle-axum" }
+shuttle-runtime = { version = "0.20.0", path = "../../../runtime" }
+shuttle-sqlite = { version = "0.20.0", path = "../../../resources/sqlite" }
 sqlx = { version = "0.6.3", features = ["runtime-tokio-rustls", "sqlite"] }
 tokio = { version = "1.26.0" }
 tracing = "0.1.37"
