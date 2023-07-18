@@ -1,0 +1,13 @@
+[package]
+name = "pdo"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+async-trait = "0.1.56"
+axum = "0.6.18"
+serde = { version = "1.0.148", default-features = false, features = ["derive"] }
+shuttle-service = "0.21.0"
+shuttle-axum = "0.21.0"
+shuttle-runtime = "0.21.0"
+tokio = "1.28.2"
