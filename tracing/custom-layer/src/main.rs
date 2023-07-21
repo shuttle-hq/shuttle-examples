@@ -9,6 +9,45 @@ lazy_static! {
     pub static ref LOG_CHANNEL: broadcast::Sender<String> = broadcast::channel(64).0;
 }
 
+#[shuttle_runtime::main(tracing_layer = Logger::init)]
+async fn init() -> Result<MyService, shuttle_runtime::Error> {
+    Ok(MyService::new())
+}
+
+#[derive(Debug)]
+struct MyService {
+    pub logs: broadcast::Receiver<String>,
+}
+
+impl MyService {
+    pub fn new() -> Self {
+        Self {
+            logs: LOG_CHANNEL.subscribe(),
+        }
+    }
+}
+
+#[shuttle_runtime::async_trait]
+impl shuttle_runtime::Service for MyService {
+    async fn bind(mut self, _addr: SocketAddr) -> Result<(), shuttle_runtime::Error> {
+        // send some messages...
+        for i in 0..10 {
+            tokio::spawn(async move {
+                tokio::time::sleep(Duration::from_secs(i)).await;
+                info!("Hello from thread #{i}!");
+            });
+        }
+
+        while let Ok(message) = self.logs.recv().await {
+            // do something with your logs!
+            eprintln!("Got a new log!");
+            tokio::fs::write(Logger::LOG_FILE, message).await?;
+        }
+
+        Ok(())
+    }
+}
+
 /// Logger struct passed to our custom tracing layer
 #[derive(Debug)]
 struct Logger {
@@ -45,6 +84,8 @@ impl MakeWriter<'_> for Logger {
 }
 
 impl Logger {
+    const LOG_FILE: &str = "/var/log/my-service.log";
+
     pub fn init() -> impl tracing_subscriber::Layer<shuttle_runtime::Registry> {
         let logger = Self {
             sender: LOG_CHANNEL.clone(),
@@ -54,43 +95,4 @@ impl Logger {
             .without_time()
             .with_writer(logger)
     }
-}
-
-#[derive(Debug)]
-struct MyService {
-    pub logs: broadcast::Receiver<String>,
-}
-
-impl MyService {
-    pub fn new() -> Self {
-        Self {
-            logs: LOG_CHANNEL.subscribe(),
-        }
-    }
-}
-
-#[shuttle_runtime::async_trait]
-impl shuttle_runtime::Service for MyService {
-    async fn bind(mut self, _addr: SocketAddr) -> Result<(), shuttle_runtime::Error> {
-        // send some messages...
-        for i in 0..10 {
-            tokio::spawn(async move {
-                tokio::time::sleep(Duration::from_secs(i)).await;
-                info!("Hello from thread #{i}!");
-            });
-        }
-
-        while let Ok(message) = self.logs.recv().await {
-            // do something with your logs!
-            eprintln!("Got a new log!");
-            eprintln!("\t{message}");
-        }
-
-        Ok(())
-    }
-}
-
-#[shuttle_runtime::main(tracing_layer = Logger::init)]
-async fn init() -> Result<MyService, shuttle_runtime::Error> {
-    Ok(MyService::new())
 }
