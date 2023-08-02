@@ -9,8 +9,8 @@ tracing-subscriber = { version = "0.3.17", features = ["json"] }
 tokio = "1.28.2"
 
 # shuttle-runtime = "0.18.0"
-shuttle-runtime = { path = "../../../../shuttle.git/custom-tracing-layer/runtime" }
-shuttle-axum = { path = "../../../../shuttle.git/custom-tracing-layer/services/shuttle-axum" }
+shuttle-runtime = { path = "../../../runtime" }
+shuttle-axum = { path = "../../../services/shuttle-axum" }
 axum = "0.6.19"
 axum-error = "0.2.0"
 serde = { version = "1.0.180", features = ["derive"] }
