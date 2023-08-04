@@ -78,8 +78,10 @@ Tide | [hello-world](./tide/hello-world/) | Hello World | `cargo shuttle init --
 Tide | [postgres](./tide/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder tide/postgres`
 Tower | [hello-world](./tower/hello-world/) | Hello World | `cargo shuttle init --template tower`
 Warp | [hello-world](./warp/hello-world/) | Hello World | `cargo shuttle init --template warp`
-*Custom Service* | [none](./custom/none/) | No framework - Custom empty service - A barebones minimal Shuttle app that does nothing | `cargo shuttle init --template none`
-*Custom Service* | [request-scheduler](./custom/request-scheduler/) | A custom *Request Scheduler* service | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder request-scheduler`
+*Custom Service* | [none](./custom-service/none/) | Empty service - A barebones implementation of Shuttle Service trait that does nothing | `cargo shuttle init --template none`
+*Custom Service* | [request-scheduler](./custom-service/request-scheduler/) | A custom *Request Scheduler* service | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder custom-service/request-scheduler`
+*Custom Resource* | [pdo](./custom-resource/pdo/) | Custom Shuttle resource that holds a Plain Data Object (PDO), shown in the context of an Axum app | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder custom-resource/pdo`
+*Other* | [standalone-binary](./other/standalone-binary/) | How to split a project to allow it to run both with Shuttle and standalone | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder other/standalone-binary`
 
 ## Community Examples
 
@@ -98,6 +100,7 @@ You can submit a Pull Request to add your example to the list.
 
 FRAMEWORK | [NAME](LINK_TO_REPO) | DESCRIPTION | `cargo shuttle init --from USER/REPO --subfolder PATH`
 
+- Try to keep the description below 120 characters
 - If the example is in the root of the repo, you can remove the --subfolder argument.
 - Add `gl:` or `bb:` prefix for examples hosted on GitLab or BitBucket (see examples at the top).
 
