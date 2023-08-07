@@ -6,10 +6,10 @@ edition = "2021"
 [dependencies]
 nanoid = "0.4.0"
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
-shuttle-rocket = "0.22.0"
-shuttle-runtime = "0.22.0"
+shuttle-rocket = "0.23.0"
+shuttle-runtime = "0.23.0"
 serde = "1.0.148"
-shuttle-shared-db = { version = "0.22.0", features = ["postgres"] }
+shuttle-shared-db = { version = "0.23.0", features = ["postgres"] }
 sqlx = { version = "0.7.1", features = ["runtime-tokio-native-tls", "postgres"] }
 tokio = "1.26.0"
 url = "2.3.1"
