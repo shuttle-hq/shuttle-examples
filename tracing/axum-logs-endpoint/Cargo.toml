@@ -1,0 +1,17 @@
+[package]
+name = "axum-logs-endpoint"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tracing = "0.1.37"
+tracing-subscriber = { version = "0.3.17", features = ["json"] }
+tokio = "1.28.2"
+
+axum = "0.6.19"
+axum-error = "0.2.0"
+serde = { version = "1.0.180", features = ["derive"] }
+serde_json = "1.0.104"
+shuttle-runtime = "0.23.0"
+shuttle-axum = "0.23.0"
+lazy_static = "1.4.0"
