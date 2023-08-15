@@ -5,7 +5,6 @@ use axum::{
     routing::{get, post},
     Json, Router,
 };
-
 use axum_error::Result;
 use serde_json::Value as JsonValue;
 use shuttle_axum::ShuttleAxum;
@@ -29,11 +28,13 @@ async fn axum_logs() -> ShuttleAxum {
     Ok(router.into())
 }
 
+// Creates a tracing log with `message`
 async fn send_message(Path(message): Path<String>) -> String {
     info!(?message, now = ?SystemTime::now());
     message
 }
 
+// Waits for `amount` log lines to arrive in the channel and returns them
 async fn get_logs(
     Path(amount): Path<usize>,
     State(state): State<Arc<AppState>>,
