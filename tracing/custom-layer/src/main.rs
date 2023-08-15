@@ -40,7 +40,7 @@ impl shuttle_runtime::Service for MyService {
 
         while let Ok(message) = self.logs.recv().await {
             // do something with your logs!
-            eprintln!("Got a new log!");
+            println!("Got a new log!");
             tokio::fs::write(Logger::LOG_FILE, message).await?;
         }
 
