@@ -53,6 +53,7 @@ Actix Web | [hello-world](./actix-web/hello-world/) | Hello World | `cargo shutt
 Actix Web | [postgres](./actix-web/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder actix-web/postgres`
 Actix Web | [websocket-actorless](./actix-web/websocket-actorless/) | Websocket app that checks the status of Shuttle's API | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder actix-web/websocket-actorless`
 Axum | [hello-world](./axum/hello-world/) | Hello World | `cargo shuttle init --template axum`
+Axum | [service-info](./axum/service-info/) | Simple app that prints the service information such as Shuttle service name | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/service-info`
 Axum | [static-files](./axum/static-files/) | Hello World page that serves static HTML and JS files | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/static-files`
 Axum | [static-next-server](./axum/static-next-server/) | SPA server for serving a apps from frameworks such as Next.js | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/static-next-server`
 Axum | [websocket](./axum/websocket/) | Websocket app that checks the status of Shuttle's API | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/websocket`
