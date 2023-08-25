@@ -10,10 +10,6 @@ DIRS=$(find . -name Cargo.toml -exec dirname {} \;)
 for dir in $DIRS; do
     echo "Checking $dir"
     
-    pushd $dir > /dev/null # Change to the directory
-    
-    cargo fmt --all -- --check
-    cargo clippy --no-deps -- -D warnings
-    
-    popd > /dev/null # Go back to the previous directory
+    cargo fmt --all --manifest-path "$dir/Cargo.toml" -- --check
+    cargo clippy --no-deps --manifest-path "$dir/Cargo.toml" -- -D warnings
 done
