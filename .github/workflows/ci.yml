@@ -21,6 +21,6 @@ jobs:
       uses: arduino/setup-protoc@v1
       
     - name: Check formatting and Clippy
-    - shell: bash
+      shell: bash
       run: ./ci.sh
 
