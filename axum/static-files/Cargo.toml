@@ -5,9 +5,9 @@ edition = "2021"
 publish = false
 
 [dependencies]
-axum = "0.6.10"
-axum-extra = { version = "0.4.2", features = ["spa"] }
-shuttle-axum = { version = "0.16.0" }
-shuttle-runtime = { version = "0.16.0" }
-shuttle-static-folder = "0.16.0"
-tokio = { version = "1.26.0" }
+axum = "0.6.18"
+shuttle-axum = "0.24.0"
+shuttle-runtime = "0.24.0"
+shuttle-static-folder = "0.24.0"
+tokio = "1.28.2"
+tower-http = { version = "0.4.0", features = ["fs"] }

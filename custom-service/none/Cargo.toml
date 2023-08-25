@@ -1,0 +1,9 @@
+[package]
+name = "none"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+shuttle-runtime = "0.24.0"
+tokio = "1"
