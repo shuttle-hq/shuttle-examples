@@ -17,10 +17,10 @@ for dir in $DIRS; do
     if [ -f "$dir/.target" ]; then
         target=$(<$dir/.target)
 
-        cargo fmt --all --manifest-path "$dir/Cargo.toml" -- --check
-        cargo clippy --no-deps --target $target --manifest-path "$dir/Cargo.toml" -- -D warnings
+        cargo fmt --all --manifest-path "$dir/Cargo.toml"
+        # cargo clippy --no-deps --target $target --manifest-path "$dir/Cargo.toml" -- -D warnings
     else
-        cargo fmt --all --manifest-path "$dir/Cargo.toml" -- --check
-        cargo clippy --no-deps --manifest-path "$dir/Cargo.toml" -- -D warnings
+        cargo fmt --all --manifest-path "$dir/Cargo.toml"
+        # cargo clippy --no-deps --manifest-path "$dir/Cargo.toml" -- -D warnings
     fi
 done

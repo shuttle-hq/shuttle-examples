@@ -90,7 +90,7 @@ pub async fn logout(
     jar: PrivateCookieJar,
 ) -> Result<PrivateCookieJar, StatusCode> {
     let Some(cookie) = jar.get("sessionid").map(|cookie| cookie.value().to_owned()) else {
-        return Ok(jar)
+        return Ok(jar);
     };
 
     let query = sqlx::query("DELETE FROM sessions WHERE session_id = $1")
@@ -110,9 +110,11 @@ pub async fn validate_session<B>(
     next: Next<B>,
 ) -> (PrivateCookieJar, Response) {
     let Some(cookie) = jar.get("foo").map(|cookie| cookie.value().to_owned()) else {
-
         println!("Couldn't find a cookie in the jar");
-        return (jar,(StatusCode::FORBIDDEN, "Forbidden!".to_string()).into_response())
+        return (
+            jar,
+            (StatusCode::FORBIDDEN, "Forbidden!".to_string()).into_response(),
+        );
     };
 
     let find_session =

@@ -97,5 +97,11 @@ fn grab_secrets(secrets: shuttle_secrets::SecretStore) -> (String, String, Strin
         .get("DOMAIN_URL")
         .unwrap_or_else(|| "None".to_string());
 
-    (stripe_key, stripe_sub_price, mailgun_key, mailgun_url, domain)
+    (
+        stripe_key,
+        stripe_sub_price,
+        mailgun_key,
+        mailgun_url,
+        domain,
+    )
 }
