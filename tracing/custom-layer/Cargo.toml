@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 lazy_static = "1.4.0"
-shuttle-runtime = "0.24.0"
+shuttle-runtime = "0.25.0"
 tracing = "0.1.37"
 tracing-subscriber = "0.3.17"
 tokio = "1.28.2"
