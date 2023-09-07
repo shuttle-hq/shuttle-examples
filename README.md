@@ -52,6 +52,7 @@ This is a list of all examples maintained in this repostiory.
 Actix Web | [hello-world](./actix-web/hello-world/) | Hello World | `cargo shuttle init --template actix-web`
 Actix Web | [postgres](./actix-web/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder actix-web/postgres`
 Actix Web | [websocket-actorless](./actix-web/websocket-actorless/) | Websocket app that checks the status of Shuttle's API | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder actix-web/websocket-actorless`
+Actix Web | [custom-tracing-subscriber](./actix-web/custom-tracing-subscriber/) | Hello world with a custom tracing setup | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder actix-web/custom-tracing-subscriber`
 Axum | [hello-world](./axum/hello-world/) | Hello World | `cargo shuttle init --template axum`
 Axum | [metadata](./axum/metadata/) | Simple app that prints the service information such as Shuttle service name | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/metadata`
 Axum | [static-files](./axum/static-files/) | Hello World page that serves static HTML and JS files | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/static-files`
