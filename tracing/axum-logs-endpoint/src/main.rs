@@ -11,12 +11,11 @@ use shuttle_axum::ShuttleAxum;
 use tracing::info;
 
 mod logger;
-use logger::Logger;
 
 mod state;
 use state::AppState;
 
-#[shuttle_runtime::main(tracing_layer = Logger::make_layer)]
+#[shuttle_runtime::main(tracing_layer = logger::Logger::make_layer)]
 async fn axum_logs() -> ShuttleAxum {
     let state = AppState::new();
     let router = Router::new()

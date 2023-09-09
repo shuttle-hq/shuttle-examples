@@ -86,7 +86,8 @@ impl MakeWriter<'_> for Logger {
 impl Logger {
     const LOG_FILE: &str = "/var/log/my-service.log";
 
-    pub fn init() -> impl tracing_subscriber::Layer<shuttle_runtime::Registry> {
+    #[allow(dead_code)]
+    pub fn init() -> impl tracing_subscriber::Layer<tracing_subscriber::Registry> {
         let logger = Self {
             sender: LOG_CHANNEL.clone(),
         };

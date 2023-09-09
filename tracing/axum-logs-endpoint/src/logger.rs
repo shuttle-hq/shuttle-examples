@@ -13,6 +13,7 @@ pub struct Logger {
     tx: broadcast::Sender<JsonValue>,
 }
 
+#[allow(dead_code)]
 impl Logger {
     pub fn new() -> Self {
         Self {
@@ -20,7 +21,7 @@ impl Logger {
         }
     }
 
-    pub fn make_layer() -> impl Layer<shuttle_runtime::Registry> {
+    pub fn make_layer() -> impl Layer<tracing_subscriber::Registry> {
         tracing_subscriber::fmt::layer()
             .pretty()
             .json()
