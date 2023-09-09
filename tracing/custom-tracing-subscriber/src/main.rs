@@ -12,8 +12,8 @@ async fn hello_world() -> &'static str {
 
 #[shuttle_runtime::main]
 async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
-    // Normally we write to stdout for Shuttle to record the logs (i.e. println!)
-    // But we can use a fmt subscriber instead which has sane defaults for applications and also
+    // We need to write to stdout for Shuttle to record our logs, so we use the
+    // tracing::fmt subscriber which has sane defaults for applications and also
     // writes to stdout.
     tracing_subscriber::fmt()
         .with_env_filter(
