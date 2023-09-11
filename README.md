@@ -78,8 +78,6 @@ Thruster | [postgres](./thruster/postgres/) | TODO app with a Postgres DB | `car
 Tide | [hello-world](./tide/hello-world/) | Hello World | `cargo shuttle init --template tide`
 Tide | [postgres](./tide/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder tide/postgres`
 Tower | [hello-world](./tower/hello-world/) | Hello World | `cargo shuttle init --template tower`
-Tracing | [custom-layer](./tracing/custom-layer/) | Custom tracing layer | `cargo shuttle init --template --from shuttle-hq/shuttle-examples --subfolder tracing/custom-layer`
-Tracing | [axum-logs-endpoint](./tracing/axum-logs-endpoint/) | Expose application logs with Axum | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder tracing/axum-logs-endpoint`
 Tracing | [custom-tracing-subscriber](./tracing/custom-tracing-subscriber/) | Hello world with a custom tracing setup | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder tracing/custom-tracing-subscriber`
 Warp | [hello-world](./warp/hello-world/) | Hello World | `cargo shuttle init --template warp`
 *Custom Service* | [none](./custom-service/none/) | Empty service - A barebones implementation of Shuttle Service trait that does nothing | `cargo shuttle init --template none`
