@@ -1,0 +1,13 @@
+[package]
+name = "custom-tracing-subscriber"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+actix-web = "4.3.1"
+shuttle-actix-web = "0.25.0"
+# disable default features to disable the Shuttle default tracing subscriber
+shuttle-runtime = { version = "0.25.0", default-features = false }
+tokio = "1.26.0"
+tracing = "0.1.37"
+tracing-subscriber = "0.3.17"
