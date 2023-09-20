@@ -4,7 +4,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 # Get all directories with Cargo.toml files
-DIRS=$(find . -name Cargo.toml -exec dirname {} \;)
+DIRS=$(find . -name Cargo.toml -exec dirname {} \; | sort)
 
 # Loop through each directory and run cargo fmt and cargo clippy, exit on failure
 for dir in $DIRS; do
@@ -14,6 +14,7 @@ for dir in $DIRS; do
     fi
 
     echo "Checking $dir"
+
     if [ -f "$dir/.target" ]; then
         target=$(<$dir/.target)
 
