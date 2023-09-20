@@ -33,6 +33,7 @@ jobs:
       run: ./ci.sh a q
       env:
         RUSTC_WRAPPER: /home/runner/.cargo/bin/sccache
+        CARGO_TARGET_DIR: /tmp/target
 
     - name: Show sccache stats
       run: /home/runner/.cargo/bin/sccache --show-stats
@@ -59,6 +60,7 @@ jobs:
       run: ./ci.sh q zzz
       env:
         RUSTC_WRAPPER: /home/runner/.cargo/bin/sccache
+        CARGO_TARGET_DIR: /tmp/target
 
     - name: Show sccache stats
       run: /home/runner/.cargo/bin/sccache --show-stats
