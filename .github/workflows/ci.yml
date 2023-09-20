@@ -12,7 +12,7 @@ env:
 
 jobs:
   fmt-clippy-a-p:
-    runs-on: ubuntu-latest-8-cores
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -38,7 +38,7 @@ jobs:
       run: /home/runner/.cargo/bin/sccache --show-stats
 
   fmt-clippy-q-z:
-    runs-on: ubuntu-latest-8-cores
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
