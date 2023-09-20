@@ -15,6 +15,5 @@ serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 shuttle-actix-web = "0.27.0"
 shuttle-runtime = "0.27.0"
-shuttle-static-folder = "0.27.0"
 tokio = { version = "1", features = ["rt-multi-thread", "sync"] }
 tracing = "0.1"

@@ -23,18 +23,12 @@ pub fn hello(name: &str) -> Template {
 }
 
 #[shuttle_runtime::main]
-async fn rocket(
-    #[shuttle_static_folder::StaticFolder(folder = "templates")] static_folder: PathBuf,
-) -> shuttle_rocket::ShuttleRocket {
-    /* The provisioned static folder template directory will not be a sub folder
-       of the location of the executable so it is necessary to merge the
-       template_dir setting into the configuration at runtime so that dynamic templates work.
+async fn rocket() -> shuttle_rocket::ShuttleRocket {
+    // Note that shuttle does not include Rocket.toml
+    // so merging config is the preferred way to modify any settings
+    // that would otherwise be set in Rocket.toml
 
-       Note that shuttle does not include Rocket.toml
-       so merging config is the preferred way to modify any settings
-       that would otherwise be set in Rocket.toml
-    */
-    let template_dir = static_folder.to_str().unwrap();
+    let template_dir = "templates";
     let figment = rocket::Config::figment().merge(("template_dir", template_dir));
     let rocket = rocket::custom(figment)
         // If you also wish to serve static content, uncomment line below and corresponding 'use' on line 4
