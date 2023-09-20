@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use shuttle_runtime::{CustomError};
+use shuttle_runtime::CustomError;
 use shuttle_tide::ShuttleTide;
 use sqlx::{Executor, FromRow, PgPool};
 use tide::{Body, Request};

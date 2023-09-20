@@ -6,7 +6,7 @@ use actix_web::{
 };
 use serde::{Deserialize, Serialize};
 use shuttle_actix_web::ShuttleActixWeb;
-use shuttle_runtime::{CustomError};
+use shuttle_runtime::CustomError;
 use sqlx::{Executor, FromRow, PgPool};
 
 #[get("/{id}")]

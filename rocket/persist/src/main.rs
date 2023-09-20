@@ -28,7 +28,7 @@ async fn add(
     // Change data Json<Weather> to Weather
     let weather: Weather = data.into_inner();
 
-    let _state = state
+    state
         .persist
         .save::<Weather>(
             format!("weather_{}", &weather.date.as_str()).as_str(),
