@@ -167,7 +167,7 @@ async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send +
 
             if let Err(e) = shared_tx_api_state2.send(ApiStateMessage {
                 client_count,
-                origin: format!("ws_update"),
+                origin: "ws_update".to_string(),
                 date_time: Utc::now(),
                 is_up,
             }) {
