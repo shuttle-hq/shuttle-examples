@@ -8,6 +8,5 @@ publish = false
 axum = "0.6.18"
 shuttle-axum = "0.27.0"
 shuttle-runtime = "0.27.0"
-shuttle-static-folder = "0.27.0"
 tokio = "1.28.2"
 tower-http = { version = "0.4.0", features = ["fs"] }
