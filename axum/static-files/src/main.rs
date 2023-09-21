@@ -8,14 +8,10 @@ async fn hello_world() -> &'static str {
 }
 
 #[shuttle_runtime::main]
-async fn axum(
-    // Name your static assets folder by passing `folder = <name>` to `StaticFolder`
-    // If you don't pass a name, it will default to `static`.
-    #[shuttle_static_folder::StaticFolder(folder = "assets")] static_folder: PathBuf,
-) -> shuttle_axum::ShuttleAxum {
+async fn axum() -> shuttle_axum::ShuttleAxum {
     let router = Router::new()
         .route("/", get(hello_world))
-        .nest_service("/assets", ServeDir::new(static_folder));
+        .nest_service("/assets", ServeDir::new(PathBuf::from("assets")));
 
     Ok(router.into())
 }
