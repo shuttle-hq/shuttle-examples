@@ -101,12 +101,11 @@ async fn websocket(
 async fn index() -> impl Responder {
     NamedFile::open_async("./static/index.html")
         .await
-        .map_err(|e| actix_web::error::ErrorInternalServerError(e))
+        .map_err(actix_web::error::ErrorInternalServerError)
 }
 
 #[shuttle_runtime::main]
-async fn actix_web(
-) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
+async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     // We're going to use channels to communicate between threads.
     // api state channel
     let (tx_api_state, rx_api_state) = watch::channel(ApiStateMessage::default());
@@ -168,7 +167,7 @@ async fn actix_web(
 
             if let Err(e) = shared_tx_api_state2.send(ApiStateMessage {
                 client_count,
-                origin: format!("ws_update"),
+                origin: "ws_update".to_string(),
                 date_time: Utc::now(),
                 is_up,
             }) {

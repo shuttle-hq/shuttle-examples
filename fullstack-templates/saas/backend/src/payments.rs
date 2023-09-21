@@ -78,7 +78,7 @@ pub async fn create_checkout(
     params.default_payment_method = Some(&payment_method.id);
 
     let Ok(_) = Subscription::create(&ctx, params).await else {
-        return Err(StatusCode::INTERNAL_SERVER_ERROR)
+        return Err(StatusCode::INTERNAL_SERVER_ERROR);
     };
 
     Ok(StatusCode::OK)
