@@ -40,7 +40,6 @@ impl FromRef<AppState> for Key {
 async fn axum(
     #[shuttle_shared_db::Postgres] postgres: PgPool,
     #[shuttle_secrets::Secrets] secrets: shuttle_secrets::SecretStore,
-    #[shuttle_static_folder::StaticFolder(folder = "public")] public: PathBuf,
 ) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!()
         .run(&postgres)
@@ -64,7 +63,7 @@ async fn axum(
     let router = Router::new()
         .nest("/api", api_router)
         .fallback_service(get(|req| async move {
-            match ServeDir::new(public).oneshot(req).await {
+            match ServeDir::new(PathBuf::from("public")).oneshot(req).await {
                 Ok(res) => res.map(boxed),
                 Err(err) => Response::builder()
                     .status(StatusCode::INTERNAL_SERVER_ERROR)
