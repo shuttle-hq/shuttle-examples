@@ -38,7 +38,7 @@ struct Response {
 }
 
 #[shuttle_runtime::main]
-async fn axum(#[shuttle_static_folder::StaticFolder] static_folder: PathBuf) -> ShuttleAxum {
+async fn axum() -> ShuttleAxum {
     let (tx, rx) = watch::channel(Message::Text("{}".to_string()));
 
     let state = Arc::new(Mutex::new(State {
@@ -75,7 +75,7 @@ async fn axum(#[shuttle_static_folder::StaticFolder] static_folder: PathBuf) -> 
 
     let router = Router::new()
         .route("/websocket", get(websocket_handler))
-        .nest_service("/", ServeDir::new(static_folder))
+        .nest_service("/", ServeDir::new(PathBuf::from("static")))
         .layer(Extension(state));
 
     Ok(router.into())
