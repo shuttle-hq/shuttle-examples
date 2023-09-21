@@ -4,8 +4,8 @@ use axum::extract::State;
 use axum::response::IntoResponse;
 use axum::routing::post;
 use axum::{extract::Form, Router};
-use shuttle_runtime::tracing::debug;
 use tokio::sync::oneshot;
+use tracing::debug;
 
 use crate::error::CrontabServiceError;
 use crate::{CrontabServiceState, Msg, RawJob};
