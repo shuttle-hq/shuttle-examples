@@ -4,7 +4,6 @@ extern crate rocket;
 // use rocket::fs::{FileServer, relative};
 use rocket::response::Redirect;
 use rocket_dyn_templates::{context, Template};
-use std::path::PathBuf;
 
 #[get("/")]
 fn index() -> Redirect {
