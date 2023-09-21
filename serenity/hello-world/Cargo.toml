@@ -5,9 +5,9 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.66"
-shuttle-serenity = "0.26.0"
-shuttle-runtime = "0.26.0"
+shuttle-serenity = "0.27.0"
+shuttle-runtime = "0.27.0"
 serenity = { version = "0.11.5", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
-shuttle-secrets = "0.26.0"
+shuttle-secrets = "0.27.0"
 tokio = "1.26.0"
 tracing = "0.1.37"
