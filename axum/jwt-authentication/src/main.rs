@@ -1,4 +1,3 @@
-use std::time::SystemTime;
 use axum::{
     async_trait,
     extract::FromRequestParts,
@@ -13,9 +12,10 @@ use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::fmt::Display;
+use std::time::SystemTime;
 
 static KEYS: Lazy<Keys> = Lazy::new(|| {
-// note that in production, you will probably want to use a random SHA-256 hash or similar 
+    // note that in production, you will probably want to use a random SHA-256 hash or similar
     let secret = "JWT_SECRET".to_string();
     Keys::new(secret.as_bytes())
 });
@@ -53,13 +53,17 @@ async fn login(Json(payload): Json<AuthPayload>) -> Result<Json<AuthBody>, AuthE
     }
 
     // add 5 minutes to current unix epoch time as expiry date/time
-    let exp = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() + 300; 
+    let exp = SystemTime::now()
+        .duration_since(SystemTime::UNIX_EPOCH)
+        .unwrap()
+        .as_secs()
+        + 300;
 
     let claims = Claims {
         sub: "b@b.com".to_owned(),
         company: "ACME".to_owned(),
         // Mandatory expiry time as UTC timestamp - takes unix epoch
-        exp: usize::try_from(exp).unwrap() 
+        exp: usize::try_from(exp).unwrap(),
     };
     // Create the authorization token
     let token = encode(&Header::default(), &claims, &KEYS.encoding)
@@ -125,7 +129,7 @@ impl IntoResponse for AuthError {
     }
 }
 
-// encoding/decoding keys - set in the static `once_cell` above 
+// encoding/decoding keys - set in the static `once_cell` above
 struct Keys {
     encoding: EncodingKey,
     decoding: DecodingKey,
@@ -162,7 +166,7 @@ struct AuthPayload {
     client_secret: String,
 }
 
-// error types for auth errors 
+// error types for auth errors
 #[derive(Debug)]
 enum AuthError {
     WrongCredentials,
