@@ -2,7 +2,7 @@ use axum::{
     extract::{Path, State},
     http::StatusCode,
     response::IntoResponse,
-    routing::get,
+    routing::{get, post},
     Json, Router,
 };
 use serde::{Deserialize, Serialize};
@@ -51,7 +51,8 @@ async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::Shut
 
     let state = MyState { pool };
     let router = Router::new()
-        .route("/todo", get(retrieve).post(add))
+        .route("/todos", post(add))
+        .route("/todos/:id", get(retrieve))
         .with_state(state);
 
     Ok(router.into())
