@@ -58,9 +58,12 @@ pub async fn login(
 
     match query.await {
         Ok(res) => {
-            if bcrypt::verify(login.password, res.get("password")).is_err() {
-                return Err(StatusCode::BAD_REQUEST);
+            match bcrypt::verify(login.password, res.get("password")) {
+                Ok(true) => {}
+                Ok(false) => return Err(StatusCode::BAD_REQUEST),
+                Err(_) => return Err(StatusCode::BAD_REQUEST),
             }
+
             let session_id = rand::random::<u64>().to_string();
 
             sqlx::query("INSERT INTO sessions (session_id, user_id) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET session_id = EXCLUDED.session_id")
