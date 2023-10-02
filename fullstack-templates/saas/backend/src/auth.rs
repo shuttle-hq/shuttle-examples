@@ -59,9 +59,9 @@ pub async fn login(
     match query.await {
         Ok(res) => {
             match bcrypt::verify(login.password, res.get("password")) {
-		Ok(true) => {},
-		Ok(false) => return Err(StatusCode::BAD_REQUEST),
-		Err(_) => return Err(StatusCode::BAD_REQUEST) 
+                Ok(true) => {}
+                Ok(false) => return Err(StatusCode::BAD_REQUEST),
+                Err(_) => return Err(StatusCode::BAD_REQUEST),
             }
 
             let session_id = rand::random::<u64>().to_string();
