@@ -1,5 +1,4 @@
-#[macro_use]
-extern crate rocket;
+use rocket::{get, routes};
 
 #[get("/")]
 fn index() -> &'static str {
@@ -7,7 +6,7 @@ fn index() -> &'static str {
 }
 
 #[shuttle_runtime::main]
-async fn rocket() -> shuttle_rocket::ShuttleRocket {
+async fn main() -> shuttle_rocket::ShuttleRocket {
     let rocket = rocket::build().mount("/", routes![index]);
 
     Ok(rocket.into())

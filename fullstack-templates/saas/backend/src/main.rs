@@ -5,7 +5,6 @@ use axum::routing::get;
 use axum::Router;
 use axum_extra::extract::cookie::Key;
 use sqlx::PgPool;
-use std::path::PathBuf;
 use tower::ServiceExt;
 use tower_http::services::ServeDir;
 
@@ -63,7 +62,7 @@ async fn axum(
     let router = Router::new()
         .nest("/api", api_router)
         .fallback_service(get(|req| async move {
-            match ServeDir::new(PathBuf::from("public")).oneshot(req).await {
+            match ServeDir::new("public").oneshot(req).await {
                 Ok(res) => res.map(boxed),
                 Err(err) => Response::builder()
                     .status(StatusCode::INTERNAL_SERVER_ERROR)

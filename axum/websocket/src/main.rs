@@ -1,4 +1,4 @@
-use std::{path::PathBuf, sync::Arc, time::Duration};
+use std::{sync::Arc, time::Duration};
 
 use axum::{
     extract::{
@@ -75,7 +75,7 @@ async fn axum() -> ShuttleAxum {
 
     let router = Router::new()
         .route("/websocket", get(websocket_handler))
-        .nest_service("/", ServeDir::new(PathBuf::from("static")))
+        .nest_service("/", ServeDir::new("static"))
         .layer(Extension(state));
 
     Ok(router.into())
