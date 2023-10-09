@@ -14,21 +14,21 @@ To clone an example, use the init command of the [`cargo-shuttle`](https://docs.
 
 ```bash
 cargo shuttle init --from https://github.com/shuttle-hq/shuttle-examples --subfolder axum/hello-world
-```
 
-You can also add `--name my-project-name` and the target path as arguments. Otherwise, they will be prompted for.
+### Other forms:
 
-The `--from` argument uses [cargo-generate](https://cargo-generate.github.io/cargo-generate/) internally, which means you can also use these forms:
-
-```bash
 # GitHub prefix. Change to 'gl:' or 'bb:' for GitLab or BitBucket
 cargo shuttle init --from gh:username/repository
 # Also GitHub
 cargo shuttle init --from username/repository
 
 # From local folder
-cargo shuttle init --from ../path/to/folder
+cargo shuttle init --from ./path/to/folder
+cargo shuttle init --from ../../another/folder
 cargo shuttle init --from /home/user/some/folder
+
+# Clone into 'my-folder', and use the project name 'my-project-name'
+cargo shuttle init --from username/repository --name my-project-name my-folder
 ```
 
 Then, you can navigate into the folder where it was created, and use these commands to run the example locally, and to deploy it.

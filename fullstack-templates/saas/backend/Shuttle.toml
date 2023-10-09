@@ -1,0 +1,4 @@
+name = "fullstack-saas"
+assets = [
+    "public/*",
+]
