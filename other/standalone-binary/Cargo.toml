@@ -5,8 +5,12 @@ edition = "2021"
 publish = false
 
 [[bin]]
+name = "multi-binary"
+path = "src/bin/shuttle.rs"
+
+[[bin]]
 name = "standalone"
-path = "src/standalone.rs"
+path = "src/bin/standalone.rs"
 
 [dependencies]
 axum = "0.6.18"
