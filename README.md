@@ -109,8 +109,8 @@ FRAMEWORK | [NAME](LINK_TO_REPO) | DESCRIPTION | `cargo shuttle init --from USER
 ############################################
 -->
 
-| **Framework** | **Name & Link**                                                                | **Description**                                                                    | **Command**                                                           |
-| ------------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
-| Axum/Any      | [Fullstack Rust](https://github.com/TylerBloom/shuttle-fullstack-rust-example) | A basic project template for fullstack Rust projects                               | `cargo shuttle init --from TylerBloom/shuttle-fullstack-rust-example` |
-| Axum/Yew      | [Web App with Yew](https://github.com/sentinel1909/shuttle-template-yew)       | A basic project template for a web app using the Yew framework                     | `cargo shuttle init --from sentinel1909/shuttle-template-yew`         |
-| Actix Web     | [Web API](https://github.com/sentinel1909/shuttle-template-actix)              | A minorly opinionated starter template for a web API using the Actix Web framework | `cargo shuttle init --from sentinel1909/shuttle-template-actix`       |
+| **Framework** | **Name & Link**                                                                | **Description**                                                                     | **Command**                                                           |
+| ------------- | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Axum/Any      | [Fullstack Rust](https://github.com/TylerBloom/shuttle-fullstack-rust-example) | A basic project template for fullstack Rust projects                                | `cargo shuttle init --from TylerBloom/shuttle-fullstack-rust-example` |
+| Axum/Yew      | [Web App with Yew](https://github.com/sentinel1909/shuttle-template-yew)       | A basic project template for a web app using the Yew framework                      | `cargo shuttle init --from sentinel1909/shuttle-template-yew`         |
+| Actix Web     | [Web API](https://github.com/sentinel1909/shuttle-template-actix)              | A minorly opinionated starting template for a web API using the Actix Web framework | `cargo shuttle init --from sentinel1909/shuttle-template-actix`       |
