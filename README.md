@@ -115,5 +115,6 @@ FRAMEWORK | [NAME](LINK_TO_REPO) | DESCRIPTION | `cargo shuttle init --from USER
 
 **Framework** | **Name & Link** | **Description** | **Command**
 --------------|-----------------|-------------|----------------
+Actix Web/Any | [GitHub Login (OAuth)](https://github.com/robjtede/actix-examples-oauth-github) | Sample app demonstrating GitHub OAuth login using Actix Web | `cargo shuttle init --from robjtede/actix-examples-oauth-github`
 Axum/Any | [Fullstack Rust](https://github.com/TylerBloom/shuttle-fullstack-rust-example) | A basic project template for fullstack Rust projects | `cargo shuttle init --from TylerBloom/shuttle-fullstack-rust-example`
 Axum/Yew | [Web App with Yew](https://github.com/sentinel1909/shuttle-template-yew) | A basic project template for a web app using the Yew framework | `cargo shuttle init --from sentinel1909/shuttle-template-yew` |
