@@ -113,4 +113,4 @@ FRAMEWORK | [NAME](LINK_TO_REPO) | DESCRIPTION | `cargo shuttle init --from USER
 --------------|-----------------|-------------|----------------
 Axum/Any | [Fullstack Rust](https://github.com/TylerBloom/shuttle-fullstack-rust-example) | A basic project template for fullstack Rust projects | `cargo shuttle init --from TylerBloom/shuttle-fullstack-rust-example`
 Axum/Yew | [Web App with Yew](https://github.com/sentinel1909/shuttle-template-yew) | A basic project template for a web app using the Yew framework | `cargo shuttle init --from sentinel1909/shuttle-template-yew` |
-Actix Web | [Web API with Actix Web](A starter template for an API using the Actix Web framework) | `cargp shuttle init --from sentinel1909/shuttle-template-actix`
+Actix Web | [Web API with Actix Web](https://github.com/sentinel1909/shuttle-template-actix.git) | A template for starting an API with Actix Web | `cargp shuttle init --from sentinel1909/shuttle-template-actix`
