@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 rocket = "0.5.0-rc.2"
-shuttle-rocket = "0.31.0"
-shuttle-runtime = "0.31.0"
+shuttle-rocket = "0.32.0"
+shuttle-runtime = "0.32.0"
 rocket_dyn_templates = { version = "0.1.0-rc.3", features = ["handlebars"] }
 tokio = "1.26.0"
