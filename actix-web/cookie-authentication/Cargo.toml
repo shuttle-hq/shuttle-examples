@@ -7,6 +7,6 @@ edition = "2021"
 actix-identity = "0.6.0"
 actix-session = { version = "0.8.0", features = ["cookie-session"] }
 actix-web = "4.3.1"
-shuttle-actix-web = "0.31.0"
-shuttle-runtime = "0.31.0"
+shuttle-actix-web = "0.32.0"
+shuttle-runtime = "0.32.0"
 tokio = "1.26.0"
