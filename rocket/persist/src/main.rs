@@ -34,7 +34,7 @@ async fn add(
             format!("weather_{}", &weather.date.as_str()).as_str(),
             weather.clone(),
         )
-        .map_err(|e| BadRequest(Some(e.to_string())))?;
+        .map_err(|e| BadRequest(e.to_string()))?;
     Ok(Json(weather))
 }
 
@@ -46,7 +46,7 @@ async fn retrieve(
     let weather = state
         .persist
         .load::<Weather>(format!("weather_{}", &date).as_str())
-        .map_err(|e| BadRequest(Some(e.to_string())))?;
+        .map_err(|e| BadRequest(e.to_string()))?;
     Ok(Json(weather))
 }
 

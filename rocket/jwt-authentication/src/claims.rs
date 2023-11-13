@@ -44,9 +44,9 @@ impl<'r> FromRequest<'r> for Claims {
 
     async fn from_request(request: &'r rocket::Request<'_>) -> Outcome<Self, Self::Error> {
         match request.headers().get_one(AUTHORIZATION) {
-            None => Outcome::Failure((Status::Forbidden, AuthenticationError::Missing)),
+            None => Outcome::Error((Status::Forbidden, AuthenticationError::Missing)),
             Some(value) => match Claims::from_authorization(value) {
-                Err(e) => Outcome::Failure((Status::Forbidden, e)),
+                Err(e) => Outcome::Error((Status::Forbidden, e)),
                 Ok(claims) => Outcome::Success(claims),
             },
         }
