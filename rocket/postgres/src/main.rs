@@ -14,7 +14,7 @@ async fn retrieve(id: i32, state: &State<MyState>) -> Result<Json<Todo>, BadRequ
         .bind(id)
         .fetch_one(&state.pool)
         .await
-        .map_err(|e| BadRequest(Some(e.to_string())))?;
+        .map_err(|e| BadRequest(e.to_string()))?;
 
     Ok(Json(todo))
 }
@@ -28,7 +28,7 @@ async fn add(
         .bind(&data.note)
         .fetch_one(&state.pool)
         .await
-        .map_err(|e| BadRequest(Some(e.to_string())))?;
+        .map_err(|e| BadRequest(e.to_string()))?;
 
     Ok(Json(todo))
 }
