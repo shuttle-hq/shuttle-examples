@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 salvo = "0.41.0"
-shuttle-salvo = "0.33.0"
-shuttle-runtime = "0.33.0"
+shuttle-salvo = "0.34.0"
+shuttle-runtime = "0.34.0"
 tokio = "1.26.0"
 
