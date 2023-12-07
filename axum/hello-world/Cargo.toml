@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 axum = "0.6.20"
-shuttle-axum = "0.34.0"
-shuttle-runtime = "0.34.0"
+shuttle-axum = "0.35.0"
+shuttle-runtime = "0.35.0"
 tokio = "1.28.2"
 tracing = "0.1.40"
