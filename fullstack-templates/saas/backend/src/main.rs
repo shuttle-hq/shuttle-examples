@@ -62,7 +62,7 @@ async fn axum(
     let router = Router::new()
         .nest("/api", api_router)
         .fallback_service(get(|req| async move {
-            match ServeDir::new("public").oneshot(req).await {
+            match ServeDir::new("dist").oneshot(req).await {
                 Ok(res) => res.map(boxed),
                 Err(err) => Response::builder()
                     .status(StatusCode::INTERNAL_SERVER_ERROR)
