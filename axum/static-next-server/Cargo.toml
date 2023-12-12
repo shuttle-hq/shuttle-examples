@@ -7,6 +7,6 @@ publish = false
 [dependencies]
 axum = "0.6.10"
 axum-extra = { version = "0.4.2", features = ["spa"] }
-shuttle-axum = "0.35.0"
-shuttle-runtime = "0.35.0"
+shuttle-axum = "0.35.1"
+shuttle-runtime = "0.35.1"
 tokio = "1.26.0"
