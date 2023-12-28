@@ -5,8 +5,8 @@ edition = "2021"
 
 [dependencies]
 axum = "0.6.10"
-qdrant-client = "1.2.0"
-shuttle-axum = "0.18.0"
-shuttle-qdrant = "0.18.0"
-shuttle-runtime = "0.18.0"
+qdrant-client = "1.7.0"
+shuttle-axum = "0.35.0"
+shuttle-qdrant = "0.35.0"
+shuttle-runtime = "0.35.0"
 tokio = "1.26.0"
