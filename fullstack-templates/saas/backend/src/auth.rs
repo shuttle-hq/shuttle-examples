@@ -1,7 +1,7 @@
-use axum::middleware::Next;
 use axum::{
-    extract::State,
-    http::{Request, StatusCode},
+    extract::{Request, State},
+    http::StatusCode,
+    middleware::Next,
     response::{IntoResponse, Response},
     Json,
 };
@@ -73,13 +73,12 @@ pub async fn login(
                 .await
                 .expect("Couldn't insert session :(");
 
-            let cookie = Cookie::build("foo", session_id)
+            let cookie = Cookie::build(("foo", session_id))
                 .secure(true)
                 .same_site(SameSite::Strict)
                 .http_only(true)
                 .path("/")
-                .max_age(Duration::WEEK)
-                .finish();
+                .max_age(Duration::WEEK);
 
             Ok((jar.add(cookie), StatusCode::OK))
         }
@@ -101,16 +100,16 @@ pub async fn logout(
         .execute(&state.postgres);
 
     match query.await {
-        Ok(_) => Ok(jar.remove(Cookie::named("foo"))),
+        Ok(_) => Ok(jar.remove(Cookie::build("foo"))),
         Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
     }
 }
 
-pub async fn validate_session<B>(
+pub async fn validate_session(
     jar: PrivateCookieJar,
     State(state): State<AppState>,
-    request: Request<B>,
-    next: Next<B>,
+    request: Request,
+    next: Next,
 ) -> (PrivateCookieJar, Response) {
     let Some(cookie) = jar.get("foo").map(|cookie| cookie.value().to_owned()) else {
         println!("Couldn't find a cookie in the jar");

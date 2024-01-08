@@ -153,10 +153,17 @@ impl shuttle_runtime::Service for CrontabService {
         let router = self.router;
         let mut runner = self.runner;
 
-        let server = axum::Server::bind(&addr);
+        let server = async move {
+            axum::serve(
+                shuttle_runtime::tokio::net::TcpListener::bind(addr)
+                    .await
+                    .unwrap(),
+                router,
+            )
+            .await
+        };
 
-        let (_runner_hdl, _axum_hdl) =
-            tokio::join!(runner.run_jobs(), server.serve(router.into_make_service()));
+        let (_runner_hdl, _axum_hdl) = tokio::join!(runner.run_jobs(), server);
 
         Ok(())
     }
