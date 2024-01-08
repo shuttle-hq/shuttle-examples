@@ -10,10 +10,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let router = build_router(my_secret);
 
     // Do the serving on its own
-    axum::Server::bind(&"127.0.0.1:8000".parse().unwrap())
-        .serve(router.into_make_service())
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:8000")
         .await
         .unwrap();
+    axum::serve(listener, router).await.unwrap();
 
     Ok(())
 }

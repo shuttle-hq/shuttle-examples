@@ -4,11 +4,11 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = { version = "0.6.18" }
-shuttle-axum = { version = "0.35.0" }
-shuttle-runtime = { version = "0.35.0" }
-shuttle-turso = { version = "0.35.0" }
+axum = "0.7.3"
+shuttle-axum = "0.35.0"
+shuttle-runtime = "0.35.0"
+shuttle-turso = "0.35.0"
 libsql-client = "0.31.0"
-tokio = { version = "1.26.0" }
+tokio = "1.26.0"
 serde = { version = "1.0.164", features = ["derive"] }
 serde_json = "1.0.99"
