@@ -5,9 +5,9 @@ edition = "2021"
 
 [dependencies]
 axum = "0.7.3"
-shuttle-axum = "0.35.0"
-shuttle-runtime = "0.35.0"
-shuttle-turso = "0.35.0"
+shuttle-axum = "0.36.0"
+shuttle-runtime = "0.36.0"
+shuttle-turso = "0.36.0"
 libsql-client = "0.31.0"
 tokio = "1.26.0"
 serde = { version = "1.0.164", features = ["derive"] }
