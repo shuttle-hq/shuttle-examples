@@ -11,8 +11,6 @@ use axum::{
 };
 use chrono::{DateTime, Utc};
 use futures::{SinkExt, StreamExt};
-use hyper::{Client, Uri};
-use hyper_tls::HttpsConnector;
 use serde::Serialize;
 use shuttle_axum::ShuttleAxum;
 use tokio::{
@@ -50,12 +48,9 @@ async fn axum() -> ShuttleAxum {
     let state_send = state.clone();
     tokio::spawn(async move {
         let duration = Duration::from_secs(PAUSE_SECS);
-        let https = HttpsConnector::new();
-        let client = Client::builder().build::<_, hyper::Body>(https);
-        let uri: Uri = STATUS_URI.parse().unwrap();
 
         loop {
-            let is_up = client.get(uri.clone()).await;
+            let is_up = reqwest::get(STATUS_URI).await;
             let is_up = is_up.is_ok();
 
             let response = Response {
