@@ -33,10 +33,10 @@ impl EventHandler for Bot {
 
             let content = match command.data.name.as_str() {
                 "todo" => {
-                    let command = command.data.options.get(0).expect("Expected command");
+                    let command = command.data.options.first().expect("Expected command");
 
                     // if the todo subcommand has a CommandOption the command is either `add` or `complete`
-                    if let Some(subcommand) = command.options.get(0) {
+                    if let Some(subcommand) = command.options.first() {
                         match subcommand.resolved.as_ref().expect("Valid subcommand") {
                             CommandDataOptionValue::String(note) => {
                                 db::add(&self.database, note, user_id).await.unwrap()

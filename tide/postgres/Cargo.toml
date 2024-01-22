@@ -5,9 +5,9 @@ edition = "2021"
 
 [dependencies]
 serde = { version = "1.0.148", features = ["derive"] }
-shuttle-aws-rds = { version = "0.36.0", features = ["postgres"] }
+shuttle-aws-rds = { version = "0.36.0", features = ["postgres", "sqlx"] }
 shuttle-runtime = "0.36.0"
 shuttle-tide = "0.36.0"
-sqlx = { version = "0.7.1", features = ["runtime-tokio-native-tls", "postgres"] }
+sqlx = "0.7.1"
 tokio = "1.26.0"
 tide = "0.16.0"
