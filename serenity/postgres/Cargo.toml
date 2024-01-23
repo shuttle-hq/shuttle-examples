@@ -1,12 +1,12 @@
 [package]
-name = "serenity-postgres"
+name = "postgres-serenity-bot"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 anyhow = "1.0.66"
 serde = "1.0.148"
-serenity = { version = "0.11.5", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
+serenity = { version = "0.12.0", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
 shuttle-runtime = "0.37.0"
 shuttle-secrets = "0.37.0"
 shuttle-serenity = "0.37.0"
