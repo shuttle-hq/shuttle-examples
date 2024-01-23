@@ -1,12 +1,12 @@
 [package]
-name = "hello-world"
+name = "hello-world-poise-bot"
 version = "0.1.0"
 edition = "2021"
 publish = false
 
 [dependencies]
 anyhow = "1.0.68"
-poise = "0.5.2"
+poise = "0.6.1"
 shuttle-poise = "0.37.0"
 shuttle-runtime = "0.37.0"
 shuttle-secrets = "0.37.0"
