@@ -1,0 +1,12 @@
+[package]
+name = "shuttle-axum-qdrant"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.7.3"
+qdrant-client = "1.7.0"
+shuttle-axum = "0.36.0"
+shuttle-qdrant = "0.36.0"
+shuttle-runtime = "0.36.0"
+tokio = "1.26.0"
