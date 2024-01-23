@@ -8,7 +8,7 @@ axum = "0.7.3"
 shuttle-axum = "0.37.0"
 shuttle-runtime = "0.37.0"
 shuttle-turso = "0.37.0"
-libsql-client = "0.31.0"
+libsql = "0.2.0"
 tokio = "1.26.0"
 serde = { version = "1.0.164", features = ["derive"] }
 serde_json = "1.0.99"
