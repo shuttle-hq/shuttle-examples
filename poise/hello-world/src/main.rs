@@ -1,7 +1,7 @@
 use anyhow::Context as _;
-use poise::serenity_prelude as serenity;
-use shuttle_poise::ShuttlePoise;
+use poise::serenity_prelude::{ClientBuilder, GatewayIntents};
 use shuttle_secrets::SecretStore;
+use shuttle_serenity::ShuttleSerenity;
 
 struct Data {} // User data, which is stored and accessible in all command invocations
 type Error = Box<dyn std::error::Error + Send + Sync>;
@@ -15,7 +15,7 @@ async fn hello(ctx: Context<'_>) -> Result<(), Error> {
 }
 
 #[shuttle_runtime::main]
-async fn poise(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> ShuttlePoise<Data, Error> {
+async fn main(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> ShuttleSerenity {
     // Get the discord token set in `Secrets.toml`
     let discord_token = secret_store
         .get("DISCORD_TOKEN")
@@ -26,17 +26,18 @@ async fn poise(#[shuttle_secrets::Secrets] secret_store: SecretStore) -> Shuttle
             commands: vec![hello()],
             ..Default::default()
         })
-        .token(discord_token)
-        .intents(serenity::GatewayIntents::non_privileged())
         .setup(|ctx, _ready, framework| {
             Box::pin(async move {
                 poise::builtins::register_globally(ctx, &framework.options().commands).await?;
                 Ok(Data {})
             })
         })
-        .build()
+        .build();
+
+    let client = ClientBuilder::new(discord_token, GatewayIntents::non_privileged())
+        .framework(framework)
         .await
         .map_err(shuttle_runtime::CustomError::new)?;
 
-    Ok(framework.into())
+    Ok(client.into())
 }

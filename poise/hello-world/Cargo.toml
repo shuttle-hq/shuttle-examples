@@ -1,14 +1,15 @@
 [package]
-name = "hello-world"
+name = "hello-world-poise-bot"
 version = "0.1.0"
 edition = "2021"
 publish = false
 
 [dependencies]
 anyhow = "1.0.68"
-poise = "0.5.2"
-shuttle-poise = "0.37.0"
+poise = "0.6.1"
 shuttle-runtime = "0.37.0"
 shuttle-secrets = "0.37.0"
+# Since poise is a serenity command framework, it can run on Shuttle with shuttle-serenity
+shuttle-serenity = "0.37.0"
 tracing = "0.1.37"
 tokio = "1.26.0"
