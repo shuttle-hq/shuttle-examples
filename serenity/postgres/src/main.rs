@@ -1,8 +1,9 @@
 use anyhow::Context as _;
 use serenity::async_trait;
-use serenity::model::application::command::CommandOptionType;
-use serenity::model::application::interaction::application_command::CommandDataOptionValue;
-use serenity::model::application::interaction::{Interaction, InteractionResponseType};
+use serenity::builder::{
+    CreateCommand, CreateCommandOption, CreateInteractionResponse, CreateInteractionResponseMessage,
+};
+use serenity::model::application::{CommandDataOptionValue, CommandOptionType, Interaction};
 use serenity::model::gateway::Ready;
 use serenity::model::id::GuildId;
 use serenity::prelude::*;
@@ -20,54 +21,52 @@ struct Bot {
 #[async_trait]
 impl EventHandler for Bot {
     async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
-        let user_id: i64 = interaction
-            .clone()
-            .application_command()
-            .unwrap()
-            .user
-            .id
-            .into();
-
-        if let Interaction::ApplicationCommand(command) = interaction {
+        if let Interaction::Command(command) = interaction {
             info!("Received command interaction: {:#?}", command);
+
+            let user_id: i64 = command.user.id.into();
 
             let content = match command.data.name.as_str() {
                 "todo" => {
-                    let command = command.data.options.get(0).expect("Expected command");
+                    let command = command.data.options.first().expect("Expected command");
 
-                    // if the todo subcommand has a CommandOption the command is either `add` or `complete`
-                    if let Some(subcommand) = command.options.get(0) {
-                        match subcommand.resolved.as_ref().expect("Valid subcommand") {
-                            CommandDataOptionValue::String(note) => {
+                    match command.name.as_str() {
+                        "add" => match &command.value {
+                            CommandDataOptionValue::SubCommand(opts) => {
+                                let note = opts.first().unwrap().value.as_str().unwrap();
                                 db::add(&self.database, note, user_id).await.unwrap()
                             }
-                            CommandDataOptionValue::Integer(index) => {
-                                db::complete(&self.database, index, user_id)
+                            _ => "Command not implemented".to_string(),
+                        },
+                        "complete" => match &command.value {
+                            CommandDataOptionValue::SubCommand(opts) => {
+                                let index = opts.first().unwrap().value.as_i64().unwrap();
+                                db::complete(&self.database, &index, user_id)
                                     .await
                                     .unwrap_or_else(|_| {
                                         "Please submit a valid index from your todo list"
                                             .to_string()
                                     })
                             }
-                            _ => "Please enter a valid todo".to_string(),
-                        }
-                    // if the todo subcommand doesn't have a CommandOption the command is `list`
-                    } else {
-                        db::list(&self.database, user_id).await.unwrap()
+                            _ => "Command not implemented".to_string(),
+                        },
+                        "list" => db::list(&self.database, user_id).await.unwrap(),
+                        _ => "Command not implemented".to_string(),
                     }
                 }
                 _ => "Command not implemented".to_string(),
             };
 
             if let Err(why) = command
-                .create_interaction_response(&ctx.http, |response| {
-                    response
-                        .kind(InteractionResponseType::ChannelMessageWithSource)
-                        .interaction_response_data(|message| message.content(content))
-                })
+                .create_response(
+                    &ctx.http,
+                    CreateInteractionResponse::Message(
+                        CreateInteractionResponseMessage::new().content(content),
+                    ),
+                )
                 .await
             {
-                error!("Cannot respond to slash command: {}", why);
+                error!("Cannot respond to slash command: {why}");
             }
         }
     }
@@ -75,51 +74,53 @@ impl EventHandler for Bot {
     async fn ready(&self, ctx: Context, ready: Ready) {
         info!("{} is connected!", ready.user.name);
 
-        let guild_id = GuildId(self.guild_id.parse().unwrap());
+        let guild_id = GuildId::new(self.guild_id.parse().unwrap());
 
-        let _ = GuildId::set_application_commands(&guild_id, &ctx.http, |commands| {
-            commands.create_application_command(|command| {
-                command
-                    .name("todo")
+        let _ = guild_id
+            .set_commands(
+                &ctx.http,
+                vec![CreateCommand::new("todo")
                     .description("Add, list and complete todos")
-                    .create_option(|option| {
-                        option
-                            .name("add")
-                            .description("Add a new todo")
-                            .kind(CommandOptionType::SubCommand)
-                            .create_sub_option(|option| {
-                                option
-                                    .name("note")
-                                    .description("The todo note to add")
-                                    .kind(CommandOptionType::String)
-                                    .min_length(2)
-                                    .max_length(100)
-                                    .required(true)
-                            })
-                    })
-                    .create_option(|option| {
-                        option
-                            .name("complete")
-                            .description("The todo to complete")
-                            .kind(CommandOptionType::SubCommand)
-                            .create_sub_option(|option| {
-                                option
-                                    .name("index")
-                                    .description("The index of the todo to complete")
-                                    .kind(CommandOptionType::Integer)
-                                    .min_int_value(1)
-                                    .required(true)
-                            })
-                    })
-                    .create_option(|option| {
-                        option
-                            .name("list")
-                            .description("List your todos")
-                            .kind(CommandOptionType::SubCommand)
-                    })
-            })
-        })
-        .await;
+                    .add_option(
+                        CreateCommandOption::new(
+                            CommandOptionType::SubCommand,
+                            "add",
+                            "Add a new todo",
+                        )
+                        .add_sub_option(
+                            CreateCommandOption::new(
+                                CommandOptionType::String,
+                                "note",
+                                "The todo note to add",
+                            )
+                            .min_length(2)
+                            .max_length(100)
+                            .required(true),
+                        ),
+                    )
+                    .add_option(
+                        CreateCommandOption::new(
+                            CommandOptionType::SubCommand,
+                            "complete",
+                            "The todo to complete",
+                        )
+                        .add_sub_option(
+                            CreateCommandOption::new(
+                                CommandOptionType::Integer,
+                                "index",
+                                "The index of the todo to complete",
+                            )
+                            .min_int_value(1)
+                            .required(true),
+                        ),
+                    )
+                    .add_option(CreateCommandOption::new(
+                        CommandOptionType::SubCommand,
+                        "list",
+                        "List your todos",
+                    ))],
+            )
+            .await;
     }
 }
 

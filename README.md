@@ -56,6 +56,7 @@ Actix Web | [websocket-actorless](./actix-web/websocket-actorless/) | Websocket 
 Actix Web | [cookie-authentication](./actix-web/cookie-authentication/) | Use JWT to authenticate API endpoints | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder actix-web/cookie-authentication`
 Axum | [hello-world](./axum/hello-world/) | Hello World | `cargo shuttle init --template axum`
 Axum | [metadata](./axum/metadata/) | Simple app that prints the service information such as Shuttle service name | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/metadata`
+Axum | [qdrant](./axum/qdrant/) | Barebones example of the shuttle-qdrant plugin | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/qdrant`
 Axum | [static-files](./axum/static-files/) | Hello World page that serves static HTML and JS files | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/static-files`
 Axum | [static-next-server](./axum/static-next-server/) | SPA server for serving a apps from frameworks such as Next.js | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/static-next-server`
 Axum | [websocket](./axum/websocket/) | Websocket app that checks the status of Shuttle's API | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/websocket`
