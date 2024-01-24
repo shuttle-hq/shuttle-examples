@@ -6,7 +6,7 @@ Make sure you have `cargo-shuttle` installed! If not, you can use `cargo install
 
 Run the following to initialise this project:
 ```bash
-cargo shuttle init --from joshua-mo-143/shuttle-cron-template
+cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder shuttle-cron
 ```
 
 Follow the prompt, then make any changes you want. Once done, you can deploy:
