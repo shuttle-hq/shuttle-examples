@@ -10,12 +10,12 @@ use std::str::FromStr;
 use tower::ServiceBuilder;
 
 #[derive(Clone)]
-struct CronService {
+struct CronjobData {
     message: String,
 }
-impl CronService {
+impl CronjobData {
     fn execute(&self, _item: Reminder) {
-        println!("{} from CronService::execute()!", &self.message);
+        println!("{} from CronjobData::execute()!", &self.message);
     }
 }
 
@@ -33,9 +33,9 @@ impl Job for Reminder {
 
 async fn say_hello_world(job: Reminder, ctx: JobContext) {
     println!("Hello world from send_reminder()!");
-    // this lets you use variables stored in the CronService struct
-    let svc = ctx.data_opt::<CronService>().unwrap();
-    // this executes CronService::execute()
+    // this lets you use variables stored in the CronjobData struct
+    let svc = ctx.data_opt::<CronjobData>().unwrap();
+    // this executes CronjobData::execute()
     svc.execute(job);
 }
 
@@ -68,7 +68,7 @@ impl shuttle_runtime::Service for MyService {
 
         let schedule = Schedule::from_str("* * * * * *").expect("Couldn't start the scheduler!");
 
-        let cron_service_ext = CronService {
+        let cron_service_ext = CronjobData {
             message: "Hello world".to_string(),
         };
 
