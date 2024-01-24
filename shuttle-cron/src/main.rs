@@ -5,7 +5,7 @@ use apalis::postgres::PostgresStorage;
 use apalis::prelude::*;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
-use sqlx::PgPool;
+use sqlx::{PgPool, postgres::PgPoolOptions};
 use std::str::FromStr;
 use tower::ServiceBuilder;
 
@@ -41,8 +41,15 @@ async fn say_hello_world(job: Reminder, ctx: JobContext) {
 
 #[shuttle_runtime::main]
 async fn shuttle_main(
-    #[shuttle_shared_db::Postgres] db: PgPool,
+    #[shuttle_shared_db::Postgres] conn_string: String,
 ) -> Result<MyService, shuttle_runtime::Error> {
+    let db = PgPoolOptions::new()
+            .min_connections(5)
+            .max_connections(5)
+            .connect(&conn_string)
+            .await
+            .unwrap();
+
     Ok(MyService { db })
 }
 
