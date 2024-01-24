@@ -1,15 +1,12 @@
 use async_trait::async_trait;
 use serde::Serialize;
-use shuttle_service::Factory;
-use shuttle_service::ResourceBuilder;
-use shuttle_service::Type;
+use shuttle_service::{resource::Type, Error, Factory, IntoResource, ResourceBuilder};
 
-#[derive(Serialize)]
+#[derive(Default, Serialize)]
 pub struct Builder {
     name: String,
 }
 
-#[derive(Clone)]
 pub struct Pdo {
     pub name: String,
 }
@@ -23,33 +20,24 @@ impl Builder {
 }
 
 #[async_trait]
-impl ResourceBuilder<Pdo> for Builder {
+impl ResourceBuilder for Builder {
     const TYPE: Type = Type::Custom;
-
     type Config = Self;
-
     type Output = String;
-
-    fn new() -> Self {
-        Self {
-            name: String::new(),
-        }
-    }
 
     fn config(&self) -> &Self::Config {
         self
     }
 
-    async fn output(
-        self,
-        _factory: &mut dyn Factory,
-    ) -> Result<Self::Output, shuttle_service::Error> {
+    async fn output(self, _factory: &mut dyn Factory) -> Result<Self::Output, Error> {
+        // factory can be used to get resources from Shuttle
         Ok(self.name)
     }
+}
 
-    async fn build(build_data: &Self::Output) -> Result<Pdo, shuttle_service::Error> {
-        Ok(Pdo {
-            name: build_data.clone(),
-        })
+#[async_trait]
+impl IntoResource<Pdo> for String {
+    async fn into_resource(self) -> Result<Pdo, Error> {
+        Ok(Pdo { name: self })
     }
 }
