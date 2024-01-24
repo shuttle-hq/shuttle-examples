@@ -1,0 +1,15 @@
+[package]
+name = "brwabrwab"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+apalis = { version = "0.4.9", features = ["cron", "postgres", "extensions", "retry"] }
+chrono = { version = "0.4.32", features = ["clock", "serde"] }
+serde = { version = "1.0.195", features = ["derive"] }
+shuttle-runtime = "0.36.0"
+shuttle-shared-db = { version = "0.36.0", features = ["postgres"] }
+sqlx = { version = "0.7.3", features = ["runtime-tokio-native-tls", "postgres"] }
+tokio = "1"
+tower = { version = "0.4.13" }
