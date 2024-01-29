@@ -56,6 +56,7 @@ Actix Web | [websocket-actorless](./actix-web/websocket-actorless/) | Websocket 
 Actix Web | [cookie-authentication](./actix-web/cookie-authentication/) | Use JWT to authenticate API endpoints | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder actix-web/cookie-authentication`
 Axum | [hello-world](./axum/hello-world/) | Hello World | `cargo shuttle init --template axum`
 Axum | [metadata](./axum/metadata/) | Simple app that prints the service information such as Shuttle service name | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/metadata`
+Axum | [qdrant](./axum/qdrant/) | Barebones example of the shuttle-qdrant plugin | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/qdrant`
 Axum | [static-files](./axum/static-files/) | Hello World page that serves static HTML and JS files | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/static-files`
 Axum | [static-next-server](./axum/static-next-server/) | SPA server for serving a apps from frameworks such as Next.js | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/static-next-server`
 Axum | [websocket](./axum/websocket/) | Websocket app that checks the status of Shuttle's API | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/websocket`
@@ -85,6 +86,7 @@ Tower | [hello-world](./tower/hello-world/) | Hello World | `cargo shuttle init 
 Tracing | [custom-tracing-subscriber](./tracing/custom-tracing-subscriber/) | Hello world with a custom tracing setup | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder tracing/custom-tracing-subscriber`
 Warp | [hello-world](./warp/hello-world/) | Hello World | `cargo shuttle init --template warp`
 *Custom Service* | [none](./custom-service/none/) | Empty service - A barebones implementation of Shuttle Service trait that does nothing | `cargo shuttle init --template none`
+*Custom Service* | [shuttle-cron](./shuttle-cron/) | A custom service that runs a cron job server using Apalis | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder shuttle-cron`
 *Custom Service* | [request-scheduler](./custom-service/request-scheduler/) | A custom *Request Scheduler* service | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder custom-service/request-scheduler`
 *Custom Resource* | [pdo](./custom-resource/pdo/) | Custom Shuttle resource that holds a Plain Data Object (PDO), shown in the context of an Axum app | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder custom-resource/pdo`
 *Other* | [standalone-binary](./other/standalone-binary/) | How to split a project to allow it to run both with Shuttle and standalone | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder other/standalone-binary`

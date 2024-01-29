@@ -1,7 +1,7 @@
-use axum::middleware::Next;
 use axum::{
     extract::{State, Request},
     http::StatusCode,
+    middleware::Next,
     response::{IntoResponse, Response},
     Json,
 };
@@ -78,8 +78,7 @@ pub async fn login(
                 .same_site(SameSite::Strict)
                 .http_only(true)
                 .path("/")
-                .max_age(Duration::WEEK)
-                .finish();
+                .max_age(Duration::WEEK);
 
             Ok((jar.add(cookie), StatusCode::OK))
         }
@@ -101,7 +100,7 @@ pub async fn logout(
         .execute(&state.postgres);
 
     match query.await {
-        Ok(_) => Ok(jar.remove(Cookie::named("foo"))),
+        Ok(_) => Ok(jar.remove(Cookie::build("foo"))),
         Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
     }
 }

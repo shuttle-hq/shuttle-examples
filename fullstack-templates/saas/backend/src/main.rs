@@ -1,7 +1,5 @@
 use axum::body::{Body};
 use axum::extract::FromRef;
-use axum::http::{Response, StatusCode};
-use axum::routing::get;
 use axum::Router;
 use axum_extra::extract::cookie::Key;
 use sqlx::PgPool;
