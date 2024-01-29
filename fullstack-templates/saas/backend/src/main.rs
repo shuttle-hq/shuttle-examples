@@ -1,11 +1,9 @@
-use axum::body::{Body};
 use axum::extract::FromRef;
-use axum::http::{Response, StatusCode};
-use axum::routing::get;
+
 use axum::Router;
 use axum_extra::extract::cookie::Key;
 use sqlx::PgPool;
-use tower::ServiceExt;
+
 use tower_http::services::{ServeDir, ServeFile};
 
 mod auth;
@@ -59,9 +57,10 @@ async fn axum(
 
     let api_router = create_api_router(state);
 
-    let router = Router::new()
-        .nest("/api", api_router)
-        .nest_service("/", ServeDir::new("dist").not_found_service(ServeFile::new("dist/index.html")));
+    let router = Router::new().nest("/api", api_router).nest_service(
+        "/",
+        ServeDir::new("dist").not_found_service(ServeFile::new("dist/index.html")),
+    );
 
     Ok(router.into())
 }
