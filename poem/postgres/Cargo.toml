@@ -4,10 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-poem = "1.3.55"
+poem = "2.0.0"
 serde = "1.0.148"
-shuttle-poem = "0.35.0"
-shuttle-runtime = "0.35.0"
-shuttle-shared-db = { version = "0.35.0", features = ["postgres"] }
-sqlx = { version = "0.7.1", features = ["runtime-tokio-native-tls", "postgres"] }
+shuttle-poem = "0.37.0"
+shuttle-runtime = "0.37.0"
+shuttle-shared-db = { version = "0.37.0", features = ["postgres", "sqlx"] }
+sqlx = "0.7.1"
 tokio = "1.26.0"

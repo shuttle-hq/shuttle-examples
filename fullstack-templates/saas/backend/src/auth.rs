@@ -1,7 +1,7 @@
-use axum::middleware::Next;
 use axum::{
     extract::{Request, State},
     http::StatusCode,
+    middleware::Next,
     response::{IntoResponse, Response},
     Json,
 };

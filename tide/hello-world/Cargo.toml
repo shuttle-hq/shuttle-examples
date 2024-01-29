@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-shuttle-tide = "0.35.0"
-shuttle-runtime = "0.35.0"
+shuttle-tide = "0.37.0"
+shuttle-runtime = "0.37.0"
 tokio = "1.26.0"
 tide = "0.16.0"

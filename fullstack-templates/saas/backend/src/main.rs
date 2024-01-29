@@ -1,5 +1,4 @@
 use axum::extract::FromRef;
-
 use axum::Router;
 use axum_extra::extract::cookie::Key;
 use sqlx::PgPool;

@@ -13,9 +13,9 @@ name = "standalone"
 path = "src/bin/standalone.rs"
 
 [dependencies]
-axum = "0.6.18"
+axum = "0.7.3"
 dotenvy = "0.15.7"
-shuttle-axum = "0.35.0"
-shuttle-runtime = "0.35.0"
-shuttle-secrets = "0.35.0"
+shuttle-axum = "0.37.0"
+shuttle-runtime = "0.37.0"
+shuttle-secrets = "0.37.0"
 tokio = "1.28.2"
