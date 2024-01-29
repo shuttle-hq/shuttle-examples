@@ -1,7 +1,7 @@
 use axum::middleware::Next;
 use axum::{
-    extract::State,
-    http::{Request, StatusCode},
+    extract::{State, Request},
+    http::StatusCode,
     response::{IntoResponse, Response},
     Json,
 };
@@ -73,7 +73,7 @@ pub async fn login(
                 .await
                 .expect("Couldn't insert session :(");
 
-            let cookie = Cookie::build("foo", session_id)
+            let cookie = Cookie::build(("foo", session_id))
                 .secure(true)
                 .same_site(SameSite::Strict)
                 .http_only(true)
@@ -106,11 +106,11 @@ pub async fn logout(
     }
 }
 
-pub async fn validate_session<B>(
+pub async fn validate_session(
     jar: PrivateCookieJar,
     State(state): State<AppState>,
-    request: Request<B>,
-    next: Next<B>,
+    request: Request,
+    next: Next,
 ) -> (PrivateCookieJar, Response) {
     let Some(cookie) = jar.get("foo").map(|cookie| cookie.value().to_owned()) else {
         println!("Couldn't find a cookie in the jar");
