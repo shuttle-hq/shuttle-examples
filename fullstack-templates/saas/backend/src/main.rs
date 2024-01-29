@@ -2,7 +2,8 @@ use axum::extract::FromRef;
 use axum::Router;
 use axum_extra::extract::cookie::Key;
 use sqlx::PgPool;
-use tower_http::services::ServeDir;
+
+use tower_http::services::{ServeDir, ServeFile};
 
 mod auth;
 mod customers;
@@ -55,9 +56,10 @@ async fn axum(
 
     let api_router = create_api_router(state);
 
-    let router = Router::new()
-        .nest("/api", api_router)
-        .nest_service("/", ServeDir::new("public"));
+    let router = Router::new().nest("/api", api_router).nest_service(
+        "/",
+        ServeDir::new("dist").not_found_service(ServeFile::new("dist/index.html")),
+    );
 
     Ok(router.into())
 }
