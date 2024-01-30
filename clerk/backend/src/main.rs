@@ -1,16 +1,11 @@
 use actix_web::{
-    http::header,
+    get,
     web::{self, ServiceConfig},
-    HttpResponse, Responder,
+    HttpRequest, HttpResponse, Responder,
 };
 use clerk_rs::{
-    apis::{sessions_api::Session, users_api::User},
-    clerk::Clerk,
-    validators::actix::ClerkMiddleware,
-    ClerkConfiguration, ClerkConfiguration,
-    ClerkModels::VerifySessionRequest,
+    apis::users_api::User, clerk::Clerk, validators::actix::ClerkMiddleware, ClerkConfiguration,
 };
-use serde::{Deserialize, Serialize};
 use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_secrets::SecretStore;
 
@@ -19,7 +14,7 @@ struct AppState {
 }
 
 #[get("/users")]
-async fn get_users(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
+async fn get_users(state: web::Data<AppState>, _req: HttpRequest) -> impl Responder {
     let Ok(all_users) = User::get_user_list(
         &state.client,
         None,
@@ -42,12 +37,14 @@ async fn get_users(state: web::Data<AppState>, req: HttpRequest) -> impl Respond
         }));
     };
 
-    HttpResponse::Ok().json(all_users.into_iter().map(|u| u.id).collect::<Vec<_>>())
+    HttpResponse::Ok().json(
+        all_users, /* .into_iter().map(|u| u.id).collect::<Vec<_>>() */
+    )
 }
 
 #[shuttle_runtime::main]
 async fn actix_web(
-    #[shuttle_secrets::Secrets] secrets: shuttle_secrets::SecretStore,
+    #[shuttle_secrets::Secrets] secrets: SecretStore,
 ) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     let app_config = move |cfg: &mut ServiceConfig| {
         let clerk_secret_key = secrets
@@ -63,7 +60,7 @@ async fn actix_web(
                 .wrap(ClerkMiddleware::new(clerk_config, None, true))
                 .service(get_users),
         )
-        .service(actix_files::Files::new("/", "./frontend2/dist").index_file("index.html"))
+        .service(actix_files::Files::new("/", "./frontend/dist").index_file("index.html"))
         .app_data(state);
     };
 

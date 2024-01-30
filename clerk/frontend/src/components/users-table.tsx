@@ -7,7 +7,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuth, UserButton } from "@clerk/clerk-react";
+import { UserButton } from "@clerk/clerk-react";
 import { Loader } from "lucide-react";
 import useSWR from "swr";
 
@@ -17,31 +17,10 @@ export interface UserSchema {
   username: string;
   email_addresses: { email_address: string; id: string }[];
   profile_image_url: string;
-  has_image: string;
 }
 
-const getUsers = async (token: string) => {
-  const res = await (
-    await fetch(import.meta.env.VITE_API_BASE_URL + "/users", {
-      method: "GET",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    })
-  ).json();
-
-  return res;
-};
-
 export default function UsersTable() {
-  const { getToken } = useAuth();
-
-  const { isLoading, data } = useSWR("/api/users", async () => {
-    const token = await getToken();
-    return getUsers(token as string);
-  });
-
-  console.log(data);
+  const { isLoading, data } = useSWR("/api/users", (url) => fetch(url).then(res => res.json()));
 
   return (
     <>
@@ -61,12 +40,12 @@ export default function UsersTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.data.map((user: UserSchema, id: string) => (
+            {data.map((user: UserSchema, id: string) => (
               <TableRow key={id}>
                 <TableCell>
                   <Avatar>
                     <AvatarImage src={user.profile_image_url} />
-                    <AvatarFallback>{user.username.slice(0, 2)}</AvatarFallback>
+                    <AvatarFallback>{user.username}</AvatarFallback>
                   </Avatar>
                 </TableCell>
                 <TableCell>{user.first_name}</TableCell>
