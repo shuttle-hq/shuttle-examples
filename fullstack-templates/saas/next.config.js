@@ -3,8 +3,8 @@ const nextConfig = {
   reactStrictMode: true,
   output: "export",
   trailingSlash: true,
-  distDir: "./dist",
-    images: {
+  distDir: "./backend/public",
+  images: {
     unoptimized: true,
   },
 }
