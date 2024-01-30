@@ -6,6 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+actix-cors = "0.7.0"
 actix-web = "4.4.1"
 clerk-rs = "0.2.3"
 dotenv = "0.15.0"

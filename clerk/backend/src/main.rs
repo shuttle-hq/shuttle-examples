@@ -1,5 +1,6 @@
+use actix_cors::Cors;
 use actix_web::{
-    get,
+    http::header,
     web::{self, ServiceConfig},
     HttpRequest, HttpResponse, Responder,
 };
@@ -16,9 +17,8 @@ struct AppState {
     client: Clerk,
 }
 
-#[get("")]
 async fn get_users(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
-    let session_header = req.headers().get("X-CLERK_SESSION_ID");
+    let session_header = req.headers().get("X-CLERK-SESSION_ID");
 
     let session_id = match session_header {
         Some(value) => value.to_str().ok().unwrap(),
@@ -41,6 +41,8 @@ async fn get_users(state: web::Data<AppState>, req: HttpRequest) -> impl Respond
             }))
         }
     };
+
+    dbg!("{}", token.clone());
 
     let is_session_verified = Session::verify_session(
         &state.client,
@@ -96,8 +98,18 @@ async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send +
 
         let state = web::Data::new(AppState { client });
 
-        cfg.service(web::scope("/users").service(get_users))
-            .app_data(state);
+        let cors = Cors::default()
+            .allow_any_origin()
+            .allow_any_method()
+            .allow_any_header()
+            .supports_credentials();
+
+        cfg.service(
+            web::resource("/users")
+                .route(web::get().to(get_users))
+                .wrap(cors),
+        )
+        .app_data(state);
     };
 
     Ok(app_config.into())
