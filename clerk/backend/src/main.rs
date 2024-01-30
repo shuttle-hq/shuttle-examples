@@ -2,62 +2,27 @@ use actix_cors::Cors;
 use actix_web::{
     http::header,
     web::{self, ServiceConfig},
-    HttpRequest, HttpResponse, Responder,
+    HttpResponse, Responder,
 };
 use clerk_rs::{
-    apis::{sessions_api::Session, users_api::User},
-    clerk::Clerk,
-    ClerkConfiguration,
-    ClerkModels::VerifySessionRequest,
+    apis::users_api::User, clerk::Clerk, validators::actix::ClerkMiddleware, ClerkConfiguration,
 };
 use dotenv::dotenv;
+use serde::{Deserialize, Serialize};
 use shuttle_actix_web::ShuttleActixWeb;
 
 struct AppState {
     client: Clerk,
 }
 
-async fn get_users(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
-    let session_header = req.headers().get("X-CLERK-SESSION_ID");
+#[derive(Debug, Serialize, Deserialize)]
+struct Claims {
+    sub: String,
+    company: String,
+    exp: usize,
+}
 
-    let session_id = match session_header {
-        Some(value) => value.to_str().ok().unwrap(),
-        None => {
-            return HttpResponse::Forbidden().json(serde_json::json!({
-                "status":"FAILED",
-                "message":"No session found"
-            }))
-        }
-    };
-
-    let session_cookie = req.cookie("__session").map(|c| c.value().to_string());
-
-    let token = match session_cookie {
-        Some(id) => id,
-        None => {
-            return HttpResponse::Forbidden().json(serde_json::json!({
-                "status": "FAILED",
-                "message": "No session found",
-            }))
-        }
-    };
-
-    dbg!("{}", token.clone());
-
-    let is_session_verified = Session::verify_session(
-        &state.client,
-        session_id,
-        Some(VerifySessionRequest { token: Some(token) }),
-    )
-    .await;
-
-    if is_session_verified.is_err() {
-        return HttpResponse::Unauthorized().json(serde_json::json!({
-            "status": "FAILED",
-            "message": "Invalid session",
-        }));
-    }
-
+async fn get_users(state: web::Data<AppState>) -> impl Responder {
     let all_users = User::get_user_list(
         &state.client,
         None,
@@ -94,18 +59,19 @@ async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send +
         let clerk_secret_key =
             std::env::var("CLERK_SECRET_KEY").expect("Clerk Secret key is not set");
         let clerk_config = ClerkConfiguration::new(None, None, Some(clerk_secret_key), None);
-        let client = Clerk::new(clerk_config);
+        let client = Clerk::new(clerk_config.clone());
 
         let state = web::Data::new(AppState { client });
 
         let cors = Cors::default()
             .allow_any_origin()
             .allow_any_method()
-            .allow_any_header()
+            .allowed_headers([header::AUTHORIZATION])
             .supports_credentials();
 
         cfg.service(
             web::resource("/users")
+                .wrap(ClerkMiddleware::new(clerk_config, None, false))
                 .route(web::get().to(get_users))
                 .wrap(cors),
         )
