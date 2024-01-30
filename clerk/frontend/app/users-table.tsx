@@ -23,8 +23,8 @@ export default function UsersTable(props: UsersTableProps) {
           <TableHead>Avatar</TableHead>
           <TableHead>First Name</TableHead>
           <TableHead>Last Name</TableHead>
-          <TableHead>username</TableHead>
-          <TableHead>email</TableHead>
+          <TableHead>Username</TableHead>
+          <TableHead>Email</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
