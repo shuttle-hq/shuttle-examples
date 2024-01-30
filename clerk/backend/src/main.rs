@@ -38,15 +38,20 @@ async fn get_users(state: web::Data<AppState>) -> impl Responder {
         None,
     )
     .await;
-    if all_users.is_err() {
-        return HttpResponse::InternalServerError().json(serde_json::json!({
+    
+    let list_data = match all_users{
+        Ok(data) => data,
+        Err(_) => {
+            return HttpResponse::InternalServerError().json(serde_json::json!({
             "status": "FAILED",
             "message": "Unable to retrieve all users",
         }));
-    }
+
+        }
+    };
 
     HttpResponse::Ok().json(serde_json::json!({
-        "data": "",
+        "data": list_data,
         "message": "",
         "status":"SUCCESS"
     }))
