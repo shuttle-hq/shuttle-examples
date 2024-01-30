@@ -1,4 +1,4 @@
 name = "shuttle-actix-react-clerk"
 assets = [
-    "frontend2/dist/*",
+    "frontend/dist/*",
 ]

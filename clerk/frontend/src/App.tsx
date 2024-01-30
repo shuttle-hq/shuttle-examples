@@ -1,4 +1,3 @@
-import "./App.css";
 import { SignIn, SignedIn, SignedOut } from "@clerk/clerk-react";
 import UsersTable from "./components/users-table";
 
