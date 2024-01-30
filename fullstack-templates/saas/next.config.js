@@ -4,7 +4,7 @@ const nextConfig = {
   output: "export",
   trailingSlash: true,
   distDir: "./backend/public",
-    images: {
+  images: {
     unoptimized: true,
   },
 }

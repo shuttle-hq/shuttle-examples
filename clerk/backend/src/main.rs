@@ -6,57 +6,19 @@ use actix_web::{
 use clerk_rs::{
     apis::{sessions_api::Session, users_api::User},
     clerk::Clerk,
+    validators::actix::ClerkMiddleware,
     ClerkConfiguration,
     ClerkModels::VerifySessionRequest,
 };
-use dotenv::dotenv;
 use shuttle_actix_web::ShuttleActixWeb;
 
 struct AppState {
     client: Clerk,
 }
 
-#[get("")]
+#[get("/users")]
 async fn get_users(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
-    let session_header = req.headers().get("X-CLERK_SESSION_ID");
-
-    let session_id = match session_header {
-        Some(value) => value.to_str().ok().unwrap(),
-        None => {
-            return HttpResponse::Forbidden().json(serde_json::json!({
-                "status":"FAILED",
-                "message":"No session found"
-            }))
-        }
-    };
-
-    let session_cookie = req.cookie("__session").map(|c| c.value().to_string());
-
-    let token = match session_cookie {
-        Some(id) => id,
-        None => {
-            return HttpResponse::Forbidden().json(serde_json::json!({
-                "status": "FAILED",
-                "message": "No session found",
-            }))
-        }
-    };
-
-    let is_session_verified = Session::verify_session(
-        &state.client,
-        session_id,
-        Some(VerifySessionRequest { token: Some(token) }),
-    )
-    .await;
-
-    if is_session_verified.is_err() {
-        return HttpResponse::Unauthorized().json(serde_json::json!({
-            "status": "FAILED",
-            "message": "Invalid session",
-        }));
-    }
-
-    let all_users = User::get_user_list(
+    let Ok(all_users) = User::get_user_list(
         &state.client,
         None,
         None,
@@ -70,34 +32,37 @@ async fn get_users(state: web::Data<AppState>, req: HttpRequest) -> impl Respond
         None,
         None,
     )
-    .await;
-    if all_users.is_err() {
+    .await
+    else {
         return HttpResponse::InternalServerError().json(serde_json::json!({
             "status": "FAILED",
             "message": "Unable to retrieve all users",
         }));
-    }
+    };
 
-    HttpResponse::Ok().json(serde_json::json!({
-        "data": "",
-        "message": "",
-        "status":"SUCCESS"
-    }))
+    HttpResponse::Ok().json(all_users.into_iter().map(|u| u.id).collect::<Vec<_>>())
 }
 
 #[shuttle_runtime::main]
-async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
-    dotenv().ok();
+async fn actix_web(
+    #[shuttle_secrets::Secrets] secrets: shuttle_secrets::SecretStore,
+) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     let app_config = move |cfg: &mut ServiceConfig| {
-        let clerk_secret_key =
-            std::env::var("CLERK_SECRET_KEY").expect("Clerk Secret key is not set");
+        let clerk_secret_key = secrets
+            .get("CLERK_SECRET_KEY")
+            .expect("Clerk Secret key is not set");
         let clerk_config = ClerkConfiguration::new(None, None, Some(clerk_secret_key), None);
-        let client = Clerk::new(clerk_config);
+        let client = Clerk::new(clerk_config.clone());
 
         let state = web::Data::new(AppState { client });
 
-        cfg.service(web::scope("/users").service(get_users))
-            .app_data(state);
+        cfg.service(
+            web::scope("/api")
+                .wrap(ClerkMiddleware::new(clerk_config, None, true))
+                .service(get_users),
+        )
+        .service(actix_files::Files::new("/", "./frontend2/dist").index_file("index.html"))
+        .app_data(state);
     };
 
     Ok(app_config.into())
