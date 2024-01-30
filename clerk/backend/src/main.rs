@@ -7,9 +7,9 @@ use actix_web::{
 use clerk_rs::{
     apis::users_api::User, clerk::Clerk, validators::actix::ClerkMiddleware, ClerkConfiguration,
 };
-use dotenv::dotenv;
 use serde::{Deserialize, Serialize};
 use shuttle_actix_web::ShuttleActixWeb;
+use shuttle_secrets::SecretStore;
 
 struct AppState {
     client: Clerk,
@@ -58,11 +58,10 @@ async fn get_users(state: web::Data<AppState>) -> impl Responder {
 }
 
 #[shuttle_runtime::main]
-async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
-    dotenv().ok();
+async fn actix_web( #[shuttle_secrets::Secrets] secret_store: SecretStore) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
+
     let app_config = move |cfg: &mut ServiceConfig| {
-        let clerk_secret_key =
-            std::env::var("CLERK_SECRET_KEY").expect("Clerk Secret key is not set");
+        let clerk_secret_key = secret_store.get("CLERK_SECRET_KEY").expect("Clerk Secret key is not set");
         let clerk_config = ClerkConfiguration::new(None, None, Some(clerk_secret_key), None);
         let client = Clerk::new(clerk_config.clone());
 
