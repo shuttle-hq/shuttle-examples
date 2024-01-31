@@ -78,7 +78,8 @@ pub async fn login(
                 .same_site(SameSite::Strict)
                 .http_only(true)
                 .path("/")
-                .max_age(Duration::WEEK);
+                .max_age(Duration::WEEK)
+                .build();
 
             Ok((jar.add(cookie), StatusCode::OK))
         }
@@ -100,7 +101,7 @@ pub async fn logout(
         .execute(&state.postgres);
 
     match query.await {
-        Ok(_) => Ok(jar.remove(Cookie::build("foo"))),
+        Ok(_) => Ok(jar.remove(Cookie::from("foo"))),
         Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
     }
 }

@@ -20,7 +20,7 @@ shuttle-axum = "0.38.0"
 shuttle-runtime = "0.38.0"
 shuttle-secrets = "0.38.0"
 shuttle-shared-db = { version = "0.38.0", features = ["postgres", "sqlx"] }
-sqlx = "0.7.1"
+sqlx = { version = "0.7.1", features = ["time"] }
 time = { version = "0.3.20", features = ["serde"] }
 tokio = "1.27.0"
 tower = "0.4.13"
