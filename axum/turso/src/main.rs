@@ -1,26 +1,21 @@
 use std::sync::Arc;
 
-use axum::{extract, extract::State, response::IntoResponse, routing::get, Json, Router};
-use libsql_client::{args, Client, Row, Statement, Value};
+use axum::{extract::State, response::IntoResponse, routing::get, Json, Router};
+use libsql::Connection;
 use serde::{Deserialize, Serialize};
 
-fn row_string_field(r: &Row, index: usize) -> String {
-    match r.values.get(index).unwrap() {
-        Value::Text { value } => value.clone(),
-        _ => unreachable!(),
+async fn get_posts(State(client): State<Arc<Connection>>) -> Json<Vec<User>> {
+    let mut rows = client
+        .query("select * from example_users", ())
+        .await
+        .unwrap();
+    let mut users = vec![];
+    while let Some(row) = rows.next().unwrap() {
+        users.push(User {
+            uid: row.get::<String>(0).unwrap(),
+            email: row.get::<String>(1).unwrap(),
+        });
     }
-}
-
-async fn get_posts(State(client): State<Arc<Client>>) -> Json<Vec<User>> {
-    let rows = client.execute("select * from example_users").await.unwrap();
-    let users: Vec<_> = rows
-        .rows
-        .iter()
-        .map(|r| User {
-            uid: row_string_field(r, 0),
-            email: row_string_field(r, 1),
-        })
-        .collect();
     Json(users)
 }
 
@@ -31,14 +26,14 @@ struct User {
 }
 
 async fn create_users(
-    State(client): State<Arc<Client>>,
-    extract::Json(user): extract::Json<User>,
+    State(client): State<Arc<Connection>>,
+    Json(user): Json<User>,
 ) -> impl IntoResponse {
     client
-        .execute(Statement::with_args(
-            "insert into example_users values (?, ?)",
-            args!(user.uid, user.email),
-        ))
+        .execute(
+            "insert into example_users (uid, email) values (?1, ?2)",
+            [user.uid, user.email],
+        )
         .await
         .unwrap();
 
@@ -48,12 +43,15 @@ async fn create_users(
 #[shuttle_runtime::main]
 async fn axum(
     #[shuttle_turso::Turso(addr = "libsql://your-db.turso.io", token = "{secrets.TURSO_DB_TOKEN}")]
-    client: Client,
+    client: Connection,
 ) -> shuttle_axum::ShuttleAxum {
     let client = Arc::new(client);
 
     client
-        .execute("create table if not exists example_users ( uid text primary key, email text );")
+        .execute(
+            "create table if not exists example_users ( uid text primary key, email text );",
+            (),
+        )
         .await
         .unwrap();
 
