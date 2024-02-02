@@ -10,6 +10,7 @@ use clerk_rs::{
     validators::actix::{clerk_authorize, ClerkMiddleware},
     ClerkConfiguration,
 };
+use serde::{Deserialize, Serialize};
 use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_secrets::SecretStore;
 
@@ -17,8 +18,9 @@ struct AppState {
     client: Clerk,
 }
 
+// Get the full user list of everyone who has signed in to this app
 #[get("/users")]
-async fn get_users(state: web::Data<AppState>, _req: HttpRequest) -> impl Responder {
+async fn get_users(state: web::Data<AppState>) -> impl Responder {
     let Ok(all_users) = User::get_user_list(
         &state.client,
         None,
@@ -36,48 +38,38 @@ async fn get_users(state: web::Data<AppState>, _req: HttpRequest) -> impl Respon
     .await
     else {
         return HttpResponse::InternalServerError().json(serde_json::json!({
-            "status": "FAILED",
             "message": "Unable to retrieve all users",
         }));
     };
 
     HttpResponse::Ok().json(
-        all_users, /* .into_iter().map(|u| u.id).collect::<Vec<_>>() */
+        all_users
+            .into_iter()
+            .map(|u| u.into())
+            .collect::<Vec<UserModel>>(),
     )
 }
 
-#[get("/user/self")]
-async fn get_user_self(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
+// Example endpoint for extracting the calling user
+#[get("/users/me")]
+async fn get_user(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
     let srv_req = ServiceRequest::from_request(req);
-
-    let claim = match clerk_authorize(&srv_req, &state.client, true).await {
+    let jwt = match clerk_authorize(&srv_req, &state.client, true).await {
         Ok(value) => value.1,
-        Err(_) => {
-            return HttpResponse::Unauthorized().json(serde_json::json!({
-                "status":"Failed",
-                "message":"Unauthorized"
-            }));
-        }
+        Err(e) => return e,
     };
 
-    let Ok(user) = User::get_user(&state.client, &claim.sub).await else {
+    let Ok(user) = User::get_user(&state.client, &jwt.sub).await else {
         return HttpResponse::InternalServerError().json(serde_json::json!({
-            "status": "FAILED",
-            "message": "Unable to retrieve all users",
+            "message": "Unable to retrieve user",
         }));
     };
 
-    HttpResponse::Ok().json(serde_json::json!({
-        "id": &user.id,
-        "first_name": &user.first_name,
-        "last_name": &user.last_name,
-        "username": &user.username,
-        "avatar": &user.profile_image_url
-    }))
+    HttpResponse::Ok().json(Into::<UserModel>::into(user))
 }
 
 #[shuttle_runtime::main]
-async fn actix_web(
+async fn main(
     #[shuttle_secrets::Secrets] secrets: SecretStore,
 ) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     let app_config = move |cfg: &mut ServiceConfig| {
@@ -90,13 +82,40 @@ async fn actix_web(
         let state = web::Data::new(AppState { client });
 
         cfg.service(
+            // protect the /api routes with clerk authentication
             web::scope("/api")
                 .wrap(ClerkMiddleware::new(clerk_config, None, true))
-                .service(get_users),
+                .service(get_users)
+                .service(get_user),
         )
+        // serve the build files from the frontend
         .service(actix_files::Files::new("/", "./frontend/dist").index_file("index.html"))
         .app_data(state);
     };
 
     Ok(app_config.into())
+}
+
+/// As subset of the fields in [`clerk_rs::models::user::User`]
+#[derive(Serialize, Deserialize)]
+struct UserModel {
+    id: Option<String>,
+    username: Option<Option<String>>,
+    first_name: Option<Option<String>>,
+    last_name: Option<Option<String>>,
+    email_addresses: Option<Vec<clerk_rs::models::EmailAddress>>,
+    profile_image_url: Option<String>,
+}
+
+impl From<clerk_rs::models::user::User> for UserModel {
+    fn from(value: clerk_rs::models::user::User) -> Self {
+        Self {
+            id: value.id,
+            username: value.username,
+            first_name: value.first_name,
+            last_name: value.last_name,
+            email_addresses: value.email_addresses,
+            profile_image_url: value.profile_image_url,
+        }
+    }
 }

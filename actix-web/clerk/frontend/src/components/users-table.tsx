@@ -40,18 +40,18 @@ export default function UsersTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data.map((user: UserSchema, id: string) => (
-              <TableRow key={id}>
+            {data.map((user: UserSchema, i: number) => (
+              <TableRow key={i}>
                 <TableCell>
                   <Avatar>
-                    <AvatarImage src={user.profile_image_url} />
-                    <AvatarFallback>{user.username}</AvatarFallback>
+                    <AvatarImage src={user?.profile_image_url} />
+                    <AvatarFallback>{user?.username}</AvatarFallback>
                   </Avatar>
                 </TableCell>
-                <TableCell>{user.first_name}</TableCell>
-                <TableCell>{user.last_name}</TableCell>
-                <TableCell>{user.username}</TableCell>
-                <TableCell>{user.email_addresses[0].email_address}</TableCell>
+                <TableCell>{user?.first_name}</TableCell>
+                <TableCell>{user?.last_name}</TableCell>
+                <TableCell>{user?.username}</TableCell>
+                <TableCell>{user?.email_addresses?.[0].email_address}</TableCell>
               </TableRow>
             ))}
           </TableBody>
