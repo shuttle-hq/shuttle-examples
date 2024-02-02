@@ -1,10 +1,14 @@
 use actix_web::{
+    dev::ServiceRequest,
     get,
     web::{self, ServiceConfig},
     HttpRequest, HttpResponse, Responder,
 };
 use clerk_rs::{
-    apis::users_api::User, clerk::Clerk, validators::actix::ClerkMiddleware, ClerkConfiguration,
+    apis::users_api::User,
+    clerk::Clerk,
+    validators::actix::{clerk_authorize, ClerkMiddleware},
+    ClerkConfiguration,
 };
 use shuttle_actix_web::ShuttleActixWeb;
 use shuttle_secrets::SecretStore;
@@ -40,6 +44,36 @@ async fn get_users(state: web::Data<AppState>, _req: HttpRequest) -> impl Respon
     HttpResponse::Ok().json(
         all_users, /* .into_iter().map(|u| u.id).collect::<Vec<_>>() */
     )
+}
+
+#[get("/user/self")]
+async fn get_user_self(state: web::Data<AppState>, req: HttpRequest) -> impl Responder {
+    let srv_req = ServiceRequest::from_request(req);
+
+    let claim = match clerk_authorize(&srv_req, &state.client, true).await {
+        Ok(value) => value.1,
+        Err(_) => {
+            return HttpResponse::Unauthorized().json(serde_json::json!({
+                "status":"Failed",
+                "message":"Unauthorized"
+            }));
+        }
+    };
+
+    let Ok(user) = User::get_user(&state.client, &claim.sub).await else {
+        return HttpResponse::InternalServerError().json(serde_json::json!({
+            "status": "FAILED",
+            "message": "Unable to retrieve all users",
+        }));
+    };
+
+    HttpResponse::Ok().json(serde_json::json!({
+        "id": &user.id,
+        "first_name": &user.first_name,
+        "last_name": &user.last_name,
+        "username": &user.username,
+        "avatar": &user.profile_image_url
+    }))
 }
 
 #[shuttle_runtime::main]
