@@ -1,5 +1,13 @@
 # Using Clerk auth with a Rust Actix web backend
 
+This template uses Actix-web and the clerk-rs crate for providing authentication from Clerk in the backend.
+
+The frontend is a simple React app that uses Clerk's React components.
+
+The template simply shows a list of all signed up users after you sign in, but it can be extended to create a full app with authenticated endpoints.
+
+## How to use this template
+
 Clone this template with `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder actix-web/clerk`.
 
 Sign up at clerk.com, go to the dashboard and create an application with the sign-in options you prefer.
@@ -8,7 +16,6 @@ Get the `CLERK_SECRET_KEY` secret and put it in `backend/Secrets.toml`.
 Make sure you don't commit this file.
 
 Get the `VITE_CLERK_PUBLISHABLE_KEY` secret and put it in `frontend/.env`.
-The key placed there is public, so it does not have to be gitignored.
 
 > The frontend was initialized from the React+TS template in `npm create vite@latest`.
 > The Clerk components were then added by following the guide at <https://clerk.com/docs/quickstarts/react>.
