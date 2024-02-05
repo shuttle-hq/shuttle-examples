@@ -20,7 +20,7 @@ export default defineConfig({
                 ],
             ],
             name: 'frontend',
-            onChange: async ({ spawn }) => {
+            onChange: async ({spawn}) => {
                 await spawn`next build`;
             },
         },
@@ -32,8 +32,8 @@ export default defineConfig({
                 ['anyof', ['match', '*.rs', 'basename'], ['match', '*.toml', 'basename']],
             ],
             name: 'backend',
-            onChange: async ({ spawn }) => {
-                await spawn`cargo shuttle run --working-directory backend`;
+            onChange: async ({spawn}) => {
+                await spawn`cargo shuttle run`;
             },
         },
     ],
