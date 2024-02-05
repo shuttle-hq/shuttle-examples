@@ -1,0 +1,16 @@
+---
+concurrency: 4
+base: 'https://benchmark-cpu.shuttleapp.rs'
+iterations: 1000
+rampup: 1
+
+plan:
+  - name: Get HTML page
+    request:
+      url: /
+  - name: Get CSS file
+    request:
+      url: /style.css
+  - name: Get JS file
+    request:
+      url: /script.js
