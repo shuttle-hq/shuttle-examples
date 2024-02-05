@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "ROARR_LOG=true turbowatch ./turbowatch.ts | roarr",
+    "dev": "cross-env ROARR_LOG=true turbowatch ./turbowatch.ts | roarr",
     "next-dev": "next dev --turbo",
     "analyze": "cross-env ANALYZE=true next build",
     "build": "next build && cargo build",
