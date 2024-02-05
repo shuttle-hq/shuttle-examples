@@ -30,8 +30,7 @@ export default defineConfig({
             // Watch for changes in backend files, excluding certain directories
             expression: [
                 'allof',
-                ['not', ['dirname', '.cargo']],
-                ['not', ['dirname', 'target']],
+                ['dirname', 'backend'],
                 ['anyof', ['match', '*.rs', 'basename'], ['match', '*.toml', 'basename']],
             ],
             name: 'backend',
