@@ -4,6 +4,7 @@ export default defineConfig({
     project: __dirname,
     triggers: [
         {
+            // Watch for changes in frontend files, excluding certain directories
             expression: [
                 'allof',
                 ['not', ['dirname', '.next']],
@@ -21,10 +22,12 @@ export default defineConfig({
             ],
             name: 'frontend',
             onChange: async ({spawn}) => {
+                // Build the Next.js project
                 await spawn`next build`;
             },
         },
         {
+            // Watch for changes in backend files, excluding certain directories
             expression: [
                 'allof',
                 ['not', ['dirname', '.cargo']],
@@ -33,6 +36,7 @@ export default defineConfig({
             ],
             name: 'backend',
             onChange: async ({spawn}) => {
+                // Run the Rust project with Cargo Shuttle
                 await spawn`cargo shuttle run`;
             },
         },
