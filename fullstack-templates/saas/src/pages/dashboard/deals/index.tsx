@@ -1,7 +1,7 @@
 import Layout from '../../../components/Layout';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { accountStore } from '../../../zustandStore';
+import { accountStore } from '@/stores/zustandStore';
 import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';

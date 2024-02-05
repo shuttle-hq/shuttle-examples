@@ -1,9 +1,9 @@
 use axum::{
     extract::{Request, State},
     http::StatusCode,
+    Json,
     middleware::Next,
     response::{IntoResponse, Response},
-    Json,
 };
 use axum_extra::extract::cookie::{Cookie, PrivateCookieJar, SameSite};
 use serde::Deserialize;
@@ -74,7 +74,7 @@ pub async fn login(
                 .expect("Couldn't insert session :(");
 
             let cookie = Cookie::build(("foo", session_id))
-                .secure(true)
+                .secure(!cfg!(debug_assertions))
                 .same_site(SameSite::Strict)
                 .http_only(true)
                 .path("/")
