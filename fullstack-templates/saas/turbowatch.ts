@@ -1,37 +1,29 @@
 import { defineConfig } from 'turbowatch';
 import { ChildProcess, exec, spawn } from 'child_process';
+import path from 'path';
+import os from 'os';
 
 // Function to execute a shell command and return a promise
 function executeCommand(command: string | string[], abortSignal?: AbortSignal): Promise<void> {
     return new Promise((resolve, reject) => {
         let process: ChildProcess;
 
-        if (typeof command === 'string') {
-            // Execute a simple command
-            process = exec(command, {cwd: __dirname}, (error, stdout, stderr) => {
-                if (error) {
-                    console.error(`exec error: ${error}`);
-                    return reject(error);
-                }
-                console.log(stdout);
-                console.error(stderr);
-                resolve();
-            });
-        } else {
-            // Execute a command with parameters (like 'cargo shuttle run')
-            process = spawn(command[0], command.slice(1), {
-                cwd: __dirname,
-                stdio: 'inherit',
-            });
+        // Destructure the command into the command and its arguments
+        const [cmd, ...args] = typeof command === 'string' ? command.split(' ') : command;
 
-            process.on('close', (code) => {
-                if (code !== 0) {
-                    reject(new Error(`${command.join(' ')} exited with code ${code}`));
-                } else {
-                    resolve();
-                }
-            });
-        }
+        // Start the process
+        process = spawn(cmd, args, {
+            cwd: __dirname,
+            stdio: 'inherit',
+        });
+
+        process.on('close', (code) => {
+            if (code !== 0) {
+                reject(new Error(`${[cmd, ...args].join(' ')} exited with code ${code}`));
+            } else {
+                resolve();
+            }
+        });
 
         if (abortSignal) {
             abortSignal.addEventListener('abort', () => {
@@ -90,9 +82,11 @@ export default defineConfig({
                 ],
             ],
             name: 'frontend',
-            onChange: async () => {
+            onChange: async ({abortSignal}) => {
                 // Build the Next.js project
-                await executeCommand('next build');
+                const nextCmd = os.platform() === 'win32' ? 'next.cmd' : 'next';
+                const nextPath = path.join(__dirname, 'node_modules', '.bin', nextCmd);
+                await executeCommand(`${nextPath} build`, abortSignal);
             },
         },
         {
@@ -105,6 +99,9 @@ export default defineConfig({
                 } else {
                     console.error('Shuttle runtime not available, skipping cargo shuttle run');
                 }
+            },
+            retry: {
+                retries: 0, // Setting retries to 0 to ensure that console logs, especially errors, are not overwritten by automatic retries
             },
         },
     ],
