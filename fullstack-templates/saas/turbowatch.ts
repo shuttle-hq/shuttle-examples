@@ -17,6 +17,7 @@ function executeCommand(command: string | string[], abortSignal?: AbortSignal): 
             stdio: 'inherit',
         });
 
+        // When the process exits, resolve or reject the promise
         process.on('close', (code) => {
             if (code !== 0) {
                 reject(new Error(`${[cmd, ...args].join(' ')} exited with code ${code}`));
@@ -25,9 +26,10 @@ function executeCommand(command: string | string[], abortSignal?: AbortSignal): 
             }
         });
 
+        // If an abort signal is provided, kill the process if the watcher is aborted
         if (abortSignal) {
             abortSignal.addEventListener('abort', () => {
-                process.kill(); // Kill the process if the watcher is aborted
+                process.kill();
             });
         }
     });
@@ -44,7 +46,7 @@ function checkShuttleRuntime(): Promise<void> {
                 return reject(error);
             }
             console.log(`Version: ${stdout}`);
-            shuttleRuntimeAvailable = true;
+            shuttleRuntimeAvailable = true; // Set the shuttle runtime availability flag to true
             resolve();
         });
     });
@@ -82,6 +84,9 @@ export default defineConfig({
                 ],
             ],
             name: 'frontend',
+            // If {interruptible: true}, then AbortSignal will abort the current onChange routine
+            interruptible: true,
+            // Routine that is executed when file changes are detected
             onChange: async ({abortSignal}) => {
                 // Build the Next.js project
                 const nextCmd = os.platform() === 'win32' ? 'next.cmd' : 'next';
@@ -93,6 +98,9 @@ export default defineConfig({
             // Watch for changes in backend files, excluding certain directories
             expression: ['allof', ['dirname', 'backend'], ['anyof', ['match', '*.rs', 'basename'], ['match', '*.toml', 'basename']]],
             name: 'backend',
+            // If {interruptible: true}, then AbortSignal will abort the current onChange routine
+            interruptible: true,
+            // Routine that is executed when file changes are detected
             onChange: async ({abortSignal}) => {
                 if (shuttleRuntimeAvailable) {
                     await executeCommand(['cargo', 'shuttle', 'run'], abortSignal);
@@ -100,6 +108,7 @@ export default defineConfig({
                     console.error('Shuttle runtime not available, skipping cargo shuttle run');
                 }
             },
+            // Retry a task if it fails. Otherwise, watch program will throw an error if trigger fails.
             retry: {
                 retries: 0, // Setting retries to 0 to ensure that console logs, especially errors, are not overwritten by automatic retries
             },
