@@ -35,31 +35,31 @@ function executeCommand(command: string | string[], abortSignal?: AbortSignal): 
     });
 }
 
-let shuttleRuntimeAvailable = false;
+let shuttleCliAvailable = false;
 
-// Function to check if the Shuttle runtime is installed
-function checkShuttleRuntime(): Promise<void> {
+// Function to check if cargo shuttle is installed
+function checkShuttleCli(): Promise<void> {
     return new Promise((resolve, reject) => {
         exec('cargo shuttle --version', (error, stdout, _stderr) => {
             if (error) {
-                console.error(`Shuttle runtime check failed: ${error}`);
+                console.error(`Shuttle check failed: ${error}`);
                 return reject(error);
             }
             console.log(`Version: ${stdout}`);
-            shuttleRuntimeAvailable = true; // Set the shuttle runtime availability flag to true
+            shuttleCliAvailable = true; // Set the shuttle availability flag to true
             resolve();
         });
     });
 }
 
-// Check for the Shuttle runtime once at the start
+// Check for cargo shuttle once at the start
 (async () => {
     try {
-        console.log('Checking for cargo shuttle runtime...');
-        await checkShuttleRuntime();
+        console.log('Checking for cargo shuttle...');
+        await checkShuttleCli();
     } catch (error) {
-        console.error('Failed to check cargo shuttle runtime:', error);
-        shuttleRuntimeAvailable = false;
+        console.error('Failed to check cargo shuttle:', error);
+        shuttleCliAvailable = false;
     }
 })();
 
@@ -102,10 +102,10 @@ export default defineConfig({
             interruptible: true,
             // Routine that is executed when file changes are detected
             onChange: async ({abortSignal}) => {
-                if (shuttleRuntimeAvailable) {
+                if (shuttleCliAvailable) {
                     await executeCommand(['cargo', 'shuttle', 'run'], abortSignal);
                 } else {
-                    console.error('Shuttle runtime not available, skipping cargo shuttle run');
+                    console.error('Shuttle not available, skipping cargo shuttle run');
                 }
             },
             // Retry a task if it fails. Otherwise, watch program will throw an error if trigger fails.
