@@ -93,6 +93,10 @@ export default defineConfig({
                 const nextPath = path.join(__dirname, 'node_modules', '.bin', nextCmd);
                 await executeCommand(`${nextPath} build`, abortSignal);
             },
+            // Retry a task if it fails. Otherwise, watch program will throw an error if trigger fails.
+            retry: {
+                retries: 0, // Setting retries to 0 to ensure that console logs, especially errors, are not overwritten by automatic retries
+            },
         },
         {
             // Watch for changes in backend files, excluding certain directories
