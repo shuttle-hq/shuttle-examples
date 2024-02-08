@@ -1,7 +1,7 @@
 import Layout from '../../../components/Layout';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { accountStore } from '@/zustandStore';
+import { accountStore } from '@/stores/zustandStore';
 
 export default function CreateCustomer() {
   const [firstName, setFirstName] = React.useState<string>('');

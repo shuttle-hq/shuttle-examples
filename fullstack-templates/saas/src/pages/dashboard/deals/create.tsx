@@ -1,7 +1,7 @@
 import Layout from '../../../components/Layout';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { accountStore } from '@/zustandStore';
+import { accountStore } from '@/stores/zustandStore';
 
 type Custname = {
   id: number;

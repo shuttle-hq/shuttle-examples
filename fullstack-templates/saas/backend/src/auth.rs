@@ -74,7 +74,7 @@ pub async fn login(
                 .expect("Couldn't insert session :(");
 
             let cookie = Cookie::build(("foo", session_id))
-                .secure(true)
+                .secure(!cfg!(debug_assertions)) // Only send the cookie over HTTPS in production
                 .same_site(SameSite::Strict)
                 .http_only(true)
                 .path("/")
