@@ -1,12 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  output: "export",
-  trailingSlash: true,
-  distDir: "./dist",
+    reactStrictMode: true,
+    trailingSlash: true,
+
+    // Export settings
+    output: "export",
+    distDir: "./dist",
+
+    // Optimization settings
     images: {
-    unoptimized: true,
-  },
+        unoptimized: true,
+    },
 }
 
-module.exports = nextConfig
+// Bundle analyzer settings
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+    enabled: process.env.ANALYZE === 'true',
+});
+
+// Export the configuration
+module.exports = withBundleAnalyzer(nextConfig);

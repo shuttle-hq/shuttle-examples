@@ -1,7 +1,7 @@
 import Navbar from './navbar';
 import React from 'react';
 import Head from 'next/head';
-import { accountStore } from '@/zustandStore';
+import { accountStore } from '@/stores/zustandStore';
 import { useRouter } from 'next/router';
 
 type Props = {
