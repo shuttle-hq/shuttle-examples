@@ -1,7 +1,7 @@
 import Navbar from './navbar';
 import React from 'react';
 import Head from 'next/head';
-import { accountStore } from '@/zustandStore';
+import { accountStore } from '@/stores/zustandStore';
 
 type Props = {
   children: React.ReactNode | React.ReactNode[];

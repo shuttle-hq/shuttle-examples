@@ -1,7 +1,7 @@
 import Layout from '../../components/Layout';
 import React from 'react';
 import { useRouter } from 'next/router';
-import { accountStore } from '@/zustandStore';
+import { accountStore } from '@/stores/zustandStore';
 import SalesChart from '@/components/SalesChart';
 import RecentSales from '@/components/RecentSales';
 import TopClients from '@/components/TopClients';
