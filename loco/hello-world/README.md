@@ -12,5 +12,5 @@ Welcome to the [Loco](https://loco.rs) Hello World Shuttle Template, designed wi
 To launch your app, simply use the following command:
 
 ```sh
-$ cargo loco start
+$ cargo shuttle run
 ```
