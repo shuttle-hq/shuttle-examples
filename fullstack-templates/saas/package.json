@@ -9,7 +9,8 @@
     "build": "next build && cargo build",
     "shuttle-login": "cargo shuttle login",
     "full": "cargo shuttle run --port 8001",
-    "start": "cargo shuttle project start",
+    "start": "cargo shuttle project start --idle-minutes 0",
+    "restart": "cargo shuttle project restart --idle-minutes 0",
     "stop": "cargo shuttle project stop",
     "deploy": "npm run build && cargo shuttle deploy --allow-dirty",
     "lint": "next lint"
