@@ -7,9 +7,9 @@ publish = false
 [dependencies]
 anyhow = "1.0.68"
 poise = "0.6.1"
-shuttle-runtime = "0.38.0"
-shuttle-secrets = "0.38.0"
+shuttle-runtime = "0.39.0"
+shuttle-secrets = "0.39.0"
 # Since poise is a serenity command framework, it can run on Shuttle with shuttle-serenity
-shuttle-serenity = "0.38.0"
+shuttle-serenity = "0.39.0"
 tracing = "0.1.37"
 tokio = "1.26.0"
