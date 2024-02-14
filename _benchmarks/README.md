@@ -6,7 +6,7 @@ This folder and document contains the materials that were used to test the perfo
 
 Date: 2024-02-14
 Server: Shuttle production server with deployer v0.39.0
-Client to Server Latency: 30 ms (Stockholm -> London)
+Client to Server Latency: 1 ms (same AWS region as Shuttle server)
 
 ## Methodology
 

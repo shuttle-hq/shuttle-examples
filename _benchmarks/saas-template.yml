@@ -1,16 +1,14 @@
 ---
 concurrency: 16
 # base: 'https://benchmark-cpu.shuttleapp.rs'
-base: 'http://localhost:8020'
-iterations: 5000
+iterations: 50000
 rampup: 1
 
 plan:
-  - name: Get HTML page
+  - name: Get customers
     request:
       url: /api/customers
       method: POST
       body: '{"email":"test@example.com"}'
       headers:
         content-type: application/json
-        # Host: static-files.unstable.shuttleapp.rs
