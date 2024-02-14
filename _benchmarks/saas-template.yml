@@ -1,6 +1,6 @@
 ---
 concurrency: 16
-# base: 'https://benchmark-cpu.shuttleapp.rs'
+base: 'https://benchmark-cpu.shuttleapp.rs'
 iterations: 50000
 rampup: 1
 
