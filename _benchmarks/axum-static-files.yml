@@ -2,22 +2,16 @@
 concurrency: 16
 # base: 'https://benchmark-cpu.shuttleapp.rs'
 base: 'http://localhost:8000'
-iterations: 50000
+iterations: 1000
 rampup: 1
 
 plan:
   - name: Get HTML page
     request:
       url: /
-      headers:
-        Host: static-files.unstable.shuttleapp.rs
   - name: Get CSS file
     request:
       url: /style.css
-      headers:
-        Host: static-files.unstable.shuttleapp.rs
   - name: Get JS file
     request:
       url: /script.js
-      headers:
-        Host: static-files.unstable.shuttleapp.rs
