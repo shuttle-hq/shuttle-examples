@@ -4,8 +4,8 @@ This folder and document contains the materials that were used to test the perfo
 
 ## General Info
 
-Server: Shuttle production server with deployer v0.39.0
-Client to Server Latency: 1 ms (same AWS region as Shuttle server)
+- Server: Shuttle production server with deployer v0.39.0
+- Client to Server Latency: 1 ms (same AWS region as Shuttle server)
 
 ## Methodology
 
@@ -108,13 +108,13 @@ Sample standard deviation 18ms
 99.9'th percentile        57ms
 ```
 
-## Test 2: SaaS fullstack template with 500 users
+## Test 2: SaaS fullstack template database call with 500 users
 
 This test used the [SaaS fullstack template](../fullstack-templates/saas/) with a Shuttle shared Postgres database.
 
 Test file: [saas-template.yml](./saas-template.yml)
 
-To prepare for the test, the authentication middleware was disabled,
+To prepare for the test, the session validation middleware was disabled in the API router,
 a user with the email `test@example.com` was signed up,
 and 500 customers were inserted with this script:
 
