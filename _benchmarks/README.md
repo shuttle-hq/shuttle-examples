@@ -4,8 +4,9 @@ This folder and document contains the materials that were used to test the perfo
 
 ## General Info
 
+- Date: 2024-02-15
 - Server: Shuttle production server with deployer v0.39.0
-- Client to Server Latency: 1 ms (same AWS region as Shuttle server)
+- Client to Server ping Latency: 1 ms (same AWS region as Shuttle server)
 
 ## Methodology
 
@@ -129,6 +130,134 @@ done
 The test then ran against the `/api/customers` endpoint for getting those 500 customers.
 
 ### Results
+
+| vCPU limit | req/s    | req/s / vCPU |
+|------------|----------|--------------|
+| 0.05 |  52 | 1040 |
+| 0.1  |  99 |  990 |
+| 0.25 | 263 | 1052 |
+| 0.5  | 533 | 1066 |
+| 1    | 775 |  775 |
+
+---
+
+**vCPU Limit:** 0.05
+
+```text
+Time taken for tests      193.3 seconds
+Total requests            10000
+Successful requests       10000
+Failed requests           0
+Requests per second       51.72 [#/sec]
+Median time per request   301ms
+Average time per request  308ms
+Sample standard deviation 63ms
+99.0'th percentile        401ms
+99.5'th percentile        498ms
+99.9'th percentile        500ms
+```
+
+**vCPU Limit:** 0.1
+
+```text
+Time taken for tests      101.1 seconds
+Total requests            10000
+Successful requests       10000
+Failed requests           0
+Requests per second       98.91 [#/sec]
+Median time per request   195ms
+Average time per request  160ms
+Sample standard deviation 51ms
+99.0'th percentile        299ms
+99.5'th percentile        299ms
+99.9'th percentile        301ms
+```
+
+**vCPU Limit:** 0.25
+
+```text
+Time taken for tests      38.0 seconds
+Total requests            10000
+Successful requests       10000
+Failed requests           0
+Requests per second       262.92 [#/sec]
+Median time per request   78ms
+Average time per request  57ms
+Sample standard deviation 34ms
+99.0'th percentile        99ms
+99.5'th percentile        100ms
+99.9'th percentile        104ms
+```
+
+**vCPU Limit:** 0.5
+
+```text
+Time taken for tests      18.8 seconds
+Total requests            10000
+Successful requests       10000
+Failed requests           0
+Requests per second       533.31 [#/sec]
+Median time per request   18ms
+Average time per request  26ms
+Sample standard deviation 17ms
+99.0'th percentile        64ms
+99.5'th percentile        66ms
+99.9'th percentile        72ms
+```
+
+**vCPU Limit:** 1
+
+```text
+Time taken for tests      12.9 seconds
+Total requests            10000
+Successful requests       10000
+Failed requests           0
+Requests per second       774.70 [#/sec]
+Median time per request   16ms
+Average time per request  17ms
+Sample standard deviation 3ms
+99.0'th percentile        25ms
+99.5'th percentile        26ms
+99.9'th percentile        35ms
+```
+
+## Test 3: Image processing
+
+This test used the [Salvo Image Rescaler](../salvo/image-rescaler/) to resize the Shuttle logo, a more CPU intensive task.
+
+Test file: [salvo-image-rescaler.yml](./salvo-image-rescaler.yml)
+
+### Results
+
+| vCPU limit | req/s    | req/s / vCPU |
+|------------|----------|--------------|
+| 0.05 |   |  |
+| 0.1  |   |   |
+| 0.25 |  |  |
+| 0.5  |  |  |
+| 1    |  |   |
+
+---
+
+**vCPU Limit:** 0.05
+
+```text
+```
+
+**vCPU Limit:** 0.05
+
+```text
+```
+
+**vCPU Limit:** 0.05
+
+```text
+```
+
+**vCPU Limit:** 0.05
+
+```text
+```
 
 **vCPU Limit:** 0.05
 
