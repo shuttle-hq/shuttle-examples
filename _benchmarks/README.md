@@ -53,6 +53,9 @@ Test file: [axum-static-files.yml](./axum-static-files.yml)
 
 ---
 
+<details>
+<summary>Full results</summary>
+
 **vCPU Limit:** 0.05
 
 ```text
@@ -117,6 +120,8 @@ Sample standard deviation 18ms
 99.9'th percentile        57ms
 ```
 
+</details>
+
 ## Test 2: SaaS fullstack template database call with 500 users
 
 This test used the [SaaS fullstack template](../fullstack-templates/saas/) with a Shuttle shared Postgres database.
@@ -148,6 +153,9 @@ The test then ran against the `/api/customers` endpoint for getting those 500 cu
 | 1    | 775 |  775 |
 
 ---
+
+<details>
+<summary>Full results</summary>
 
 **vCPU Limit:** 0.05
 
@@ -229,6 +237,8 @@ Sample standard deviation 3ms
 99.9'th percentile        35ms
 ```
 
+</details>
+
 ## Test 3: Image processing
 
 This test used the [Salvo Image Rescaler](../salvo/image-rescaler/) to resize the Shuttle logo, a more CPU intensive task.
@@ -246,6 +256,9 @@ Test file: [salvo-image-rescaler.yml](./salvo-image-rescaler.yml)
 | 4    | 58.18 | 14.55 |
 
 ---
+
+<details>
+<summary>Full results</summary>
 
 **vCPU Limit:** 0.25
 
