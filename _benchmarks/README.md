@@ -2,6 +2,14 @@
 
 This folder and document contains the materials that were used to test the performance (such as request throughput) of various example apps at different CPU limits.
 
+## Overview
+
+The tests were chosen to represent 3 levels of CPU intensity:
+
+- Light: A file server with very small responses
+- Medium: A fullstack app with medium large JSON responses from a database call
+- Heavy: An image processing server
+
 ## General Info
 
 - Date: 2024-02-15
@@ -231,35 +239,35 @@ Test file: [salvo-image-rescaler.yml](./salvo-image-rescaler.yml)
 
 | vCPU limit | req/s    | req/s / vCPU |
 |------------|----------|--------------|
-| 0.05 |   |  |
-| 0.1  |   |   |
 | 0.25 |  |  |
 | 0.5  |  |  |
-| 1    |  |   |
+| 1    |  |  |
+| 2    |  |  |
+| 4    |  |  |
 
 ---
 
-**vCPU Limit:** 0.05
+**vCPU Limit:** 0.25
 
 ```text
 ```
 
-**vCPU Limit:** 0.05
+**vCPU Limit:** 0.5
 
 ```text
 ```
 
-**vCPU Limit:** 0.05
+**vCPU Limit:** 1
 
 ```text
 ```
 
-**vCPU Limit:** 0.05
+**vCPU Limit:** 2
 
 ```text
 ```
 
-**vCPU Limit:** 0.05
+**vCPU Limit:** 4
 
 ```text
 ```

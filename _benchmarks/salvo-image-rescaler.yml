@@ -1,7 +1,7 @@
 ---
-concurrency: 16
+concurrency: 4
 base: 'https://benchmark-cpu.shuttleapp.rs'
-iterations: 2000
+iterations: 1000
 rampup: 1
 
 plan:
