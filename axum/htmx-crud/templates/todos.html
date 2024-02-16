@@ -1,0 +1,14 @@
+<div id="todos">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Description</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody id="todos-content">
+            {% for todo in todos %} {% include "todo.html" %} {% endfor %}
+        </tbody>
+    </table>
+</div>

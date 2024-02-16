@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block title %}Index{% endblock %} {% block content
+%}
+<h1>Shuttle Todos - Home</h1>
+<a href="/stream">Event stream</a>
+<h1>Shuttle Todos</h1>
+<form id="add-form">
+    <input
+        placeholder="Your todo description..."
+        required
+        type="text"
+        name="description"
+    />
+    <button
+        hx-post="/todos"
+        hx-trigger="click"
+        hx-target="#todos-content"
+        hx-swap="beforeend"
+    >
+        Add
+    </button>
+</form>
+<div
+    id="list"
+    hx-get="/todos"
+    hx-target="this"
+    hx-trigger="load"
+    hx-swap="outerHTML"
+>
+    Loading...
+</div>
+{% endblock %}
