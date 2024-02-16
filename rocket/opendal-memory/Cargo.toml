@@ -1,0 +1,13 @@
+[package]
+name = "opendal-memory"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+shuttle-runtime = "0.39.0"
+shuttle-opendal = "0.39.0"
+tokio = "1.26.0"
+shuttle-rocket = "0.39.0"
+opendal = "0.45.0"
+rocket = { version = "0.5.0", features = ["json"] }
+serde = { version = "1.0.148", features = ["derive"] }
