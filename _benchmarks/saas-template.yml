@@ -1,6 +1,6 @@
 ---
+base: 'http://localhost:8000'
 concurrency: 16
-base: 'https://benchmark-cpu.shuttleapp.rs'
 iterations: 10000
 rampup: 1
 

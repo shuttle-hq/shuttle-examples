@@ -239,35 +239,90 @@ Test file: [salvo-image-rescaler.yml](./salvo-image-rescaler.yml)
 
 | vCPU limit | req/s    | req/s / vCPU |
 |------------|----------|--------------|
-| 0.25 |  |  |
-| 0.5  |  |  |
-| 1    |  |  |
-| 2    |  |  |
-| 4    |  |  |
+| 0.25 |  4.68 | 18.72 |
+| 0.5  |  9.59 | 19.18 |
+| 1    | 19.39 | 19.39 |
+| 2    | 38.8  | 19.4  |
+| 4    | 58.18 | 14.55 |
 
 ---
 
 **vCPU Limit:** 0.25
 
 ```text
+Time taken for tests      427.0 seconds
+Total requests            2000
+Successful requests       2000
+Failed requests           0
+Requests per second       4.68 [#/sec]
+Median time per request   807ms
+Average time per request  853ms
+Sample standard deviation 380ms
+99.0'th percentile        1810ms
+99.5'th percentile        2007ms
+99.9'th percentile        2310ms
 ```
 
 **vCPU Limit:** 0.5
 
 ```text
+Time taken for tests      208.6 seconds
+Total requests            2000
+Successful requests       2000
+Failed requests           0
+Requests per second       9.59 [#/sec]
+Median time per request   408ms
+Average time per request  416ms
+Sample standard deviation 172ms
+99.0'th percentile        803ms
+99.5'th percentile        893ms
+99.9'th percentile        999ms
 ```
 
 **vCPU Limit:** 1
 
 ```text
+Time taken for tests      103.2 seconds
+Total requests            2000
+Successful requests       2000
+Failed requests           0
+Requests per second       19.39 [#/sec]
+Median time per request   208ms
+Average time per request  206ms
+Sample standard deviation 86ms
+99.0'th percentile        393ms
+99.5'th percentile        397ms
+99.9'th percentile        412ms
 ```
 
 **vCPU Limit:** 2
 
 ```text
+Time taken for tests      51.5 seconds
+Total requests            2000
+Successful requests       2000
+Failed requests           0
+Requests per second       38.80 [#/sec]
+Median time per request   108ms
+Average time per request  102ms
+Sample standard deviation 42ms
+99.0'th percentile        191ms
+99.5'th percentile        197ms
+99.9'th percentile        216ms
 ```
 
 **vCPU Limit:** 4
 
 ```text
+Time taken for tests      34.4 seconds
+Total requests            2000
+Successful requests       2000
+Failed requests           0
+Requests per second       58.18 [#/sec]
+Median time per request   75ms
+Average time per request  68ms
+Sample standard deviation 27ms
+99.0'th percentile        132ms
+99.5'th percentile        137ms
+99.9'th percentile        145ms
 ```
