@@ -1,0 +1,13 @@
+---
+base: 'http://localhost:8000'
+concurrency: 4
+iterations: 1000
+rampup: 1
+
+plan:
+  - name: Get small image
+    request:
+      url: /200/200
+  - name: Get large image
+    request:
+      url: /1000/1000

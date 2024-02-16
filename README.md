@@ -79,6 +79,7 @@ Rocket | [static-files](./rocket/static-files/) | Hello World page that serves s
 Rocket | [url-shortener](./rocket/url-shortener/) | URL shortener with Postgres storage | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder rocket/url-shortener`
 Rocket | [workspace](./rocket/workspace/) | A cargo workspace where one crate is a Shuttle service | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder rocket/workspace`
 Salvo | [hello-world](./salvo/hello-world/) | Hello World | `cargo shuttle init --template salvo`
+Salvo | [image-rescaler](./salvo/image-rescaler/) | Hello World | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder salvo/image-rescaler`
 Serenity | [hello-world](./serenity/hello-world/) | Hello World Discord bot | `cargo shuttle init --template serenity`
 Thruster | [hello-world](./thruster/hello-world/) | Hello World | `cargo shuttle init --template thruster`
 Thruster | [postgres](./thruster/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder thruster/postgres`

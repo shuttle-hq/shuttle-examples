@@ -1,0 +1,14 @@
+---
+base: 'http://localhost:8000'
+concurrency: 16
+iterations: 10000
+rampup: 1
+
+plan:
+  - name: Get customers
+    request:
+      url: /api/customers
+      method: POST
+      body: '{"email":"test@example.com"}'
+      headers:
+        content-type: application/json

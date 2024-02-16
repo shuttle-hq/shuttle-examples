@@ -1,0 +1,16 @@
+---
+base: 'http://localhost:8000'
+concurrency: 16
+iterations: 50000
+rampup: 1
+
+plan:
+  - name: Get HTML page
+    request:
+      url: /
+  - name: Get CSS file
+    request:
+      url: /style.css
+  - name: Get JS file
+    request:
+      url: /script.js
