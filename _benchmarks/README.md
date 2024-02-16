@@ -1,4 +1,4 @@
-# Shuttle Example project benchmarks
+# Shuttle example project benchmarks
 
 This folder and document contains the materials that were used to test the performance (such as request throughput) of various example apps at different CPU limits.
 
@@ -10,11 +10,11 @@ The tests were chosen to represent 3 levels of CPU intensity:
 - Medium: A fullstack app with medium large JSON responses from a database call
 - Heavy: An image processing server
 
-## General Info
+## General info
 
 - Date: 2024-02-15
-- Server: Shuttle production server with deployer v0.39.0
-- Client to Server ping Latency: 1 ms (same AWS region as Shuttle server)
+- Server & Version: Shuttle production server with deployer v0.39.0
+- Client to server ping latency: 1 ms (same AWS region as Shuttle server)
 
 ## Methodology
 
@@ -50,8 +50,6 @@ Test file: [axum-static-files.yml](./axum-static-files.yml)
 | 0.1  |  550 | 5500 |
 | 0.25 | 1068 | 4272 |
 | 0.5  | 1117 | 2234 |
-
----
 
 <details>
 <summary>Full results</summary>
@@ -151,8 +149,6 @@ The test then ran against the `/api/customers` endpoint for getting those 500 cu
 | 0.25 | 263 | 1052 |
 | 0.5  | 533 | 1066 |
 | 1    | 775 |  775 |
-
----
 
 <details>
 <summary>Full results</summary>
@@ -254,8 +250,6 @@ Test file: [salvo-image-rescaler.yml](./salvo-image-rescaler.yml)
 | 1    | 19.39 | 19.39 |
 | 2    | 38.8  | 19.4  |
 | 4    | 58.18 | 14.55 |
-
----
 
 <details>
 <summary>Full results</summary>
