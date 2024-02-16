@@ -1,5 +1,8 @@
-{% extends "base.html" %} {% block title %} Index {% endblock %} {% block
+{% extends "base.html" %} {% block title %} Server Sent Event Stream {% endblock %} {% block
 content %}
+<h1>Shuttle Todos - Event Stream</h1>
+<a href="/">Home</a>
+<p>Live changes to the todo list will appear below.</p>
 <div hx-sse="connect:/todos/stream swap:message" hx-swap="beforeend">
     <div></div>
 </div>
