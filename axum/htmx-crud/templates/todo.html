@@ -1,0 +1,14 @@
+<tr id="shuttle-todo-{{ todo.id }}">
+    <td>{{ todo.id }}</td>
+    <td id="shuttle-todo-desc-{{todo.id}}">{{ todo.description }}</td>
+    <td>
+        <button
+            hx-delete="/todos/{{todo.id}}"
+            hx-trigger="click"
+            hx-target="#shuttle-todo-{{todo.id}}"
+            hx-swap="delete"
+        >
+            Delete
+        </button>
+    </td>
+</tr>
