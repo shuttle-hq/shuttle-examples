@@ -57,18 +57,18 @@ Actix Web | [websocket-actorless](./actix-web/websocket-actorless/) | Websocket 
 Actix Web | [cookie-authentication](./actix-web/cookie-authentication/) | Use JWT to authenticate API endpoints | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder actix-web/cookie-authentication`
 Axum | [hello-world](./axum/hello-world/) | Hello World | `cargo shuttle init --template axum`
 Axum | [htmx-crud](./axum/htmx-crud/) | htmx CRUD app | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/htmx-crud`
+Axum | [jwt-authentication](./axum/jwt-authentication/) | Use JWT to authenticate API endpoints | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/jwt-authentication`
 Axum | [metadata](./axum/metadata/) | Simple app that prints the service information such as Shuttle service name | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/metadata`
+Axum | [postgres](./axum/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/postgres`
 Axum | [qdrant](./axum/qdrant/) | Barebones example of the shuttle-qdrant plugin | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/qdrant`
 Axum | [static-files](./axum/static-files/) | Hello World page that serves static HTML and JS files | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/static-files`
 Axum | [static-next-server](./axum/static-next-server/) | SPA server for serving a apps from frameworks such as Next.js | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/static-next-server`
 Axum | [websocket](./axum/websocket/) | Websocket app that checks the status of Shuttle's API | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/websocket`
 Axum | [with-state](./axum/with-state/) | Hello World with example of how to utilize State in Axum | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/with-state`
-Axum | [jwt-authentication](./axum/jwt-authentication/) | Use JWT to authenticate API endpoints | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/jwt-authentication`
 Axum & Next.js | [saas](./fullstack-templates/saas/) | Competent opinionated fullstack web app with pre-made routes and assets | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder fullstack-templates/saas`
 Loco | [hello-world](./loco/hello-world/) | Hello World | `cargo shuttle init --template loco`
 Poem | [hello-world](./poem/hello-world/) | Hello World | `cargo shuttle init --template poem`
 Poem | [mongodb](./poem/mongodb/) | TODO app with MongoDB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder poem/mongodb`
-Poem | [postgres](./poem/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder poem/postgres`
 Poise | [hello-world](./poise/hello-world/) | Hello World Discord bot | `cargo shuttle init --template poise`
 Rocket | [jwt-authentication](./rocket/jwt-authentication/) | Use JWT to authenticate API endpoints | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder rocket/jwt-authentication`
 Rocket | [dyn-templates](./rocket/dyn-templates/) | Handlebars dynamic templates | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder rocket/dyn-templates`
@@ -84,9 +84,7 @@ Salvo | [hello-world](./salvo/hello-world/) | Hello World | `cargo shuttle init 
 Salvo | [image-rescaler](./salvo/image-rescaler/) | Hello World | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder salvo/image-rescaler`
 Serenity | [hello-world](./serenity/hello-world/) | Hello World Discord bot | `cargo shuttle init --template serenity`
 Thruster | [hello-world](./thruster/hello-world/) | Hello World | `cargo shuttle init --template thruster`
-Thruster | [postgres](./thruster/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder thruster/postgres`
 Tide | [hello-world](./tide/hello-world/) | Hello World | `cargo shuttle init --template tide`
-Tide | [postgres](./tide/postgres/) | TODO app with a Postgres DB | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder tide/postgres`
 Tower | [hello-world](./tower/hello-world/) | Hello World | `cargo shuttle init --template tower`
 Tracing | [custom-tracing-subscriber](./tracing/custom-tracing-subscriber/) | Hello world with a custom tracing setup | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder tracing/custom-tracing-subscriber`
 Warp | [hello-world](./warp/hello-world/) | Hello World | `cargo shuttle init --template warp`

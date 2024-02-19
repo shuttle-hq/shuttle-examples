@@ -1,0 +1,152 @@
+## OFFICIAL STARTERS ##
+
+[templates.actix-web-hello-world]
+title = "Actix Web Hello World"
+path = "actix-web/hello-world"
+type = "starter"
+use_cases = ["Web app"]
+tags = ["actix-web"]
+template = "actix-web"
+
+[templates.axum-hello-world]
+title = "Axum Hello World"
+path = "axum/hello-world"
+type = "starter"
+use_cases = ["Web app"]
+tags = ["axum"]
+template = "axum"
+
+[templates.loco-hello-world]
+title = "Loco Hello World"
+path = "loco/hello-world"
+type = "starter"
+use_cases = ["Web app"]
+tags = ["loco"]
+template = "loco"
+
+[templates.poem-hello-world]
+title = "Poem Hello World"
+path = "poem/hello-world"
+type = "starter"
+use_cases = ["Web app"]
+tags = ["poem"]
+template = "poem"
+
+[templates.poise-hello-world]
+title = "Poise Hello World"
+path = "poise/hello-world"
+type = "starter"
+use_cases = ["Discord bot"]
+tags = ["poise", "serenity"]
+template = "poise"
+
+[templates.rocket-hello-world]
+title = "Rocket Hello World"
+path = "rocket/hello-world"
+type = "starter"
+use_cases = ["Web app"]
+tags = ["rocket"]
+template = "rocket"
+
+[templates.salvo-hello-world]
+title = "Salvo Hello World"
+path = "salvo/hello-world"
+type = "starter"
+use_cases = ["Web app"]
+tags = ["salvo"]
+template = "salvo"
+
+[templates.serenity-hello-world]
+title = "Serenity Hello World"
+path = "serenity/hello-world"
+type = "starter"
+use_cases = ["Discord bot"]
+tags = ["serenity"]
+template = "serenity"
+
+[templates.thruster-hello-world]
+title = "Thruster Hello World"
+path = "thruster/hello-world"
+type = "starter"
+use_cases = ["Web app"]
+tags = ["thruster"]
+template = "thruster"
+
+[templates.tide-hello-world]
+title = "Tide Hello World"
+path = "tide/hello-world"
+type = "starter"
+use_cases = ["Web app"]
+tags = ["tide"]
+template = "tide"
+
+[templates.tower-hello-world]
+title = "Tower Hello World"
+path = "tower/hello-world"
+type = "starter"
+use_cases = ["Web app"]
+tags = ["tower"]
+template = "tower"
+
+[templates.warp-hello-world]
+title = "Warp Hello World"
+path = "warp/hello-world"
+type = "starter"
+use_cases = ["Web app"]
+tags = ["warp"]
+template = "warp"
+
+[templates.none]
+title = "None"
+description = "Empty service - A barebones implementation of Shuttle Service trait that does nothing"
+path = "custom-service/none"
+type = "starter"
+use_cases = []
+tags = ["diy"]
+template = "none"
+
+
+## OFFICIAL TEMPLATES ##
+
+
+[templates.actix-web-postgres]
+title = "Actix Web Postgres"
+description = "Todo list with a Postgres database"
+path = "actix-web/postgres"
+type = "template"
+use_cases = ["Web app", "Storage"]
+tags = ["actix-web", "database", "postgres"]
+
+[templates.actix-web-clerk-react]
+title = "Clerk authentication"
+description = "Fullstack Rust+React with auth provider logic"
+path = "actix-web/clerk"
+type = "template"
+use_cases = ["Web app", "Authentication"]
+tags = ["actix-web", "clerk", "react", "typescript", "tailwind"]
+
+[templates.actix-cookie-authentication]
+title = "Cookie Authentication"
+description = "Use JWT to authenticate API endpoints"
+path = "actix-web/cookie-authentication"
+type = "template"
+use_cases = ["Web app", "Authentication"]
+tags = ["actix-web", "jwt"]
+
+[templates.actix-websocket-actorless]
+title = "Actorless Websockets"
+description = "Websocket app that checks the status of Shuttle's API"
+path = "actix-web/websocket-actorless"
+type = "template"
+use_cases = ["Web app", "Monitoring"]
+tags = ["actix-web", "websocket"]
+
+[templates.actix-static-files]
+title = "Actix Web static file server"
+description = "Hello World page that serves static HTML and JS files"
+path = "actix-web/static-files"
+type = "template"
+use_cases = ["Web app"]
+tags = ["actix-web"]
+
+## COMMUNITY TEMPLATES ##
