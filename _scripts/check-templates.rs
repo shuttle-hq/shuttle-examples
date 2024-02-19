@@ -2,9 +2,9 @@
 //!
 //! ```cargo
 //! [dependencies]
-//! serde = { version = "*", features = ["derive"] }
-//! toml = "*"
-//! ignore = "*"
+//! serde = { version = "1", features = ["derive"] }
+//! toml = "0.8"
+//! ignore = "0.4"
 //! ```
 use ignore::Walk;
 use serde::{Deserialize, Serialize};
