@@ -64,7 +64,6 @@ Axum | [static-next-server](./axum/static-next-server/) | SPA server for serving
 Axum | [websocket](./axum/websocket/) | Websocket app that checks the status of Shuttle's API | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/websocket`
 Axum | [with-state](./axum/with-state/) | Hello World with example of how to utilize State in Axum | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/with-state`
 Axum | [jwt-authentication](./axum/jwt-authentication/) | Use JWT to authenticate API endpoints | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/jwt-authentication`
-Axum | [oauth2-authentication](./axum/oauth2-authentication/) | Use Google Oauth2 to authenticate API endpoints | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder axum/oauth2-authentication`
 Axum & Next.js | [saas](./fullstack-templates/saas/) | Competent opinionated fullstack web app with pre-made routes and assets | `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder fullstack-templates/saas`
 Loco | [hello-world](./loco/hello-world/) | Hello World | `cargo shuttle init --template loco`
 Poem | [hello-world](./poem/hello-world/) | Hello World | `cargo shuttle init --template poem`
