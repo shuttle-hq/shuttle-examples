@@ -9,7 +9,7 @@ async fn hello_world() -> &'static str {
 async fn main() -> shuttle_axum::ShuttleAxum {
     let router = Router::new().route("/", get(hello_world)).nest_service(
         "/game",
-        ServeDir::new("game").not_found_service(ServeFile::new("game/index.html")),
+        ServeDir::new("dist").not_found_service(ServeFile::new("dist/index.html")),
     );
     Ok(router.into())
 }
