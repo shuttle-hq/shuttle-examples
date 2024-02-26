@@ -1,0 +1,15 @@
+[package]
+name = "shuttle-docs-weather-bot"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.66"
+reqwest = { version = "0.11.24", features = ["json"] }
+serde = "1.0.197"
+serenity = { version = "0.12.0", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
+shuttle-runtime = "0.39.0"
+shuttle-secrets = "0.39.0"
+shuttle-serenity = "0.39.0"
+tokio = "1.26.0"
+tracing = "0.1.37"
