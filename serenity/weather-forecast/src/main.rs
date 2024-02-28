@@ -32,7 +32,7 @@ impl EventHandler for Bot {
                         "place",
                         "City to lookup forecast",
                     )
-                    .required(true)
+                    .required(true),
                 ),
         ];
 
@@ -62,7 +62,7 @@ impl EventHandler for Bot {
 
                     let result =
                         weather::get_forecast(place, &self.weather_api_key, &self.client).await;
-                        
+
                     match result {
                         Ok((location, forecast)) => {
                             format!("Forecast: {} in {}", forecast.headline.overview, location)
