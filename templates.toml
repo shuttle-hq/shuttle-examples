@@ -134,8 +134,8 @@ use_cases = ["Web app", "Authentication"]
 tags = ["actix-web", "jwt"]
 
 [templates.actix-websocket-actorless]
-title = "Actorless Websockets"
-description = "Websocket app that checks the status of Shuttle's API"
+title = "Actix Web Actorless Websockets"
+description = "Health monitoring service using websockets"
 path = "actix-web/websocket-actorless"
 type = "template"
 use_cases = ["Web app", "Monitoring"]
@@ -148,5 +148,69 @@ path = "actix-web/static-files"
 type = "template"
 use_cases = ["Web app"]
 tags = ["actix-web"]
+
+[templates.axum-htmx-crud]
+title = "Axum + HTMX"
+description = "Simple CRUD app using HTMX and Askama"
+path = "axum/htmx-crud"
+type = "template"
+use_cases = ["Web app", "Storage"]
+tags = ["axum", "htmx", "database", "postgres"]
+
+[templates.axum-jwt-authentication]
+title = "JWT authentication"
+description = "Simple CRUD app using HTMX and Askama"
+path = "axum/jwt-authentication"
+type = "template"
+use_cases = ["Web app", "Authentication"]
+tags = ["axum", "jwt"]
+
+[templates.axum-metadata]
+title = "Shuttle Metadata"
+description = "Basic usage of Shuttle metadata"
+path = "axum/metadata"
+type = "template"
+use_cases = []
+tags = ["axum"]
+
+[templates.axum-postgres]
+title = "Axum Postgres"
+description = "Todo list with a Postgres database"
+path = "axum/postgres"
+type = "template"
+use_cases = ["Web app", "Storage"]
+tags = ["axum", "database", "postgres"]
+
+[templates.axum-qdrant]
+title = "Qdrant"
+description = "Connecting to Qdrant cloud with shuttle-qdrant"
+path = "axum/qdrant"
+type = "template"
+use_cases = ["Web app", "Storage", "AI"]
+tags = ["axum", "database", "qdrant"]
+
+[templates.axum-static-files]
+title = "File server"
+description = "Hello World static file server with tower-http"
+path = "axum/static-files"
+type = "template"
+use_cases = ["Web app"]
+tags = ["axum"]
+
+[templates.axum-turso]
+title = "Turso"
+description = "Connect to a Turso DB with shuttle-turso"
+path = "axum/turso"
+type = "template"
+use_cases = ["Web app", "Storage"]
+tags = ["axum", "database", "libsql", "sqlite"]
+
+[templates.axum-websocket]
+title = "Axum Websockets"
+description = "Health monitoring service using websockets"
+path = "axum/websocket"
+type = "template"
+use_cases = ["Web app", "Monitoring"]
+tags = ["axum", "websocket"]
 
 ## COMMUNITY TEMPLATES ##
