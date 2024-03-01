@@ -11,6 +11,20 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  check-templates:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: taiki-e/install-action@v2
+      with:
+        tool: cargo-binstall
+
+    - run: cargo binstall -y rust-script@0.34.0
+
+    - run: rust-script _scripts/check-templates.rs
+
   fmt-clippy-a-p:
     runs-on: ubuntu-latest
 
@@ -22,7 +36,7 @@ jobs:
 
     - name: Install sccache
       run: |
-        SCCACHE_VERSION='v0.5.4'
+        SCCACHE_VERSION='v0.7.7'
         curl -L https://github.com/mozilla/sccache/releases/download/$SCCACHE_VERSION/sccache-$SCCACHE_VERSION-x86_64-unknown-linux-musl.tar.gz \
           | tar -xOz sccache-$SCCACHE_VERSION-x86_64-unknown-linux-musl/sccache \
           > /home/runner/.cargo/bin/sccache \
@@ -49,7 +63,7 @@ jobs:
 
     - name: Install sccache
       run: |
-        SCCACHE_VERSION='v0.5.4'
+        SCCACHE_VERSION='v0.7.7'
         curl -L https://github.com/mozilla/sccache/releases/download/$SCCACHE_VERSION/sccache-$SCCACHE_VERSION-x86_64-unknown-linux-musl.tar.gz \
           | tar -xOz sccache-$SCCACHE_VERSION-x86_64-unknown-linux-musl/sccache \
           > /home/runner/.cargo/bin/sccache \
