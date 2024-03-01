@@ -6,7 +6,7 @@
 //! toml = "0.8"
 //! ignore = "0.4"
 //! ```
-use ignore::Walk;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -54,28 +54,43 @@ fn main() {
     let s = std::fs::read_to_string("templates.toml").expect("to find file");
     let toml: Schema = toml::from_str(&s).expect("to parse toml file");
 
-    let mut manifests = Walk::new(".")
-        .into_iter()
-        .filter_map(|entry| {
-            let path = entry.unwrap().into_path();
-            if path.file_name().map(|s| s.to_str().unwrap()) != Some("Cargo.toml") {
-                return None;
+    let (tx, rx) = std::sync::mpsc::channel();
+
+    let t = std::thread::spawn(move || {
+        rx.into_iter().collect::<std::collections::BTreeSet<_>>()
+    });
+
+    let walker = ignore::WalkBuilder::new(".").build_parallel();
+    walker.run(|| {
+        let tx = tx.clone();
+        Box::new(move |result| {
+            use ignore::WalkState::*;
+            // join directory with filename so that this directory can be skipped in the case of a workspace
+            let path = result.unwrap().into_path().join("Cargo.toml");
+            if !path.exists() {
+                return Continue;
             }
+
+            let s = format!("{}", path.display());
+            let s = s.trim_start_matches("./")
+                .trim_end_matches("/Cargo.toml")
+                .to_owned();
+            tx.send(s).unwrap();
+
             if std::fs::read_to_string(&path)
                 .unwrap()
                 .contains("[workspace]")
             {
-                println!("workspace {}", path.display());
+                // don't walk into subdirectories of workspaces
+                return Skip;
             }
 
-            let s = format!("{}", path.display());
-            Some(
-                s.trim_start_matches("./")
-                    .trim_end_matches("/Cargo.toml")
-                    .to_owned(),
-            )
+            Continue
         })
-        .collect::<std::collections::BTreeSet<_>>();
+    });
+    drop(tx);
+    let mut manifests = t.join().unwrap();
+    
     // println!("{:?}", manifests);
 
     for (name, t) in toml.templates {
@@ -99,5 +114,5 @@ fn main() {
         std::process::exit(1);
     }
 
-    println!("Templates definitions verified")
+    println!("Template definitions verified")
 }
