@@ -17,8 +17,6 @@ struct Template {
     description: Option<String>,
     /// Path relative to the repo root
     path: Option<String>,
-    /// GitHub username of the main author of the template
-    author: Option<String>,
     /// "starter" OR "template" OR "tutorial"
     r#type: TemplateType,
     /// List of areas where this template is useful. Examples: "Web app", "Discord bot", "Monitoring", "Automation", "Utility"
@@ -33,6 +31,8 @@ struct Template {
 
     /// Set this to true if this is a community template outside of the shuttle-examples repo
     community: Option<bool>,
+    /// GitHub username of the author of the community template
+    author: Option<String>,
     /// URL to the repo of the community template
     repo: Option<String>,
 }
@@ -54,7 +54,7 @@ fn main() {
     let s = std::fs::read_to_string("templates.toml").expect("to find file");
     let toml: Schema = toml::from_str(&s).expect("to parse toml file");
 
-    let (tx, rx) = std::sync::mpsc::channel();
+    let (tx, rx) = std::sync::mpsc::channel::<String>();
 
     let t = std::thread::spawn(move || {
         rx.into_iter().collect::<std::collections::BTreeSet<_>>()
@@ -91,11 +91,14 @@ fn main() {
     drop(tx);
     let mut manifests = t.join().unwrap();
     
-    // println!("{:?}", manifests);
-
+    let mut set = std::collections::BTreeSet::<_>::new();
     for (name, t) in toml.templates {
-        // println!("{}  {:?}", name, t);
         let path = t.path.unwrap_or_default();
+
+        if !set.insert(path.clone()) {
+            eprintln!("Path '{}' referenced in two places", path);
+            std::process::exit(1);
+        }
 
         if !manifests.remove(&path) {
             eprintln!(
