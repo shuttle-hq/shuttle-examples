@@ -56,9 +56,7 @@ fn main() {
 
     let (tx, rx) = std::sync::mpsc::channel::<String>();
 
-    let t = std::thread::spawn(move || {
-        rx.into_iter().collect::<std::collections::BTreeSet<_>>()
-    });
+    let t = std::thread::spawn(move || rx.into_iter().collect::<std::collections::BTreeSet<_>>());
 
     let walker = ignore::WalkBuilder::new(".").build_parallel();
     walker.run(|| {
@@ -72,7 +70,8 @@ fn main() {
             }
 
             let s = format!("{}", path.display());
-            let s = s.trim_start_matches("./")
+            let s = s
+                .trim_start_matches("./")
                 .trim_end_matches("/Cargo.toml")
                 .to_owned();
             tx.send(s).unwrap();
@@ -90,9 +89,13 @@ fn main() {
     });
     drop(tx);
     let mut manifests = t.join().unwrap();
-    
+
     let mut set = std::collections::BTreeSet::<_>::new();
     for (name, t) in toml.templates {
+        if t.community.is_some_and(|c| c) {
+            continue;
+        }
+
         let path = t.path.unwrap_or_default();
 
         if !set.insert(path.clone()) {
