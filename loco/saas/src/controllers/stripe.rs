@@ -1,13 +1,18 @@
 #![allow(clippy::unused_async)]
 use crate::errors::ApiError;
 use axum::http::StatusCode;
-use axum::{extract::State, routing::{delete, post, get}, Json};
-use loco_rs::prelude::{AppContext, Routes };
-use loco_rs::auth;
+use axum::{
+    extract::State,
+    routing::{delete, get, post},
+    Json,
+};
+use loco_rs::prelude::{AppContext, Routes};
+
+use crate::models::_entities::{subscription_tiers, user_subscriptions, users};
 use loco_rs::controller::middleware;
 use sea_orm::entity::prelude::*;
 use sea_orm::entity::ActiveValue;
-use sea_orm::{ColumnTrait, DatabaseConnection, EntityTrait, QueryFilter, Condition};
+use sea_orm::{ColumnTrait, Condition, DatabaseConnection, EntityTrait, QueryFilter};
 use sea_orm::{DeriveActiveEnum, EnumIter, IntoActiveModel};
 use serde::{Deserialize, Serialize};
 use std::fmt;
@@ -17,9 +22,8 @@ use stripe::{
     CreatePaymentMethod, CreatePaymentMethodCardUnion, CreatePrice, CreatePriceRecurring,
     CreatePriceRecurringInterval, CreateProduct, CreateSubscription, CreateSubscriptionItems,
     Currency, Customer, IdOrCreate, PaymentMethod, PaymentMethodTypeFilter, Price, PriceId,
-    Product, Subscription, SubscriptionId, UpdateSubscription, UpdateSubscriptionItems
+    Product, Subscription, SubscriptionId, UpdateSubscription, UpdateSubscriptionItems,
 };
-use crate::models::_entities::{users, user_subscriptions, subscription_tiers};
 
 pub fn routes() -> Routes {
     Routes::new()
@@ -112,15 +116,18 @@ pub async fn update_subscription_tier(
     let client = Client::new(secret_key);
 
     let user_subscription = user_subscriptions::Entity::find()
-        .filter(
-            user_subscriptions::Column::UserId.eq(user.id),
-        )
+        .filter(user_subscriptions::Column::UserId.eq(user.id))
         .one(&ctx.db)
         .await?
         .unwrap();
 
-    let subscription_item = Subscription::retrieve(&client, &SubscriptionId::from_str(&user_subscription.stripe_subscription_id).unwrap(), &["items"])
-        .await?.items;
+    let subscription_item = Subscription::retrieve(
+        &client,
+        &SubscriptionId::from_str(&user_subscription.stripe_subscription_id).unwrap(),
+        &["items"],
+    )
+    .await?
+    .items;
 
     let subscription_item = &subscription_item.data[0];
 
@@ -129,30 +136,36 @@ pub async fn update_subscription_tier(
     }
 
     let new_subscription = subscription_tiers::Entity::find()
-        .filter(Condition::any().add(
-            subscription_tiers::Column::Tier.contains(new_user_tier.user_tier.to_string())
-        ).add(subscription_tiers::Column::Tier.contains(user_subscription.user_tier.to_string())
-            ),
+        .filter(
+            Condition::any()
+                .add(subscription_tiers::Column::Tier.contains(new_user_tier.user_tier.to_string()))
+                .add(
+                    subscription_tiers::Column::Tier
+                        .contains(user_subscription.user_tier.to_string()),
+                ),
         )
         .all(&ctx.db)
         .await?;
 
-    let updated_tier: String = new_subscription.iter().find(|x| x.tier == new_user_tier.user_tier.to_string()).map(|x| x.stripe_price_id.to_string()).unwrap();
+    let updated_tier: String = new_subscription
+        .iter()
+        .find(|x| x.tier == new_user_tier.user_tier.to_string())
+        .map(|x| x.stripe_price_id.to_string())
+        .unwrap();
 
     let _ = Subscription::update(
         &client,
         &SubscriptionId::from_str(&user_subscription.stripe_subscription_id).unwrap(),
         UpdateSubscription {
-                items: Some(vec![
-                    UpdateSubscriptionItems {
-                        id: Some(subscription_item.id.to_string()),
-                        price: Some(updated_tier),
-                        ..Default::default()
-                    },
-                ]),
-                        ..Default::default()
-        }
-    ).await?;
+            items: Some(vec![UpdateSubscriptionItems {
+                id: Some(subscription_item.id.to_string()),
+                price: Some(updated_tier),
+                ..Default::default()
+            }]),
+            ..Default::default()
+        },
+    )
+    .await?;
 
     let mut updated_user_subscription = user_subscription.into_active_model();
     updated_user_subscription.user_tier = ActiveValue::Set(new_user_tier.user_tier);
@@ -211,8 +224,9 @@ pub async fn get_current_tier(
         .await?
         .unwrap();
 
-    Ok(Json(UpdateUserTier { user_tier: subscription.user_tier  }))
-
+    Ok(Json(UpdateUserTier {
+        user_tier: subscription.user_tier,
+    }))
 }
 
 #[derive(Deserialize, Clone)]
@@ -232,9 +246,7 @@ impl UserSubscription {
         CreateCustomer {
             name: Some(&self.name),
             email: Some(&self.email),
-            description: Some(
-                "A paying user.",
-            ),
+            description: Some("A paying user."),
             metadata: Some(std::collections::HashMap::from([(
                 String::from("async-stripe"),
                 String::from("true"),
@@ -250,7 +262,6 @@ impl UserSubscription {
             exp_year: self.exp_year,
             exp_month: self.exp_month,
             cvc: Some(self.cvc.clone()),
-            ..Default::default()
         }
     }
 }
@@ -269,14 +280,6 @@ impl UserTier {
         match self {
             Self::Pro => Some(1000),
             Self::Team => Some(2500),
-        }
-    }
-
-    fn from_str(str: &str) -> Self {
-        match str {
-            "Pro" => Self::Pro,
-            "Team" => Self::Team,
-            _ => panic!("Didn't implement from_str")
         }
     }
 }
@@ -310,8 +313,8 @@ async fn retrieve_product(
             .await?
         }
         None => {
-            let product = create_product_item(client, &user_tier).await?;
-            let price = create_product_price(client, &user_tier, &product).await?;
+            let product = create_product_item(client, user_tier).await?;
+            let price = create_product_price(client, user_tier, &product).await?;
 
             let tier_model = subscription_tiers::ActiveModel {
                 tier: ActiveValue::Set(user_tier.to_string()),
