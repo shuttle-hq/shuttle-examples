@@ -259,7 +259,7 @@ tags = ["rocket", "opendal"]
 [templates.rocket-persist]
 title = "Rocket shuttle-persist"
 description = "A hashmap key-value store using OpenDAL"
-path = "rocket/opendal-memory"
+path = "rocket/persist"
 use_cases = ["Web app", "Storage"]
 tags = ["rocket", "opendal"]
 

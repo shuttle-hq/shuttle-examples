@@ -9,7 +9,7 @@
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 struct Template {
     /// Title of the template
     title: String,
@@ -18,6 +18,7 @@ struct Template {
     /// Path relative to the repo root
     path: Option<String>,
     /// "starter" OR "template" (default) OR "tutorial"
+    #[serde(default)]
     r#type: TemplateType,
     /// List of areas where this template is useful. Examples: "Web app", "Discord bot", "Monitoring", "Automation", "Utility"
     use_cases: Vec<String>,
