@@ -1,3 +1,7 @@
+# Shuttle Template Definitions
+#
+# Use `rust-script _scripts/check-templates.rs` to validate this list
+
 ## OFFICIAL STARTERS ##
 
 [templates.actix-web-hello-world]
