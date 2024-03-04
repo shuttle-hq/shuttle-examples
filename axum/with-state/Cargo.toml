@@ -5,6 +5,6 @@ edition = "2021"
 
 [dependencies]
 axum = "0.7.3"
-shuttle-axum = "0.39.0"
-shuttle-runtime = "0.39.0"
+shuttle-axum = "0.40.0"
+shuttle-runtime = "0.40.0"
 tokio = "1.26.0"

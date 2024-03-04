@@ -1,43 +1,45 @@
 use async_trait::async_trait;
-use serde::Serialize;
-use shuttle_service::{resource::Type, Error, Factory, IntoResource, ResourceBuilder};
+use serde::{Serialize, Deserialize};
+use shuttle_service::{Error, IntoResource, ResourceFactory, ResourceInputBuilder};
 
-#[derive(Default, Serialize)]
+#[derive(Default)]
 pub struct Builder {
+    field: String,
+}
+
+impl Builder {
+    // Make a setter method for each field in the builder
+    pub fn field(mut self, field: &str) -> Self {
+        self.field = field.to_string();
+        self
+    }
+}
+
+#[derive(Serialize, Deserialize)]
+pub struct InputType {
     name: String,
+}
+
+#[async_trait]
+impl ResourceInputBuilder for Builder {
+    // Read the trait docs for explanations of these types
+    type Input = InputType;
+    type Output = InputType;
+
+    async fn build(self, _factory: &ResourceFactory) -> Result<Self::Input, Error> {
+        // factory can be used to get metadata from Shuttle
+        Ok(InputType { name: self.field })
+    }
 }
 
 pub struct Pdo {
     pub name: String,
 }
 
-impl Builder {
-    /// Name to give resource
-    pub fn name(mut self, name: &str) -> Self {
-        self.name = name.to_string();
-        self
-    }
-}
-
 #[async_trait]
-impl ResourceBuilder for Builder {
-    const TYPE: Type = Type::Custom;
-    type Config = Self;
-    type Output = String;
-
-    fn config(&self) -> &Self::Config {
-        self
-    }
-
-    async fn output(self, _factory: &mut dyn Factory) -> Result<Self::Output, Error> {
-        // factory can be used to get resources from Shuttle
-        Ok(self.name)
-    }
-}
-
-#[async_trait]
-impl IntoResource<Pdo> for String {
+impl IntoResource<Pdo> for InputType {
     async fn into_resource(self) -> Result<Pdo, Error> {
-        Ok(Pdo { name: self })
+        // connection or setup logic can be handled here
+        Ok(Pdo { name: self.name })
     }
 }
