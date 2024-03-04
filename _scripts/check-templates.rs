@@ -10,7 +10,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default, Serialize, Deserialize)]
-struct Template {
+struct TemplateDefinition {
     /// Title of the template
     title: String,
     /// A short description of the template
@@ -49,7 +49,7 @@ enum TemplateType {
 
 #[derive(Debug, Serialize, Deserialize)]
 struct Schema {
-    templates: std::collections::HashMap<String, Template>,
+    templates: std::collections::HashMap<String, TemplateDefinition>,
 }
 
 fn main() {
