@@ -1,5 +1,5 @@
 use async_trait::async_trait;
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 use shuttle_service::{Error, IntoResource, ResourceFactory, ResourceInputBuilder};
 
 #[derive(Default)]
