@@ -17,7 +17,7 @@ struct Template {
     description: Option<String>,
     /// Path relative to the repo root
     path: Option<String>,
-    /// "starter" OR "template" OR "tutorial"
+    /// "starter" OR "template" (default) OR "tutorial"
     r#type: TemplateType,
     /// List of areas where this template is useful. Examples: "Web app", "Discord bot", "Monitoring", "Automation", "Utility"
     use_cases: Vec<String>,
@@ -37,10 +37,11 @@ struct Template {
     repo: Option<String>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 enum TemplateType {
     Starter,
+    #[default]
     Template,
     Tutorial,
 }

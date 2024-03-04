@@ -113,7 +113,6 @@ template = "none"
 title = "Actix Web Postgres"
 description = "Todo list with a Postgres database"
 path = "actix-web/postgres"
-type = "template"
 use_cases = ["Web app", "Storage"]
 tags = ["actix-web", "database", "postgres"]
 
@@ -121,7 +120,6 @@ tags = ["actix-web", "database", "postgres"]
 title = "Clerk authentication"
 description = "Fullstack Rust+React with auth provider logic"
 path = "actix-web/clerk"
-type = "template"
 use_cases = ["Web app", "Authentication"]
 tags = ["actix-web", "clerk", "react", "typescript", "tailwind"]
 
@@ -129,7 +127,6 @@ tags = ["actix-web", "clerk", "react", "typescript", "tailwind"]
 title = "Cookie Authentication"
 description = "Use JWT to authenticate API endpoints"
 path = "actix-web/cookie-authentication"
-type = "template"
 use_cases = ["Web app", "Authentication"]
 tags = ["actix-web", "jwt"]
 
@@ -137,7 +134,6 @@ tags = ["actix-web", "jwt"]
 title = "Actix Web Actorless Websockets"
 description = "Health monitoring service using websockets"
 path = "actix-web/websocket-actorless"
-type = "template"
 use_cases = ["Web app", "Monitoring"]
 tags = ["actix-web", "websocket"]
 
@@ -145,7 +141,6 @@ tags = ["actix-web", "websocket"]
 title = "Actix Web static file server"
 description = "Hello World page that serves static HTML and JS files"
 path = "actix-web/static-files"
-type = "template"
 use_cases = ["Web app"]
 tags = ["actix-web"]
 
@@ -153,7 +148,6 @@ tags = ["actix-web"]
 title = "Axum + HTMX"
 description = "Simple CRUD app using HTMX and Askama"
 path = "axum/htmx-crud"
-type = "template"
 use_cases = ["Web app", "Storage"]
 tags = ["axum", "htmx", "database", "postgres"]
 
@@ -161,7 +155,6 @@ tags = ["axum", "htmx", "database", "postgres"]
 title = "JWT authentication"
 description = "Use JWT to authenticate API endpoints"
 path = "axum/jwt-authentication"
-type = "template"
 use_cases = ["Web app", "Authentication"]
 tags = ["axum", "jwt"]
 
@@ -169,7 +162,6 @@ tags = ["axum", "jwt"]
 title = "Shuttle Metadata"
 description = "Basic usage of Shuttle metadata"
 path = "axum/metadata"
-type = "template"
 use_cases = []
 tags = ["axum"]
 
@@ -177,7 +169,6 @@ tags = ["axum"]
 title = "Axum Postgres"
 description = "Todo list with a Postgres database"
 path = "axum/postgres"
-type = "template"
 use_cases = ["Web app", "Storage"]
 tags = ["axum", "database", "postgres"]
 
@@ -185,7 +176,6 @@ tags = ["axum", "database", "postgres"]
 title = "Qdrant"
 description = "Connecting to Qdrant cloud with shuttle-qdrant"
 path = "axum/qdrant"
-type = "template"
 use_cases = ["Web app", "Storage", "AI"]
 tags = ["axum", "database", "qdrant"]
 
@@ -193,7 +183,6 @@ tags = ["axum", "database", "qdrant"]
 title = "File server"
 description = "Hello World static file server with tower-http"
 path = "axum/static-files"
-type = "template"
 use_cases = ["Web app"]
 tags = ["axum"]
 
@@ -201,7 +190,6 @@ tags = ["axum"]
 title = "Turso"
 description = "Connect to a Turso DB with shuttle-turso"
 path = "axum/turso"
-type = "template"
 use_cases = ["Web app", "Storage"]
 tags = ["axum", "database", "libsql", "sqlite"]
 
@@ -209,7 +197,6 @@ tags = ["axum", "database", "libsql", "sqlite"]
 title = "Axum Websockets"
 description = "Health monitoring service using websockets"
 path = "axum/websocket"
-type = "template"
 use_cases = ["Web app", "Monitoring"]
 tags = ["axum", "websocket"]
 
@@ -217,7 +204,6 @@ tags = ["axum", "websocket"]
 title = "Custom Resource"
 description = "A custom resource for the Shuttle main macro"
 path = "custom-resource/pdo"
-type = "template"
 use_cases = []
 tags = ["diy"]
 
@@ -225,7 +211,6 @@ tags = ["diy"]
 title = "Request Scheduler"
 description = "Schedule requests with a cron schedule"
 path = "custom-service/request-scheduler"
-type = "template"
 use_cases = ["Web app", "Cron jobs", "Storage"]
 tags = ["axum"]
 
@@ -233,7 +218,6 @@ tags = ["axum"]
 title = "Fullstack SaaS"
 description = "Opinionated fullstack web app with pre-made routes and assets"
 path = "fullstack-templates/saas"
-type = "template"
 use_cases = ["Web app", "Authentication", "Storage", "Monetization"]
 tags = ["axum", "next.js", "database", "postgres", "typescript", "tailwind"]
 
@@ -241,7 +225,6 @@ tags = ["axum", "next.js", "database", "postgres", "typescript", "tailwind"]
 title = "Standalone binary"
 description = "How to split a project to allow it to run both with Shuttle and standalone"
 path = "other/standalone-binary"
-type = "template"
 use_cases = []
 tags = ["diy", "axum"]
 
@@ -249,7 +232,6 @@ tags = ["diy", "axum"]
 title = "Poem MongoDB"
 description = "Todo list with a MongoDB database"
 path = "poem/mongodb"
-type = "template"
 use_cases = ["Web app", "Storage"]
 tags = ["poem", "database", "mongodb"]
 
@@ -257,7 +239,6 @@ tags = ["poem", "database", "mongodb"]
 title = "Rocket Handlebars dynamic templates"
 description = "HTML templating with Handlebars"
 path = "rocket/dyn-templates"
-type = "template"
 use_cases = ["Web app"]
 tags = ["rocket", "handlebars"]
 
@@ -265,7 +246,6 @@ tags = ["rocket", "handlebars"]
 title = "JWT authentication"
 description = "Use JWT to authenticate API endpoints"
 path = "rocket/jwt-authentication"
-type = "template"
 use_cases = ["Web app", "Authentication"]
 tags = ["rocket", "jwt"]
 
@@ -273,7 +253,6 @@ tags = ["rocket", "jwt"]
 title = "OpenDAL in-memory store"
 description = "A hashmap key-value store using OpenDAL"
 path = "rocket/opendal-memory"
-type = "template"
 use_cases = ["Web app", "Storage"]
 tags = ["rocket", "opendal"]
 
@@ -281,7 +260,6 @@ tags = ["rocket", "opendal"]
 title = "Rocket shuttle-persist"
 description = "A hashmap key-value store using OpenDAL"
 path = "rocket/opendal-memory"
-type = "template"
 use_cases = ["Web app", "Storage"]
 tags = ["rocket", "opendal"]
 
@@ -289,7 +267,6 @@ tags = ["rocket", "opendal"]
 title = "Rocket Postgres"
 description = "Todo list with a Postgres database"
 path = "rocket/postgres"
-type = "template"
 use_cases = ["Web app", "Storage"]
 tags = ["rocket", "database", "postgres"]
 
@@ -297,7 +274,6 @@ tags = ["rocket", "database", "postgres"]
 title = "Shuttle Secrets"
 description = "Rocket app showing how to use Shuttle Secrets"
 path = "rocket/secrets"
-type = "template"
 use_cases = ["Web app"]
 tags = ["rocket"]
 
@@ -305,7 +281,6 @@ tags = ["rocket"]
 title = "Rocket static file server"
 description = "Hello World page that serves static HTML files"
 path = "rocket/static-files"
-type = "template"
 use_cases = ["Web app"]
 tags = ["rocket"]
 
@@ -313,7 +288,6 @@ tags = ["rocket"]
 title = "URL shortener"
 description = "Save long URLs behind a short one, with Postgres storage"
 path = "rocket/url-shortener"
-type = "template"
 use_cases = ["Web app", "Storage"]
 tags = ["rocket", "database", "postgres"]
 
@@ -321,7 +295,6 @@ tags = ["rocket", "database", "postgres"]
 title = "Workspace"
 description = "How to use a Shuttle app in a Cargo workspace"
 path = "rocket/workspace"
-type = "template"
 use_cases = []
 tags = []
 
@@ -329,7 +302,6 @@ tags = []
 title = "Image Rescaler"
 description = "Use the image library to rescale the Shuttle logo"
 path = "salvo/image-rescaler"
-type = "template"
 use_cases = ["Web app", "Image processing"]
 tags = ["salvo", "image"]
 
@@ -337,7 +309,6 @@ tags = ["salvo", "image"]
 title = "Serenity Postgres"
 description = "Todo list bot with a Postgres database"
 path = "serenity/postgres"
-type = "template"
 use_cases = ["Discord bot", "Storage"]
 tags = ["serenity", "database", "postgres"]
 
@@ -345,7 +316,6 @@ tags = ["serenity", "database", "postgres"]
 title = "Shutte custom Cron service"
 description = "Schedule tasks with a cron schedule"
 path = "shuttle-cron"
-type = "template"
 use_cases = ["Cron jobs", "Storage"]
 tags = ["axum", "apalis", "database", "postgres"]
 
@@ -353,7 +323,6 @@ tags = ["axum", "apalis", "database", "postgres"]
 title = "Custom Tracing Subscriber"
 description = "How to use a custom tracing-subscriber on Shuttle"
 path = "tracing/custom-tracing-subscriber"
-type = "template"
 use_cases = ["Web App", "Logging"]
 tags = ["actix-web", "tracing"]
 
@@ -361,10 +330,15 @@ tags = ["actix-web", "tracing"]
 ## COMMUNITY TEMPLATES ##
 
 
+# --- HOW TO ADD TO THE LIST ---
+# 1. Your example should be in a public repository.
+# 2. If it has a license, it should allow users to copy and modify the code.
+# 3. Follow the pattern and add it to the list below
+#   - Try to keep the description below 120 characters long
+
 [templates.actix-github-oauth]
 title = "GitHub Login (OAuth)"
 description = "Sample app demonstrating GitHub OAuth login using Actix Web"
-type = "template"
 use_cases = ["Web App", "Authentication"]
 tags = ["actix-web", "oauth"]
 community = true
@@ -373,8 +347,7 @@ repo = "https://github.com/robjtede/actix-examples-oauth-github"
 
 [templates.fullstack-rust]
 title = "Fullstack Rust"
-description = "A basic project template for fullstack Rust projects"
-type = "template"
+description = "A template for fullstack Rust projects"
 use_cases = ["Web App"]
 tags = ["axum", "yew"]
 community = true
@@ -383,10 +356,27 @@ repo = "https://github.com/TylerBloom/shuttle-fullstack-rust-example"
 
 [templates.axum-web-app-yew]
 title = "Web App with Yew"
-description = "A basic project template for a web app using the Yew framework"
-type = "template"
+description = "A template for a web app using the Yew framework"
 use_cases = ["Web App"]
 tags = ["axum", "yew"]
 community = true
 author = "sentinel1909"
 repo = "https://github.com/sentinel1909/shuttle-template-yew"
+
+[templates.actix-web-api]
+title = "Web API with Actix Web"
+description = "A template for starting an API with Actix Web"
+use_cases = ["Web App"]
+tags = ["actix-web"]
+community = true
+author = "sentinel1909"
+repo = "https://github.com/sentinel1909/shuttle-template-actix"
+
+[templates.rocket-yew-sled]
+title = "Web API with Rocket and Sled"
+description = "A Full Stack CRUD template for starting an API with Rocket, Sled, and Yew"
+use_cases = ["Web App"]
+tags = ["rocket", "yew"]
+community = true
+author = "wiseaidev"
+repo = "https://github.com/wiseaidev/rocket-yew-starter-pack"
