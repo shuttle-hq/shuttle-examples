@@ -31,9 +31,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install wasm32-wasi target
-      run: rustup target add wasm32-wasi
-
     - name: Install sccache
       run: |
         SCCACHE_VERSION='v0.7.7'
@@ -57,9 +54,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-
-    - name: Install wasm32-wasi target
-      run: rustup target add wasm32-wasi
 
     - name: Install sccache
       run: |

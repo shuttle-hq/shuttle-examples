@@ -18,9 +18,5 @@ for dir in $DIRS; do
     echo "Checking $dir"
 
     cargo fmt --all --manifest-path "$dir/Cargo.toml" -- --check
-    if [ -f "$dir/.target" ]; then
-        cargo clippy --no-deps --manifest-path "$dir/Cargo.toml" --target $(<$dir/.target) -- -D warnings
-    else
-        cargo clippy --no-deps --manifest-path "$dir/Cargo.toml" -- -D warnings
-    fi
+    cargo clippy --no-deps --manifest-path "$dir/Cargo.toml" -- -D warnings
 done
