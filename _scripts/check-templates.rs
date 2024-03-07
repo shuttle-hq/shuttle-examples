@@ -11,18 +11,20 @@ use shuttle_common::templates::TemplatesSchema;
 
 fn main() {
     let s = std::fs::read_to_string("templates.toml").expect("to find file");
-    let toml: TemplatesSchema = toml::from_str(&s).expect("to parse toml file");
+    let schema: TemplatesSchema = toml::from_str(&s).expect("to parse toml file");
 
     let (tx, rx) = std::sync::mpsc::channel::<String>();
 
-    let t = std::thread::spawn(move || rx.into_iter().collect::<std::collections::BTreeSet<_>>());
+    let thread =
+        std::thread::spawn(move || rx.into_iter().collect::<std::collections::BTreeSet<_>>());
 
     let walker = ignore::WalkBuilder::new(".").build_parallel();
     walker.run(|| {
         let tx = tx.clone();
         Box::new(move |result| {
             use ignore::WalkState::*;
-            // join directory with filename so that this directory can be skipped in the case of a workspace
+            // Join directory with filename so that this directory can
+            // be skipped in the case of a workspace manifest.
             let path = result.unwrap().into_path().join("Cargo.toml");
             if !path.exists() {
                 return Continue;
@@ -47,12 +49,25 @@ fn main() {
         })
     });
     drop(tx);
-    let mut manifests = t.join().unwrap();
+    let mut manifests = thread.join().unwrap();
 
     let mut set = std::collections::BTreeSet::<_>::new();
-    for (name, t) in toml.templates {
-        if t.community.is_some_and(|c| c) {
-            continue;
+    // don't validate community templates
+    for (name, t) in schema
+        .starters
+        .into_iter()
+        .chain(schema.templates.into_iter())
+        .chain(schema.examples.into_iter())
+        .chain(schema.tutorials.into_iter())
+    {
+        const MAX_LENGTH: usize = 100;
+        let len = t.title.chars().count() + t.description.chars().count();
+        if len > MAX_LENGTH {
+            eprintln!(
+                "The title + description of '{}' is too long (length {}; max {})",
+                name, len, MAX_LENGTH
+            );
+            std::process::exit(1);
         }
 
         let path = t.path.unwrap_or_default();
@@ -79,5 +94,5 @@ fn main() {
         std::process::exit(1);
     }
 
-    println!("Template definitions verified")
+    println!("Template definitions verified ✅")
 }
