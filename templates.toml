@@ -1,110 +1,112 @@
 # Shuttle Template Definitions
 #
-# Use `rust-script _scripts/check-templates.rs` to validate this list
+# The schema is defined in `shuttle_common::templates`.
+# Use `rust-script _scripts/check-templates.rs` to validate this list.
+version = 1
+
 
 ## OFFICIAL STARTERS ##
 
-[templates.actix-web-hello-world]
-title = "Actix Web Hello World"
+[starters.actix-web-hello-world]
+title = "Actix Web"
+description = "Powerful and fast web framework"
 path = "actix-web/hello-world"
-type = "starter"
 use_cases = ["Web app"]
 tags = ["actix-web"]
 template = "actix-web"
 
-[templates.axum-hello-world]
-title = "Axum Hello World"
+[starters.axum-hello-world]
+title = "Axum"
+description = "Modular web framework from the Tokio ecosystem"
 path = "axum/hello-world"
-type = "starter"
 use_cases = ["Web app"]
 tags = ["axum"]
 template = "axum"
 
-[templates.loco-hello-world]
-title = "Loco Hello World"
+[starters.loco-hello-world]
+title = "Loco"
+description = "Batteries included web framework based on Axum"
 path = "loco/hello-world"
-type = "starter"
 use_cases = ["Web app"]
 tags = ["loco"]
 template = "loco"
 
-[templates.poem-hello-world]
-title = "Poem Hello World"
+[starters.poem-hello-world]
+title = "Poem"
+description = "Full-featured and easy-to-use web framework"
 path = "poem/hello-world"
-type = "starter"
 use_cases = ["Web app"]
 tags = ["poem"]
 template = "poem"
 
-[templates.poise-hello-world]
-title = "Poise Hello World"
+[starters.poise-hello-world]
+title = "Poise"
+description = "Discord Bot framework with good slash command support"
 path = "poise/hello-world"
-type = "starter"
 use_cases = ["Discord bot"]
 tags = ["poise", "serenity"]
 template = "poise"
 
-[templates.rocket-hello-world]
-title = "Rocket Hello World"
+[starters.rocket-hello-world]
+title = "Rocket"
+description = "Simple and easy-to-use web framework"
 path = "rocket/hello-world"
-type = "starter"
 use_cases = ["Web app"]
 tags = ["rocket"]
 template = "rocket"
 
-[templates.salvo-hello-world]
-title = "Salvo Hello World"
+[starters.salvo-hello-world]
+title = "Salvo"
+description = "Full-featured and easy-to-use web framework"
 path = "salvo/hello-world"
-type = "starter"
 use_cases = ["Web app"]
 tags = ["salvo"]
 template = "salvo"
 
-[templates.serenity-hello-world]
-title = "Serenity Hello World"
+[starters.serenity-hello-world]
+title = "Serenity"
+description = "Discord Bot framework"
 path = "serenity/hello-world"
-type = "starter"
 use_cases = ["Discord bot"]
 tags = ["serenity"]
 template = "serenity"
 
-[templates.thruster-hello-world]
-title = "Thruster Hello World"
+[starters.thruster-hello-world]
+title = "Thruster"
+description = "Web framework"
 path = "thruster/hello-world"
-type = "starter"
 use_cases = ["Web app"]
 tags = ["thruster"]
 template = "thruster"
 
-[templates.tide-hello-world]
-title = "Tide Hello World"
+[starters.tide-hello-world]
+title = "Tide"
+description = "Web framework"
 path = "tide/hello-world"
-type = "starter"
 use_cases = ["Web app"]
 tags = ["tide"]
 template = "tide"
 
-[templates.tower-hello-world]
-title = "Tower Hello World"
+[starters.tower-hello-world]
+title = "Tower"
+description = "Modular service library"
 path = "tower/hello-world"
-type = "starter"
 use_cases = ["Web app"]
 tags = ["tower"]
 template = "tower"
 
-[templates.warp-hello-world]
-title = "Warp Hello World"
+[starters.warp-hello-world]
+title = "Warp"
+description = "Web framework"
 path = "warp/hello-world"
-type = "starter"
 use_cases = ["Web app"]
 tags = ["warp"]
 template = "warp"
 
-[templates.none]
-title = "None"
-description = "Empty service - A barebones implementation of Shuttle Service trait that does nothing"
+[starters.no-framework]
+title = "No framework"
+description = "An empty implementation of the Shuttle Service trait"
 path = "custom-service/none"
-type = "starter"
 use_cases = []
 tags = ["diy"]
 template = "none"
@@ -112,9 +114,8 @@ template = "none"
 
 ## OFFICIAL TEMPLATES ##
 
-
 [templates.actix-web-postgres]
-title = "Actix Web Postgres"
+title = "Postgres"
 description = "Todo list with a Postgres database"
 path = "actix-web/postgres"
 use_cases = ["Web app", "Storage"]
@@ -135,21 +136,21 @@ use_cases = ["Web app", "Authentication"]
 tags = ["actix-web", "jwt"]
 
 [templates.actix-websocket-actorless]
-title = "Actix Web Actorless Websockets"
+title = "Websockets Actorless"
 description = "Health monitoring service using websockets"
 path = "actix-web/websocket-actorless"
 use_cases = ["Web app", "Monitoring"]
 tags = ["actix-web", "websocket"]
 
 [templates.actix-static-files]
-title = "Actix Web static file server"
+title = "File server"
 description = "Hello World page that serves static HTML and JS files"
 path = "actix-web/static-files"
 use_cases = ["Web app"]
 tags = ["actix-web"]
 
 [templates.axum-htmx-crud]
-title = "Axum + HTMX"
+title = "HTMX"
 description = "Simple CRUD app using HTMX and Askama"
 path = "axum/htmx-crud"
 use_cases = ["Web app", "Storage"]
@@ -162,15 +163,8 @@ path = "axum/jwt-authentication"
 use_cases = ["Web app", "Authentication"]
 tags = ["axum", "jwt"]
 
-[templates.axum-metadata]
-title = "Shuttle Metadata"
-description = "Basic usage of Shuttle metadata"
-path = "axum/metadata"
-use_cases = []
-tags = ["axum"]
-
 [templates.axum-postgres]
-title = "Axum Postgres"
+title = "Postgres"
 description = "Todo list with a Postgres database"
 path = "axum/postgres"
 use_cases = ["Web app", "Storage"]
@@ -198,18 +192,11 @@ use_cases = ["Web app", "Storage"]
 tags = ["axum", "database", "libsql", "sqlite"]
 
 [templates.axum-websocket]
-title = "Axum Websockets"
+title = "Websockets"
 description = "Health monitoring service using websockets"
 path = "axum/websocket"
 use_cases = ["Web app", "Monitoring"]
 tags = ["axum", "websocket"]
-
-[templates.custom-resource-pdo]
-title = "Custom Resource"
-description = "A custom resource for the Shuttle main macro"
-path = "custom-resource/pdo"
-use_cases = []
-tags = ["diy"]
 
 [templates.request-scheduler]
 title = "Request Scheduler"
@@ -225,22 +212,15 @@ path = "fullstack-templates/saas"
 use_cases = ["Web app", "Authentication", "Storage", "Monetization"]
 tags = ["axum", "next.js", "database", "postgres", "typescript", "tailwind"]
 
-[templates.standalone-binary]
-title = "Standalone binary"
-description = "How to split a project to allow it to run both with Shuttle and standalone"
-path = "other/standalone-binary"
-use_cases = []
-tags = ["diy", "axum"]
-
 [templates.poem-mongodb]
-title = "Poem MongoDB"
+title = "MongoDB"
 description = "Todo list with a MongoDB database"
 path = "poem/mongodb"
 use_cases = ["Web app", "Storage"]
 tags = ["poem", "database", "mongodb"]
 
 [templates.rocket-dyn-templates]
-title = "Rocket Handlebars dynamic templates"
+title = "Handlebars dynamic templates"
 description = "HTML templating with Handlebars"
 path = "rocket/dyn-templates"
 use_cases = ["Web app"]
@@ -255,34 +235,20 @@ tags = ["rocket", "jwt"]
 
 [templates.rocket-opendal-memory]
 title = "OpenDAL in-memory store"
-description = "A hashmap key-value store using OpenDAL"
+description = "A key-value store using OpenDAL"
 path = "rocket/opendal-memory"
 use_cases = ["Web app", "Storage"]
 tags = ["rocket", "opendal"]
 
-[templates.rocket-persist]
-title = "Rocket shuttle-persist"
-description = "A hashmap key-value store using OpenDAL"
-path = "rocket/persist"
-use_cases = ["Web app", "Storage"]
-tags = ["rocket", "opendal"]
-
 [templates.rocket-postgres]
-title = "Rocket Postgres"
+title = "Postgres"
 description = "Todo list with a Postgres database"
 path = "rocket/postgres"
 use_cases = ["Web app", "Storage"]
 tags = ["rocket", "database", "postgres"]
 
-[templates.rocket-secrets]
-title = "Shuttle Secrets"
-description = "Rocket app showing how to use Shuttle Secrets"
-path = "rocket/secrets"
-use_cases = ["Web app"]
-tags = ["rocket"]
-
 [templates.rocket-static-files]
-title = "Rocket static file server"
+title = "File server"
 description = "Hello World page that serves static HTML files"
 path = "rocket/static-files"
 use_cases = ["Web app"]
@@ -295,13 +261,6 @@ path = "rocket/url-shortener"
 use_cases = ["Web app", "Storage"]
 tags = ["rocket", "database", "postgres"]
 
-[templates.workspace]
-title = "Workspace"
-description = "How to use a Shuttle app in a Cargo workspace"
-path = "rocket/workspace"
-use_cases = []
-tags = []
-
 [templates.salvo-image-rescaler]
 title = "Image Rescaler"
 description = "Use the image library to rescale the Shuttle logo"
@@ -310,15 +269,15 @@ use_cases = ["Web app", "Image processing"]
 tags = ["salvo", "image"]
 
 [templates.serenity-postgres]
-title = "Serenity Postgres"
-description = "Todo list bot with a Postgres database"
+title = "Postgres"
+description = "Todo list Discord bot with a Postgres database"
 path = "serenity/postgres"
 use_cases = ["Discord bot", "Storage"]
 tags = ["serenity", "database", "postgres"]
 
 [templates.shuttle-cron]
 title = "Shutte custom Cron service"
-description = "Schedule tasks with a cron schedule"
+description = "Schedule tasks on a cron schedule with apalis"
 path = "shuttle-cron"
 use_cases = ["Cron jobs", "Storage"]
 tags = ["axum", "apalis", "database", "postgres"]
@@ -331,56 +290,99 @@ use_cases = ["Web App", "Logging"]
 tags = ["actix-web", "tracing"]
 
 
-## COMMUNITY TEMPLATES ##
+## EXAMPLES ##
 
+[examples.metadata]
+title = "Shuttle Metadata"
+description = "Basic usage of shuttle-metadata"
+path = "axum/metadata"
+use_cases = []
+tags = ["axum"]
+
+[examples.persist]
+title = "Shuttle Persist"
+description = "Basic usage of shuttle-persist"
+path = "rocket/persist"
+use_cases = ["Web app", "Storage"]
+tags = ["rocket"]
+
+[examples.secrets]
+title = "Shuttle Secrets"
+description = "Basic usage of shuttle-secrets"
+path = "rocket/secrets"
+use_cases = ["Web app"]
+tags = ["rocket"]
+
+[examples.workspace]
+title = "Workspace"
+description = "How to use a Shuttle app in a Cargo workspace"
+path = "rocket/workspace"
+use_cases = []
+tags = []
+
+[examples.custom-resource-pdo]
+title = "Custom Resource"
+description = "A custom PDO resource for the Shuttle main macro"
+path = "custom-resource/pdo"
+use_cases = []
+tags = ["diy"]
+
+[examples.standalone-binary]
+title = "Standalone binary"
+description = "How to run an app both with Shuttle and standalone"
+path = "other/standalone-binary"
+use_cases = []
+tags = ["diy", "axum"]
+
+
+## TUTORIALS ##
+
+[tutorials]
+
+
+## COMMUNITY TEMPLATES ##
 
 # --- HOW TO ADD TO THE LIST ---
 # 1. Your example should be in a public repository.
 # 2. If it has a license, it should allow users to copy and modify the code.
 # 3. Follow the pattern and add it to the list below
-#   - Try to keep the description below 120 characters long
 
-[templates.actix-github-oauth]
+[community_templates.actix-github-oauth]
 title = "GitHub Login (OAuth)"
 description = "Sample app demonstrating GitHub OAuth login using Actix Web"
 use_cases = ["Web App", "Authentication"]
 tags = ["actix-web", "oauth"]
-community = true
 author = "robjtede"
 repo = "https://github.com/robjtede/actix-examples-oauth-github"
 
-[templates.fullstack-rust]
+[community_templates.fullstack-rust-axum-yew]
 title = "Fullstack Rust"
-description = "A template for fullstack Rust projects"
+description = "A template for fullstack Rust projects with Yew"
 use_cases = ["Web App"]
 tags = ["axum", "yew"]
-community = true
 author = "TylerBloom"
 repo = "https://github.com/TylerBloom/shuttle-fullstack-rust-example"
 
-[templates.axum-web-app-yew]
+[community_templates.axum-web-app-yew]
 title = "Web App with Yew"
 description = "A template for a web app using the Yew framework"
 use_cases = ["Web App"]
 tags = ["axum", "yew"]
-community = true
 author = "sentinel1909"
 repo = "https://github.com/sentinel1909/shuttle-template-yew"
 
-[templates.actix-web-api]
+[community_templates.actix-web-api]
 title = "Web API with Actix Web"
 description = "A template for starting an API with Actix Web"
 use_cases = ["Web App"]
 tags = ["actix-web"]
-community = true
 author = "sentinel1909"
 repo = "https://github.com/sentinel1909/shuttle-template-actix"
 
-[templates.rocket-yew-sled]
+[community_templates.rocket-yew-sled]
 title = "Web API with Rocket and Sled"
 description = "A Full Stack CRUD template for starting an API with Rocket, Sled, and Yew"
 use_cases = ["Web App"]
 tags = ["rocket", "yew"]
-community = true
 author = "wiseaidev"
 repo = "https://github.com/wiseaidev/rocket-yew-starter-pack"
