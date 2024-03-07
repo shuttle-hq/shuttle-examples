@@ -12,7 +12,7 @@ title = "Actix Web"
 description = "Powerful and fast web framework"
 path = "actix-web/hello-world"
 use_cases = ["Web app"]
-tags = ["actix-web", "hello-world"]
+tags = ["actix-web"]
 template = "actix-web"
 
 [starters.axum-hello-world]
@@ -20,7 +20,7 @@ title = "Axum"
 description = "Modular web framework from the Tokio ecosystem"
 path = "axum/hello-world"
 use_cases = ["Web app"]
-tags = ["axum", "hello-world"]
+tags = ["axum"]
 template = "axum"
 
 [starters.loco-hello-world]
@@ -28,7 +28,7 @@ title = "Loco"
 description = "Batteries included web framework based on Axum"
 path = "loco/hello-world"
 use_cases = ["Web app"]
-tags = ["loco", "hello-world"]
+tags = ["loco"]
 template = "loco"
 
 [starters.poem-hello-world]
@@ -36,7 +36,7 @@ title = "Poem"
 description = "Full-featured and easy-to-use web framework"
 path = "poem/hello-world"
 use_cases = ["Web app"]
-tags = ["poem", "hello-world"]
+tags = ["poem"]
 template = "poem"
 
 [starters.poise-hello-world]
@@ -44,7 +44,7 @@ title = "Poise"
 description = "Discord Bot framework with good slash command support"
 path = "poise/hello-world"
 use_cases = ["Discord bot"]
-tags = ["poise", "serenity", "hello-world"]
+tags = ["poise", "serenity"]
 template = "poise"
 
 [starters.rocket-hello-world]
@@ -52,7 +52,7 @@ title = "Rocket"
 description = "Simple and easy-to-use web framework"
 path = "rocket/hello-world"
 use_cases = ["Web app"]
-tags = ["rocket", "hello-world"]
+tags = ["rocket"]
 template = "rocket"
 
 [starters.salvo-hello-world]
@@ -60,7 +60,7 @@ title = "Salvo"
 description = "Full-featured and easy-to-use web framework"
 path = "salvo/hello-world"
 use_cases = ["Web app"]
-tags = ["salvo", "hello-world"]
+tags = ["salvo"]
 template = "salvo"
 
 [starters.serenity-hello-world]
@@ -68,7 +68,7 @@ title = "Serenity"
 description = "Discord Bot framework"
 path = "serenity/hello-world"
 use_cases = ["Discord bot"]
-tags = ["serenity", "hello-world"]
+tags = ["serenity"]
 template = "serenity"
 
 [starters.thruster-hello-world]
@@ -76,7 +76,7 @@ title = "Thruster"
 description = "Web framework"
 path = "thruster/hello-world"
 use_cases = ["Web app"]
-tags = ["thruster", "hello-world"]
+tags = ["thruster"]
 template = "thruster"
 
 [starters.tide-hello-world]
@@ -84,7 +84,7 @@ title = "Tide"
 description = "Web framework"
 path = "tide/hello-world"
 use_cases = ["Web app"]
-tags = ["tide", "hello-world"]
+tags = ["tide"]
 template = "tide"
 
 [starters.tower-hello-world]
@@ -92,7 +92,7 @@ title = "Tower"
 description = "Modular service library"
 path = "tower/hello-world"
 use_cases = ["Web app"]
-tags = ["tower", "hello-world"]
+tags = ["tower"]
 template = "tower"
 
 [starters.warp-hello-world]
@@ -100,7 +100,7 @@ title = "Warp"
 description = "Web framework"
 path = "warp/hello-world"
 use_cases = ["Web app"]
-tags = ["warp", "hello-world"]
+tags = ["warp"]
 template = "warp"
 
 [starters.no-framework]
