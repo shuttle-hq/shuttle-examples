@@ -1,4 +1,0 @@
-# List the start up tasks. Learn more https://www.gitpod.io/docs/config-start-tasks/
-tasks:
-  - before: cargo install cargo-shuttle
-    command: cargo shuttle login
