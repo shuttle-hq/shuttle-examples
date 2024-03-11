@@ -21,10 +21,7 @@ async fn rocket(
 ) -> shuttle_rocket::ShuttleRocket {
     // get secret defined in `Secrets.toml` file.
     let secret = secrets.get("MY_API_KEY").context("secret was not found")?;
-    let _config = config::Config::builder()
-        .add_source(secrets)
-        .build()
-        .expect("Failed to load app configuration");
+
     let state = MyState { secret };
     let rocket = rocket::build().mount("/", routes![secret]).manage(state);
 
