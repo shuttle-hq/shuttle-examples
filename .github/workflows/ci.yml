@@ -43,7 +43,8 @@ jobs:
           > /home/runner/.cargo/bin/sccache \
           && chmod +x /home/runner/.cargo/bin/sccache
 
-    - run: sudo apt install -y libasound2-dev
+    # bevy dependency
+    - run: sudo apt install -y libasound2-dev libudev-dev
 
     - name: Check formatting and Clippy
       shell: bash
