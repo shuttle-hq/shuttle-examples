@@ -12,7 +12,7 @@ use clerk_rs::{
 };
 use serde::{Deserialize, Serialize};
 use shuttle_actix_web::ShuttleActixWeb;
-use shuttle_secrets::SecretStore;
+use shuttle_runtime::SecretStore;
 
 struct AppState {
     client: Clerk,
@@ -70,7 +70,7 @@ async fn get_user(state: web::Data<AppState>, req: HttpRequest) -> impl Responde
 
 #[shuttle_runtime::main]
 async fn main(
-    #[shuttle_secrets::Secrets] secrets: SecretStore,
+    #[shuttle_runtime::Secrets] secrets: SecretStore,
 ) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     let app_config = move |cfg: &mut ServiceConfig| {
         let clerk_secret_key = secrets

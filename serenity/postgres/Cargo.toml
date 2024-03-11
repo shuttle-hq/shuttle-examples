@@ -8,7 +8,6 @@ anyhow = "1.0.66"
 serde = "1.0.148"
 serenity = { version = "0.12.0", default-features = false, features = ["client", "gateway", "rustls_backend", "model"] }
 shuttle-runtime = "0.41.0"
-shuttle-secrets = "0.41.0"
 shuttle-serenity = "0.41.0"
 shuttle-shared-db = { version = "0.41.0", features = ["postgres", "sqlx"] }
 sqlx = "0.7.1"
