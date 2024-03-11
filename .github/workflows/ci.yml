@@ -39,6 +39,8 @@ jobs:
           > /home/runner/.cargo/bin/sccache \
           && chmod +x /home/runner/.cargo/bin/sccache
 
+    - run: apt install -y libasound2-dev
+
     - name: Check formatting and Clippy
       shell: bash
       run: ./ci.sh a q
