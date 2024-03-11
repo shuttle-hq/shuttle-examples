@@ -44,7 +44,7 @@ pub async fn google_callback(
 
     let secs: i64 = secs.as_secs().try_into()?;
 
-    let max_age = Local::now().naive_local() + Duration::seconds(secs);
+    let max_age = Local::now().naive_local() + Duration::try_seconds(secs).unwrap();
 
     let cookie = Cookie::build(("sid", token.access_token().secret().to_owned()))
         .domain(".app.localhost")
