@@ -275,6 +275,13 @@ path = "serenity/postgres"
 use_cases = ["Discord bot", "Storage"]
 tags = ["serenity", "database", "postgres"]
 
+[templates.serenity-weather-forecast]
+title = "Weather Bot"
+description = "Weather forecast Discord bot using the Accuweather API"
+path = "serenity/weather-forecast"
+use_cases = ["Discord bot"]
+tags = ["serenity"]
+
 [templates.shuttle-cron]
 title = "Shutte custom Cron service"
 description = "Schedule tasks on a cron schedule with apalis"
