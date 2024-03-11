@@ -8,7 +8,6 @@ fn main() {
         .add_plugins((
             DefaultPlugins.set(WindowPlugin {
                 primary_window: Some(Window {
-                    fit_canvas_to_parent: true,
                     prevent_default_event_handling: false,
                     canvas: Some("#canvas".to_string()),
                     position: WindowPosition::Centered(MonitorSelection::Current),
@@ -29,14 +28,14 @@ fn setup(mut commands: Commands) {
 }
 
 fn main_menu(mut commands: Commands, asset_server: Res<AssetServer>) {
-    let font = asset_server.load("Roboto-Black.ttf");
+    let font = asset_server.load("/Roboto-Black.ttf");
 
     let title_font = title_text_style(60.0, font.clone());
 
     commands.spawn({
         Text2dBundle {
             text: Text::from_section("Hello world!", title_font.clone())
-                .with_alignment(TextAlignment::Center),
+                .with_justify(JustifyText::Center),
             ..default()
         }
     });

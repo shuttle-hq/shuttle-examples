@@ -1,2 +1,0 @@
-up:
-	cargo shuttle run
