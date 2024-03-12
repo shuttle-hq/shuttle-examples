@@ -170,6 +170,13 @@ path = "axum/jwt-authentication"
 use_cases = ["Web app", "Authentication"]
 tags = ["axum", "jwt"]
 
+[templates.axum-oauth2]
+title = "OAuth authentication"
+description = "Use Google OAuth to authenticate API endpoints"
+path = "axum/oauth2"
+use_cases = ["Web app", "Authentication"]
+tags = ["axum", "oauth"]
+
 [templates.axum-postgres]
 title = "Postgres"
 description = "Todo list with a Postgres database"
