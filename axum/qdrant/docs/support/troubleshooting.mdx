@@ -1,0 +1,45 @@
+---
+title: "Troubleshooting"
+---
+
+This section is aimed at collecting common issues users have to provide quick debug solutions.
+
+<AccordionGroup>
+  <Accordion title="I get an error about protoc not being installed, or protoc being the wrong version.">
+    Since Shuttle v0.18.0, `protoc` is no longer required to use Shuttle. If you encounter the above error,
+    we recommend you upgrade to the latest version of `cargo-shuttle` and other Shuttle crates.
+  </Accordion>
+  <Accordion title="I've updated Shuttle and my project isn't working anymore.">
+    If you've recently updated shuttle, in order to get your project back up, you need to run:
+    `cargo shuttle project restart` and everything should be back in working order.
+  </Accordion>
+  <Accordion title="I'm struggling to install Shuttle on my M1/M2 Mac, what should I do?">
+    There's a known bug with arm64 because of the openssl crates being built for x86, rather than arm64. In order to get around that issue, you can either run:
+
+    `cargo install --features vendored-openssl cargo-shuttle`
+
+    or install it via binary:
+
+    `cargo binstall cargo-shuttle`
+  </Accordion>
+  <Accordion title="How can I return custom errors with Shuttle?">
+    CustomError is an alias for `anyhow::Error`, the simplest way to output a relevant message here is by using `anyhow::Context` like this:
+
+    ```rust
+    pool.execute(include_str!("../schema.sql"))
+        .await
+        .context("failed to run migrations")?;
+    ```
+  </Accordion>
+  <Accordion title="How can I handle environment variables?">
+    Add `shuttle-secrets` to the dependencies for your service, and add a `Secrets.toml` to the root of your project with the secrets you'd like to store. Make sure to add `Secrets*.toml` to your `.gitignore` to omit your secrets from version control.
+
+    Next, pass `#[shuttle_secrets::Secrets] secret_store: SecretStore` as an argument to your `shuttle_runtime::main` function. `SecretStore::get` can now be called to retrieve your API keys and other secrets at runtime.
+
+    For more details, and an explanation on how to use local secrets, head on over here: [Shuttle secrets](../resources/shuttle-secrets).
+  </Accordion>
+</AccordionGroup>
+
+### Other issues?
+
+Hop on over to [our Discord server](https://github.com/shuttle-hq/shuttle), we are very responsive!

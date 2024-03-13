@@ -1,0 +1,47 @@
+---
+title: "Frequently Asked Questions"
+---
+
+This section is aimed at collecting common questions users have to provide documented answers.
+
+<AccordionGroup>
+  <Accordion title="How secure is Shuttle?">
+    We build and deploy every project in its own container.
+    This gives you safe isolation from other users,
+    and also across all the projects that are owned by your account.
+  </Accordion>
+  <Accordion title="What happens when I create a project?">
+    The `cargo shuttle project start` command starts a Docker container, which will
+    stay up indefinitely as long as it [is active](../introduction/idle-projects). Your project container
+    has a limit of 6 GiB memory (4 GiB during high contention, which is very rare) and 4 vCPUs.
+  </Accordion>
+  <Accordion title="What happens when I deploy to Shuttle?">
+    Your code is analyzed and built on our servers. The first time you introduce additional resources in your code, like the first time you use a database, we will add that resource to your project and wire it automatically to your deployment.
+  </Accordion>
+  <Accordion title="Can I use frontend frameworks with Shuttle?">
+    Of course! When you deploy a project on Shuttle, your API becomes available at a URL of the form `${project_name}.shuttleapp.rs`. And since Shuttle is compatible with any of the common frontend hosting solutions (Vercel, Netlify, etc), you just have to make your API calls to the URL of your project, and you're up.
+
+    For details on how to serve static files with Shuttle, check out our docs: [Shuttle static folder](https://docs.shuttle.rs/resources/shuttle-static-folder)
+
+    For a tutorial on how to build & deploy a simple full-stack app using Next.js & Rust, check out this tutorial: [Deploying a NextJS frontend with Rust, in one go](https://joshmo.hashnode.dev/deploying-a-nextjs-front-end-with-a-rust-api-in-one-go)
+  </Accordion>
+  <Accordion title="How does this differ from using serverless framework with Rust Lambda and provided runtime?">
+    You can bring your lambda code to Shuttle as is. And we run it on dedicated infrastructure that keeps the state of your services across requests, has no cold-start and can even have long-running threads, all of which is not possible on AWS Lambda.
+  </Accordion>
+  <Accordion title="Can I implement my own custom service for shuttle?">
+    Absolutely! And it's quite easy. Check out this section of our docs for the steps to do so: [Custom Services](https://docs.shuttle.rs/tutorials/custom-service)
+  </Accordion>
+  <Accordion title="Can I use SeaORM with Shuttle?">
+    Yes, you can create a SeaORM connection from the sqlx pool Shuttle passes to you when you provision a SQL database. You can take a look at the example [here](https://github.com/shuttle-hq/shuttle/issues/179#issuecomment-1203536025).
+  </Accordion>
+  <Accordion title="Can I rename my Shuttle project?">
+    Certainly. Just create a `Shuttle.toml` file in the same directory where your `Cargo.toml` is and add `name = "your-project-name"`.
+  </Accordion>
+  <Accordion title="Where geographically are deployments hosted?">
+    Currently, all deployments are in the eu-west1 region (London).
+  </Accordion>
+  <Accordion title="Do we plan to support multiple regions?">
+    We do plan to support multiple regions, but we can't give a precise ETA yet.
+  </Accordion>
+</AccordionGroup>
+

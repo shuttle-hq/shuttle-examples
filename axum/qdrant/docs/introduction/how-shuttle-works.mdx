@@ -1,0 +1,101 @@
+---
+title: "How Shuttle works"
+---
+
+### Runtime
+
+The simplest way to build & deploy an app with Shuttle looks something like this:
+```rust
+async fn hello_world() -> &'static str {
+    "Hello, world!"
+}
+
+#[shuttle_runtime::main]
+async fn axum() -> shuttle_axum::ShuttleAxum {
+    let router = Router::new().route("/hello", get(hello_world));
+
+    Ok(router.into())
+}
+```
+
+This example spins up a server with an `/hello` endpoint that, when called, returns "Hello, world!". But most importantly, the code you see in the snippet above, is all it takes for `cargo shuttle deploy` to deploy it.
+
+That's possible due to the `#[shuttle_runtime::main]` macro which contains our `proc-macro` code which gets exposed to user services from runtime. The runtime contains the alpha runtime, which is a gRPC server and a Loader in a service with the `#[shuttle_runtime::main]` macro.
+
+The gRPC server receives commands from the deployers, such as `start` and `stop`. The `Loader` provisions resources for the users service (see Provisioning Resources below).
+
+### Provisioning Resources
+
+![Image](/images/shuttle-macros.png)
+
+As you can see in the example above, the 3 annotations that you are passing to your `main()` function, at compile time, get provisioned on our end.
+
+Here are the examples on how to use them, once you add the required annotations to your code:
+
+**Static Folder**
+
+```rust
+#[shuttle_runtime::main]
+async fn axum(
+    // Name your static assets folder by passing `folder = <name>` to `StaticFolder`
+    // If you don't pass a name, it will default to `static`.
+    #[shuttle_static_folder::StaticFolder(folder = "assets")] static_folder: PathBuf,
+) -> shuttle_axum::ShuttleAxum {
+    let router = Router::new()
+        .route("/hello", get(hello_world))
+        .merge(SpaRouter::new("/assets", static_folder).index_file("index.html"));
+        // TODO: SpaRouter is deprecated, use ServeDir instead
+
+    Ok(router.into())
+}
+```
+
+**Secrets Store**
+
+```rust
+#[shuttle_runtime::main]
+async fn axum(
+    #[shuttle_secrets::Secrets] secret_store: SecretStore,
+) -> shuttle_axum::ShuttleAxum {
+    // Get secret defined in `Secrets.toml` file.
+    let secret = if let Some(secret) = secret_store.get("MY_API_KEY") {
+        secret
+    } else {
+        return Err(anyhow!("secret was not found").into());
+    };
+}
+```
+
+**Postgres Database**
+
+```rust
+#[shuttle_runtime::main]
+async fn axum(
+    #[shuttle_shared_db::Postgres] postgres: PgPool,
+) -> shuttle_axum::ShuttleAxum {
+    postgres.execute(include_str!("../schema.sql")) // We can reference our database instance by using `pool` and perform actions
+        .await
+        .map_err(CustomError::new)?;
+}
+```
+
+For more info on resources, head on over to our [resources](../resources/overview) section.
+
+
+### Deploying your Project
+
+When you run `cargo shuttle deploy`, your project code is archived and sent to our servers where it is compiled to a binary. Our codegen in `shuttle_runtime::main` will embed a gRPC server in the binary that we will be used to start and stop your service, as well as a `Loader` struct that will provision the resources you request in the arguments to your main function. Your service will then be started on Shuttle’s infrastructure in the `eu-west2` region of AWS.
+
+### Project Limitations
+
+Currently we limit a project container’s memory usage to `4GB` during high contention and `6GB` otherwise.
+
+CPU usage per project is currently limited to four threads. However, because of how this limit is implemented through Docker, popular crates like `num_cpus` may think it has access to all of the host’s threads.
+
+In terms of database resources, the only restriction we have is that an RDS database has a max storage of `10GB`.
+
+Other than that any reasonable usage is acceptable during our alpha, but we will intervene when we detect applications that use excessively large amounts of storage (after attempting to contact the owner).
+
+---
+
+If you wish to contribute to Shuttle and learn more about how Shuttle works under the hood, check out our [Contributing Guide](../community/contribute).

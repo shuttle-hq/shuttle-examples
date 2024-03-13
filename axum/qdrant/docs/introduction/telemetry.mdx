@@ -1,0 +1,65 @@
+---
+title: "Telemetry"
+description: "Using `tracing` or `log` with shuttle apps."
+---
+
+## Tracing
+
+When you build an app with the `#[shuttle_runtime::main]` macro, a global subscriber will be created and installed
+[behind the scenes](https://github.com/shuttle-hq/shuttle/blob/001dbcfcf47066713598f00a98f4972de450ff3b/codegen/src/main/mod.rs#L237-L245).
+This means that you can skip this step when implementing [tracing](https://docs.rs/tracing/latest/tracing/) in your application, 
+all you have to do is add `tracing` as a dependency in your `Cargo.toml`, and you're good to go!
+
+```rust
+// [...]
+use tracing::info;
+
+#[shuttle_runtime::main]
+async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> ShuttleAxum { 
+    info!("Running database migration");
+    pool.execute(include_str!("../schema.sql"))
+        .await
+        .map_err(CustomError::new)?;
+
+    // [...]
+}
+```
+
+## Log
+
+If you'd rather use [log](https://docs.rs/log/latest/log/), everything from the above section on tracing applies.
+A log-compatible layer is added to the global subscriber, so like with tracing, all you need to do to use `log` macros
+in your project is add it to your `Cargo.toml`.
+
+## Setting Log Level
+
+The global subscriber has an `env_filter` which defaults to the `INFO` log level if no `RUST_LOG` variable is set. You can change the log level for local runs
+with `RUST_LOG="<crate-name>=trace" cargo shuttle run`. We do not currently allow changing the log level for production deployments, and it will be set to `DEBUG` by default.
+
+## Viewing Logs
+
+We have a few commands that are useful for viewing your application's logs. 
+
+To view the logs for your current deployment, in your project directory run:
+
+```bash
+cargo shuttle logs
+```
+
+You can also view logs of a specific deployment by adding the deployment id to this command:
+
+```bash
+cargo shuttle logs <id>
+```
+
+To get the deployment ID, you can run this command to view your deployment history:
+
+```bash
+cargo shuttle deployment list
+```
+
+And last but not least, if you'd like a live feed of your logs, run:
+
+```bash
+cargo shuttle logs --follow
+```

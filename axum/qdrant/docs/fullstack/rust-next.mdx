@@ -1,0 +1,67 @@
+---
+title: "Rust & Next.js"
+---
+
+### Introduction
+
+We have created the `create-shuttle-app` utility in order to make the process of building & deploying a full-stack app a breeze.
+
+This is how it works:
+```
+     +-----------------+
+     |       CLI       |
+     +-----------------+
+              |
+              | Run the `npx create-shuttle-app` command
+              |
+     +-----------------+
+     |    Initialize   |
+     +-----------------+
+              |
+              | A new Shuttle Project gets initialized
+              |
+     +-----------------+
+     | Shuttle Project |
+     +-----------------+
+              |
+              | Contains:
+              | - A new project with Shuttle, Axum and other dependencies installed
+              | - A static folder which contains Next.js inside
+              | - All relevant code required to instantly deploy the full-stack app
+              |
+     +-----------------+
+     |  Full-stack App |
+     +-----------------+
+              |
+              | Ready to be deployed with `cargo shuttle deploy`
+```
+
+### Getting Started
+
+In order to get started, simply run this command:
+```bash
+npx create-shuttle-app
+```
+
+The command also takes some optional args:
+```bash
+--ts                               # Initialize the Next.js app as a typescript project.
+--eslint                           # Initialize with eslint config.
+-e, --example [name]|[github-url]  # An example to bootstrap the app with. You can use an example name
+                                   # from the official Next.js repo or a GitHub URL. The URL can use
+                                   # any branch and/or subdirectory
+--shuttle-example <github-url>     # A GitHub URL to use to bootstrap the shuttle backend with.
+```
+
+In order to deploy your project, follow these steps:
+1. Login by running `npm run shuttle-login`
+2. Start your project by running `npm run start`
+3. And if you are ready to deploy it, run `npm run deploy`
+
+If you wish to develop locally, you can start a NextJS dev server as well as your Shuttle backend with the `npm run dev` command, and if you wish to stop your deployment, simply run `npm run stop`.
+
+<Note>
+**Windows troubleshooting**
+
+`create-shuttle-app` will install Rust and the cargo-shuttle crate with install scripts. It will try to do this automatically, but it may fail, and you might want to do this yourself. The install scripts may also cause PowerShell to not be able to run create-shuttle-app, since it disallows scripts by default. To override this, run the set-executionpolicy remotesigned command in a PowerShell started in administrator mode. Or use Git Bash, which doesn’t restrict this.
+</Note>

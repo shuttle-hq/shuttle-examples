@@ -1,0 +1,342 @@
+---
+title: "Serenity"
+description: "Serenity is a Rust library for the Discord API."
+---
+
+This section revolves around simple Serenity examples you can get quickly started with by following these 4 steps:
+1. Go through the steps in **Prerequisites** below
+2. Initialize a new Serenity project by running the `cargo shuttle init --template serenity` command
+3. Copy pasting the contents of the example you want to deploy -- make sure to check the tabs of the snippet(s) to ensure you are copying the right code/file
+4. Running the `cargo shuttle deploy` command
+
+### Prerequisites
+
+To get started log in to the [Discord developer portal](https://discord.com/developers/applications).
+
+1. Click the New Application button, name your application and click Create.
+2. Navigate to the Bot tab in the lefthand menu, and add a new bot.
+3. On the bot page click the Reset Token button to reveal your token. Put this token in your `Secrets.toml`. It's very important that you don't reveal your token to anyone, as it can be abused. Create a `.gitignore` file to omit your `Secrets.toml` from version control.
+4. For the sake of this example, you also need to scroll down on the bot page to the Message Content Intent section and enable that option.
+
+To add the bot to a server we need to create an invite link.
+
+1. On your bot's application page, open the OAuth2 page via the lefthand panel.
+2. Go to the URL Generator via the lefthand panel, and select the `bot` scope as well as the `Send Messages` permission in the Bot Permissions section.
+3. Copy the URL, open it in your browser and select a Discord server you wish to invite the bot to.
+
+### Hello World Bot
+
+<CodeGroup>
+```Rust src/main.rs
+use anyhow::anyhow;
+use serenity::async_trait;
+use serenity::model::channel::Message;
+use serenity::model::gateway::Ready;
+use serenity::prelude::*;
+use shuttle_secrets::SecretStore;
+use tracing::{error, info};
+
+struct Bot;
+
+#[async_trait]
+impl EventHandler for Bot {
+    async fn message(&self, ctx: Context, msg: Message) {
+        if msg.content == "!hello" {
+            if let Err(e) = msg.channel_id.say(&ctx.http, "world!").await {
+                error!("Error sending message: {:?}", e);
+            }
+        }
+    }
+
+    async fn ready(&self, _: Context, ready: Ready) {
+        info!("{} is connected!", ready.user.name);
+    }
+}
+
+#[shuttle_runtime::main]
+async fn serenity(
+    #[shuttle_secrets::Secrets] secret_store: SecretStore,
+) -> shuttle_serenity::ShuttleSerenity {
+    // Get the discord token set in `Secrets.toml`
+    let token = if let Some(token) = secret_store.get("DISCORD_TOKEN") {
+        token
+    } else {
+        return Err(anyhow!("'DISCORD_TOKEN' was not found").into());
+    };
+
+    // Set gateway intents, which decides what events the bot will be notified about
+    let intents = GatewayIntents::GUILD_MESSAGES | GatewayIntents::MESSAGE_CONTENT;
+
+    let client = Client::builder(&token, intents)
+        .event_handler(Bot)
+        .await
+        .expect("Err creating client");
+
+    Ok(client.into())
+}
+```
+```toml Secrets.toml
+DISCORD_TOKEN = 'the contents of your discord token'
+```
+</CodeGroup>
+
+## Todo list bot
+
+### Prerequisites
+
+In this example we will deploy a Serenity bot with Shuttle that can add, list and complete todos using [Application Commands](https://discord.com/developers/docs/interactions/application-commands). To persist the todos we need a database. We will have Shuttle provison a PostgreSQL database for us by enabling the `sqlx-postgres` feature for `shuttle-service` and passing `#[shared::Postgres] pool: PgPool` as an argument to our `main` function.
+
+To run this bot we need a valid Discord Token. To get started log in to the [Discord developer portal](https://discord.com/developers/applications).
+
+1. Click the New Application button, name your application and click Create.
+2. Navigate to the Bot tab in the lefthand menu, and add a new bot.
+3. On the bot page click the Reset Token button to reveal your token. Put this token in your `Secrets.toml`. It's very important that you don't reveal your token to anyone, as it can be abused. Create a `.gitignore` file to omit your `Secrets.toml` from version control.
+
+
+To add the bot to a server we need to create an invite link.
+
+1. On your bot's application page, open the OAuth2 page via the lefthand panel.
+2. Go to the URL Generator via the lefthand panel, and select the `applications.commands` scope.
+3. Copy the URL, open it in your browser and select a Discord server you wish to invite the bot to.
+
+For this example we also need a `GuildId`.
+
+1. Open your Discord client, open the User Settings and navigate to Advanced. Enable Developer Mode.
+2. Right click the Discord server you'd like to use the bot in and click Copy Id. This is your Guild ID.
+3. Store it in `Secrets.toml` and retrieve it like we did for the Discord Token.
+
+For more information please refer to the [Discord docs](https://discord.com/developers/docs/getting-started) as well as the [Serenity repo](https://github.com/serenity-rs/serenity) for more examples.
+
+<CodeGroup>
+```Rust src/main.rs
+use anyhow::Context as _;
+use serenity::async_trait;
+use serenity::model::application::command::CommandOptionType;
+use serenity::model::application::interaction::application_command::CommandDataOptionValue;
+use serenity::model::application::interaction::{Interaction, InteractionResponseType};
+use serenity::model::gateway::Ready;
+use serenity::model::id::GuildId;
+use serenity::prelude::*;
+use shuttle_secrets::SecretStore;
+use sqlx::{Executor, PgPool};
+use tracing::{error, info};
+
+mod db;
+
+struct Bot {
+    database: PgPool,
+    guild_id: String,
+}
+
+#[async_trait]
+impl EventHandler for Bot {
+    async fn interaction_create(&self, ctx: Context, interaction: Interaction) {
+        let user_id: i64 = interaction
+            .clone()
+            .application_command()
+            .unwrap()
+            .user
+            .id
+            .into();
+
+        if let Interaction::ApplicationCommand(command) = interaction {
+            info!("Received command interaction: {:#?}", command);
+
+            let content = match command.data.name.as_str() {
+                "todo" => {
+                    let command = command.data.options.get(0).expect("Expected command");
+
+                    // if the todo subcommand has a CommandOption the command is either `add` or `complete`
+                    if let Some(subcommand) = command.options.get(0) {
+                        match subcommand.resolved.as_ref().expect("Valid subcommand") {
+                            CommandDataOptionValue::String(note) => {
+                                db::add(&self.database, note, user_id).await.unwrap()
+                            }
+                            CommandDataOptionValue::Integer(index) => {
+                                db::complete(&self.database, index, user_id)
+                                    .await
+                                    .unwrap_or_else(|_| {
+                                        "Please submit a valid index from your todo list"
+                                            .to_string()
+                                    })
+                            }
+                            _ => "Please enter a valid todo".to_string(),
+                        }
+                    // if the todo subcommand doesn't have a CommandOption the command is `list`
+                    } else {
+                        db::list(&self.database, user_id).await.unwrap()
+                    }
+                }
+                _ => "Command not implemented".to_string(),
+            };
+
+            if let Err(why) = command
+                .create_interaction_response(&ctx.http, |response| {
+                    response
+                        .kind(InteractionResponseType::ChannelMessageWithSource)
+                        .interaction_response_data(|message| message.content(content))
+                })
+                .await
+            {
+                error!("Cannot respond to slash command: {}", why);
+            }
+        }
+    }
+
+    async fn ready(&self, ctx: Context, ready: Ready) {
+        info!("{} is connected!", ready.user.name);
+
+        let guild_id = GuildId(self.guild_id.parse().unwrap());
+
+        let _ = GuildId::set_application_commands(&guild_id, &ctx.http, |commands| {
+            commands.create_application_command(|command| {
+                command
+                    .name("todo")
+                    .description("Add, list and complete todos")
+                    .create_option(|option| {
+                        option
+                            .name("add")
+                            .description("Add a new todo")
+                            .kind(CommandOptionType::SubCommand)
+                            .create_sub_option(|option| {
+                                option
+                                    .name("note")
+                                    .description("The todo note to add")
+                                    .kind(CommandOptionType::String)
+                                    .min_length(2)
+                                    .max_length(100)
+                                    .required(true)
+                            })
+                    })
+                    .create_option(|option| {
+                        option
+                            .name("complete")
+                            .description("The todo to complete")
+                            .kind(CommandOptionType::SubCommand)
+                            .create_sub_option(|option| {
+                                option
+                                    .name("index")
+                                    .description("The index of the todo to complete")
+                                    .kind(CommandOptionType::Integer)
+                                    .min_int_value(1)
+                                    .required(true)
+                            })
+                    })
+                    .create_option(|option| {
+                        option
+                            .name("list")
+                            .description("List your todos")
+                            .kind(CommandOptionType::SubCommand)
+                    })
+            })
+        })
+        .await;
+    }
+}
+
+#[shuttle_runtime::main]
+async fn serenity(
+    #[shuttle_shared_db::Postgres] pool: PgPool,
+    #[shuttle_secrets::Secrets] secret_store: SecretStore,
+) -> shuttle_serenity::ShuttleSerenity {
+    // Get the discord token set in `Secrets.toml`
+    let token = secret_store
+        .get("DISCORD_TOKEN")
+        .context("'DISCORD_TOKEN' was not found")?;
+    // Get the guild_id set in `Secrets.toml`
+    let guild_id = secret_store
+        .get("GUILD_ID")
+        .context("'GUILD_ID' was not found")?;
+
+    // Run the schema migration
+    pool.execute(include_str!("../schema.sql"))
+        .await
+        .context("failed to run migrations")?;
+
+    let bot = Bot {
+        database: pool,
+        guild_id,
+    };
+    let client = Client::builder(&token, GatewayIntents::empty())
+        .event_handler(bot)
+        .await
+        .expect("Err creating client");
+
+    Ok(client.into())
+}
+```
+
+```rust src/db.rs
+use sqlx::{FromRow, PgPool};
+use std::fmt::Write;
+
+#[derive(FromRow)]
+struct Todo {
+    pub id: i32,
+    pub note: String,
+}
+
+pub(crate) async fn add(pool: &PgPool, note: &str, user_id: i64) -> Result<String, sqlx::Error> {
+    sqlx::query("INSERT INTO todos (note, user_id) VALUES ($1, $2)")
+        .bind(note)
+        .bind(user_id)
+        .execute(pool)
+        .await?;
+
+    Ok(format!("Added `{}` to your todo list", note))
+}
+
+pub(crate) async fn complete(
+    pool: &PgPool,
+    index: &i64,
+    user_id: i64,
+) -> Result<String, sqlx::Error> {
+    let todo: Todo = sqlx::query_as(
+        "SELECT id, note FROM todos WHERE user_id = $1 ORDER BY id LIMIT 1 OFFSET $2",
+    )
+    .bind(user_id)
+    .bind(index - 1)
+    .fetch_one(pool)
+    .await?;
+
+    sqlx::query("DELETE FROM todos WHERE id = $1")
+        .bind(todo.id)
+        .execute(pool)
+        .await?;
+
+    Ok(format!("Completed `{}`!", todo.note))
+}
+
+pub(crate) async fn list(pool: &PgPool, user_id: i64) -> Result<String, sqlx::Error> {
+    let todos: Vec<Todo> =
+        sqlx::query_as("SELECT note, id FROM todos WHERE user_id = $1 ORDER BY id")
+            .bind(user_id)
+            .fetch_all(pool)
+            .await?;
+
+    let mut response = format!("You have {} pending todos:\n", todos.len());
+    for (i, todo) in todos.iter().enumerate() {
+        writeln!(&mut response, "{}. {}", i + 1, todo.note).unwrap();
+    }
+
+    Ok(response)
+}
+```
+
+```sql schema.sql
+DROP TABLE IF EXISTS todos;
+
+CREATE TABLE todos (
+  id serial PRIMARY KEY,
+  user_id BIGINT NULL,
+  note TEXT NOT NULL
+);
+```
+
+```toml Secrets.toml
+DISCORD_TOKEN = 'the contents of your discord token'
+GUILD_ID = "123456789"
+```
+</CodeGroup>
+---
+<Tip> If you want to explore other frameworks, we have more examples with popular ones like Tower and Warp. You can find them [right here](../examples/other). </Tip>

@@ -1,0 +1,39 @@
+---
+title: "Shuttle Service Name"
+---
+
+## Overview
+
+The name of a Shuttle service (your project), can be set up in three different ways.
+
+## via the `--name` option
+
+A new Shuttle service can be named by passing in a project name as an argument along with the `--name` option.  For example:
+
+```bash
+mkdir -p url-shortener
+cargo shuttle init --template rocket --name url-shortener
+```
+
+This will create a new Rocket framework based project called `url-shortener` and will populate the name field within the `[package]` section name of the generated `Cargo.toml` file.
+
+This method of naming overrides naming via `Shuttle.toml`, if that file is present at the root of the project folder.  It also overrides any name provided within `Cargo.toml`.
+
+## via Shuttle.toml
+
+If the `--name` option with a command is not used, the next method to name a project is via creating a `Shuttle.toml` file at the root level of the project folder.  In this file, place a key-value pair like so:
+
+```toml 
+name = <your-project-name>
+```
+
+Where `<your-project-name>` is whatever you wish to name the project.  This method of naming supercedes any name set in `Cargo.toml`.
+
+## via Cargo.toml
+
+In the absence of either of the previous two options, the project will be named based on the content of the `name = ` field of the `[package]` section within the `Cargo.toml` configuration file.
+
+## Workspaces
+
+If your project is a cargo workspace the name will be taken from a `Shuttle.toml` in the root of the workspace, or
+from the directory name of the workspace. See [workspaces](../introduction/workspaces).

@@ -1,0 +1,18 @@
+---
+title: "Overview"
+---
+
+Shuttle-next is a brand new WASM web-framework based on axum and hyper. There are many benefits to
+using WASM for a backend web-framework, but one of the key features is the isolation it offers. Since
+WASM modules have no notion of a file system, a shuttle-next project can only interact with the host
+through resources explicitly declared by us. In this first iteration, the only resource available is
+an HTTP stream to and from a project.
+
+Shuttle-next is very much a work in progress, and we're releasing this iteration without some of the 
+features that make shuttle a pleasure to use, for example the ability to effortlessly deploy and connect 
+to a database. It's also not currently possible to use any middleware. We're planning to implement this 
+functionality, and more, in the near future. We're also hoping that the feedback we get from this release 
+will help us see which features we should prioritize, and which areas of the framework's design need the 
+most attention going forward.
+
+<Info> Note: shuttle-next does not currently work on Windows, it only works on unix systems (i.e mac, Linux and Windows Subsystem for Linux). We aim to resolve this in future releases. </Info>

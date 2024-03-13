@@ -1,0 +1,34 @@
+---
+title: "Overview"
+---
+
+## Benefits
+
+The next sections go over one by one the the resources currently supported by Shuttle. In broad terms, for the resource needed, simply mark up your code with the appropriate annotation. This is very powerful and brings several benefits:
+
+- simplicity
+- receive a database by writing a simple annotation
+- compile-time insurance/assurance that the resource requested is the resource received
+- enables quick prototyping, there is no need for extensive setup, management consoles/tools, etc.
+
+## Resources
+
+### Amazon Web Services Relational Database Service (AWS RDS)
+
+This plugin allows applications to leverage AWS RDS for database needs, instead of a shared database. This will result in improved availability and reliability given the "managed" nature of the service and its increased resources. It can be a good choice if the database backing the application requires the performance increase that results from improved isolation. 
+
+### Persist
+
+This plugin allows data to be persisted in a key-value store, which is backed by a struct that implements `serde` for serialization and deserialization. It is useful for saving data that is not desirable to be hard coded. An example is saved settings for a Discord bot that need to remain the same between updates.
+
+### Shared Databases
+
+The Shared Databases plugin will spin up a shared Postgres or MongoDB database instance, which is shared with other users.  This is the option to choose if database isolation isn't a concern. It's the suitable choice for prototyping applications on Shuttle.
+
+### Secrets
+
+The Shuttle Secrets plugin provides a place to store environment variables which are sensitve and cannot be committed into version control.
+
+### Static Folder
+
+The Static Folder plugin provides a way to store static files, such as web pages, cascading style sheets, or other assets, to be served up as part of a web application.

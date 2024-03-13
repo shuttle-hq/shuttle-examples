@@ -1,0 +1,67 @@
+---
+title: "Shuttle AWS RDS"
+---
+
+This plugin provisions databases on AWS RDS using [Shuttle](https://www.shuttle.rs). The following three engines are supported:
+- Postgres
+- MySql
+- MariaDB
+
+## Usage
+Each engine is behind a feature flag, and can be installed with the following commands and
+used with the following attribute paths:
+
+| Engine   | Command                                         | Attribute path            |
+|----------|-------------------------------------------------|---------------------------|
+| Postgres | `cargo add shuttle-aws-rds --features postgres` | shuttle_aws_rds::Postgres |
+| MySql    | `cargo add shuttle-aws-rds --features mysql`    | shuttle_aws_rds::MySql    |
+| MariaDB  | `cargo add shuttle-aws-rds --features mariadb`  | shuttle_aws_rds::MariaDB  |
+
+### Parameters
+| Parameter | Type | Default  | Description                                                                                             |
+|-----------|------|----------|---------------------------------------------------------------------------------------------------------|
+| local_uri | str  | `None`   | Rather connect `cargo shuttle run` to this database and don't spin up a Docker instance of the database |
+
+When setting the `local_uri` you can also insert secrets from `Secrets.toml` using string interpolation. To insert the
+`PASSWORD` secret, pass it in like this:
+
+```rust
+#[shuttle_runtime::main]
+async fn tide(#[shuttle_aws_rds::Postgres(
+        local_uri = "postgres://postgres:{secrets.PASSWORD}@localhost:16695/postgres"
+    )] pool: PgPool) -> ShuttleTide<MyState> { ... }
+```
+
+The URI should be formatted according to the
+[Postgres](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) or
+[MySql and MariaDB](https://dev.mysql.com/doc/refman/8.0/en/connecting-using-uri-or-key-value-pairs.html#connecting-using-uri)
+documentation, depending on which one you're using.
+
+If you do not specify a `local_uri`, then shuttle will attempt to spin up a docker instance and launch the database inside of it.
+For this to succeed, you must have docker installed and you must also have started the docker engine. If you have not used docker
+before, the easiest way is to [install the desktop app](https://docs.docker.com/get-docker/) and then launch it in order to start
+the docker engine.
+
+## Example
+This snippet shows the main function of a tide app that uses the `shuttle_aws_rds::Postgres` attribute to provision an RDS Postgres database.
+It gives you an authenticated  [sqlx Pool](https://docs.rs/sqlx/latest/sqlx/pool/index.html), which you can use to interact with the database.
+
+```rust main.rs
+#[shuttle_runtime::main]
+async fn tide(#[shuttle_aws_rds::Postgres] pool: PgPool) -> ShuttleTide<MyState> {
+    pool.execute(include_str!("../schema.sql"))
+        .await
+        .map_err(CustomError::new)?;
+
+    let state = MyState { pool };
+    let mut app = tide::with_state(state);
+
+    app.with(tide::log::LogMiddleware::new());
+    app.at("/todo").post(add);
+    app.at("/todo/:id").get(retrieve);
+
+    Ok(app.into())
+}
+```
+
+The full example can be found on [GitHub](https://github.com/shuttle-hq/shuttle-examples/tree/main/tide/postgres)

@@ -1,0 +1,46 @@
+---
+title: "Shuttle Static Folder"
+---
+
+This plugin allows services to get the path to a static folder at runtime, enabling the serving of static files such as web pages.
+
+## Usage
+Add `shuttle-static-folder` to the dependencies for your service. This resource can be utilized by adding a parameter to the main function and annoting it with the `shuttle_static_folder::StaticFolder` attribute, to get a `PathBuf` with the location of the static folder.
+
+Here is a code snippet to illustrate::
+
+``` rust
+#[shuttle_runtime::main]
+async fn main(
+    #[shuttle_static_folder::StaticFolder] static_folder: PathBuf,
+) -> __ { ... }
+```
+
+A `PathBuf` is an owned, mutable path (similar to a String). To know more about `PathBuf`, head over to the [discussion](https://doc.rust-lang.org/std/path/struct.PathBuf.html) in [The Rust Standard Library](https://doc.rust-lang.org/std/index.html). By default, the folder is called `static`, unless specifically renamed (see below).
+
+> Note: if you use `shuttle-static-folder` in your project and your project is a workspace, the static assets
+> folder needs to be in the root of the workspace.
+
+## Customization
+
+The folder parameter name can be customized in order to change the name of the static folder.
+
+| Parameter | Type | Default  | Description                                                        |
+|-----------|------|----------|--------------------------------------------------------------------|
+| folder    | str  | `static` | The relative path, from the crate root, to the directory containing static files to deploy |
+
+### Customization Example: Static Folder Renamed to Public Folder
+The plugin defaults to a folder name of `static`, but there is freedom to change it.  When annotating the parameter name, as noted above, add an argument in the format `folder = "<desired name>"`, as follows:
+
+``` rust
+#[shuttle_runtime::main]
+async fn main(
+    #[shuttle_static_folder::StaticFolder(folder = "public")] public_folder: PathBuf,
+) -> __ { ... }
+```
+
+The parameter name should be changed to match, in this case being `folder = "public"`.
+
+## Example Usage
+
+An example of how to use the Static Folder Resource, using the Axum framework, can be found here: [Axum Static Files Example](https://github.com/shuttle-hq/shuttle-examples/tree/main/axum/static-files)

@@ -1,0 +1,41 @@
+---
+title: "What is Shuttle?"
+description: "Shuttle is a Rust-native cloud development platform that lets you deploy your app while also taking care of all of your infrastructure."
+---
+
+![](/images/infra-from-code.gif)
+
+<Info>The GIF above displays a sneak-peek for our upcoming console and does a good job of demonstrating how easy it is to add resources to your project.</Info>
+
+As a platform designed with a focus on providing an exceptional developer experience, our goal is to make building and deploying applications a breeze. Shuttle's **<Tooltip tip="Provisioning resources directly from your code, instead of having to deal with complex consoles and yaml files">Infrastructure from Code</Tooltip>** capabilities make provisioning resources simple and hassle-free. Getting a database is just a matter of asking for one with a macro:
+
+```rust
+#[shuttle_runtime::main]
+async fn rocket(
+    // automatic db provisioning + hands you back an authenticated connection pool
+    #[shuttle_shared_db::Postgres] pool: PgPool,
+) -> ShuttleRocket<...> {
+    // application code
+}
+```
+
+You can hit the ground running and swiftly transform your ideas into tangible solutions. Accelerate your project's progress by rapidly building and deploying prototypes, ensuring you bring your vision to life in record time.
+
+<Info>Our mission is aligned with the wave of Rust becoming the future of web development, as we strive to deliver cutting-edge solutions that leverage the full potential of [the most loved programming language](https://survey.stackoverflow.co/2022/).</Info>
+
+## Supported Frameworks
+
+Currently we support most of the popular Rust web frameworks: [Axum](../examples/axum), [Actix](../examples/actix), [Rocket](../examples/other), [Warp](../examples/other), [Tower](../examples/other), [Salvo](../examples/other), [Poem](../examples/other), [Tide](../examples/other),
+  
+And also some of the Discord Bot building frameworks: [Serenity](../examples/serenity), [Poise](https://github.com/shuttle-hq/examples/tree/main/poise/hello-world)
+
+If you need a custom service, you can take a look at our guide [right here](../tutorials/custom-service).
+
+## Resource Provisioning
+
+At this moment, Shuttle supports the provisioning of the following resources:
+- [Shuttle AWS RDS](../resources/shuttle-aws-rds)
+- [Shuttle Persist](../resources/shuttle-persist)
+- [Shuttle Shared Databases](../resources/shuttle-shared-db)
+- [Shuttle Secrets](../resources/shuttle-secrets)
+- [Shuttle Static Folder](../resources/shuttle-static-folder)
