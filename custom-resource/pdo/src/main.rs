@@ -7,7 +7,7 @@ async fn hello_world(State(pdo): State<Arc<Pdo>>) -> String {
 }
 
 #[shuttle_runtime::main]
-async fn axum(#[Builder(name = "John")] pdo: Pdo) -> shuttle_axum::ShuttleAxum {
+async fn axum(#[Builder(field = "value")] pdo: Pdo) -> shuttle_axum::ShuttleAxum {
     let state = Arc::new(pdo);
     let router = Router::new().route("/", get(hello_world)).with_state(state);
 
