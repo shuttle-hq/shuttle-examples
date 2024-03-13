@@ -1,0 +1,18 @@
+---
+title: "Workspaces"
+description: "Using cargo workspaces with shuttle."
+---
+
+Shuttle supports [cargo workspace](https://doc.rust-lang.org/book/ch14-03-cargo-workspaces.html). Simply run
+the project and deployment commands in the root of the workspace, and the project name will be taken from the
+directory name of the workspace or a `Shuttle.toml` with a name key in the root of the workspace. 
+
+> Note: if you use `shuttle-static-folder` in your project and your project is a workspace, the static assets
+> folder needs to be in the root of the workspace.
+
+### Caveats
+
+We currently only support one Shuttle service per workspace, so you can have many crates in a workspace, but only
+one crate with a `shuttle_runtime::main` macro. We intend to allow starting several services in deployment too. 
+The long term plan is to have one central service that routes to the other services in the project, sharing resources 
+amongst them. Any feedback on what people would like to see in this area is most welcome.

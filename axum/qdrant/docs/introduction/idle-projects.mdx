@@ -1,0 +1,44 @@
+---
+title: "Idle Projects"
+---
+
+Shuttle imposes no restrictions on how many projects a user can 
+create. While we are in alpha this is a win-win, users creating many and
+varied projects is great for testing both our code and how we handle 
+load. However, this leads to a sizable amount of idle projects. To 
+remedy this, we put these idle projects to sleep, by default after **30 minutes** 
+of very low activity.
+
+By activity we mean both:
+
+- CPU load of the project over a 30 minute window. The load is
+increased when a project receives traffic (for example, traffic to an
+API endpoint for an axum server, or calling the commands of a Discord bot).
+An HTTP server (eg. axum or rocket), will need about 2 requests per minute over the idle-time period to be considered
+active, a Discord bot will need about 6 calls per minute.
+- User interaction, for example running `cargo shuttle status` or any other CLI commands except for `cargo shuttle project <cmd>` commands.
+
+If the project is sleeping, traffic to the project or user 
+interaction will wake it, and this usually takes around one
+second. 
+
+**Important: If a Discord bot is sleeping due to 
+inactivity, calling the bot commands will not wake it, only developer 
+interaction through the CLI will (but traffic will keep it from going to
+ sleep). See the below instructions for how to increase the idle limit.**
+
+### Configuring the timeout
+
+Since we don't really want to restrict active users yet, this limit 
+can be freely modified. You can change it by passing in a flag when 
+creating a project:
+
+```bash
+cargo shuttle project start --idle-minutes 40
+```
+
+If you pass in `--idle-minutes 0`
+the idle timeout will be disabled and your project will never sleep. 
+This is especially useful for Discord bots, since they will not be 
+awoken by traffic (people using the bot commands in a Discord channel), 
+only by developer interaction through the Shuttle CLI.

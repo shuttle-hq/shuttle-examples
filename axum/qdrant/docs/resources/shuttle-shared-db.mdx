@@ -1,0 +1,55 @@
+---
+title: "Shuttle Shared Databases"
+---
+
+This plugin manages databases that are shared with other services on [Shuttle](https://www.shuttle.rs). Your database
+will share a postgres server with other users, but it will not be accessible by other users.
+
+## Usage
+Add `shuttle-shared-db` to the dependencies for your service. Every type of shareable database
+is behind the following feature flag and attribute path. `*-rustls` feature enables `rustls`-based implementation,
+otherwise some flavour of `native-tls` is used.
+
+| Engine   | Feature flags                 | Attribute path                |
+|----------|-------------------------------|-------------------------------|
+| Postgres | `postgres`, `postgres-rustls` | `shuttle_shared_db::Postgres` |
+| MongoDB  | `mongodb`                     | `shuttle_shared_db::MongoDb`  |
+
+### Parameters
+| Parameter | Type | Default  | Description                                                                                             |
+|-----------|------|----------|---------------------------------------------------------------------------------------------------------|
+| local_uri | str  | `None`   | Rather connect `cargo shuttle run` to this database and don't spin up a Docker instance of the database |
+
+When setting the `local_uri` you can also insert secrets from `Secrets.toml` using string interpolation. To insert the
+`PASSWORD` secret, pass it in like this:
+
+```rust
+#[shuttle_runtime::main]
+async fn poem(#[shuttle_shared_db::Postgres(
+        local_uri = "postgres://postgres:{secrets.PASSWORD}@localhost:16695/postgres"
+    )] pool: PgPool) -> ShuttlePoem<impl poem::Endpoint> { ... }
+```
+
+## Example
+The Shuttle poem main function below uses the `[shuttle_shared_db::Postgres]` attribute macro to provision a shared postgres database,
+which can be accessed using a pre-configured, authenticated [sqlx Pool](https://docs.rs/sqlx/latest/sqlx/pool/index.html).
+
+```rust main.rs
+#[shuttle_runtime::main]
+async fn poem(
+    #[shuttle_shared_db::Postgres] pool: PgPool,
+) -> ShuttlePoem<impl poem::Endpoint> {
+    pool.execute(include_str!("../schema.sql"))
+        .await
+        .map_err(CustomError::new)?;
+
+    let app = Route::new()
+        .at("/todo", post(add))
+        .at("/todo/:id", get(retrieve))
+        .with(AddData::new(pool));
+
+    Ok(app.into())
+}
+```
+
+The full example can be found on [GitHub](https://github.com/shuttle-hq/shuttle-examples/tree/main/poem/postgres)

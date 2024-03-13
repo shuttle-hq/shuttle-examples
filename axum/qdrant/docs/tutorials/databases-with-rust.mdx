@@ -1,0 +1,200 @@
+---
+title: "Working with Databases in Rust"
+---
+
+In this guide we'll be looking at working with PostgresQL & MongoDB and how we can interface with them easily using Rust. By the end of this guide you'll have more of an idea of how to use both and when each one would be better for your use case.
+
+It will be assumed you already have a project initialised - if not, you can always initialise a new project with `cargo shuttle init`.
+
+## SQL 
+Relational databases are the classical way to store data in the backend of web applications when it comes to storing records and persisted data.  Shuttle currently offers free provisioned SQL instances for your applications and currently provides it through an SQLx connection pool. It should be noted that although we're using Postgres for this guide, the same concepts works equally well with both MySQL and MariaDB.
+
+To get started with SQLx (and using our new database), we'll want to add the `sqlx` crate to an initialised Rust program. We will also want to add the `shuttle-shared-db` crate which allows us to use the macro that provisions the database instance to us.
+
+```bash
+cargo add sqlx shuttle-shared-db --features sqlx/runtime-tokio-native-tls,sqlx/postgres,sqlx/macros,sqlx/offline,shuttle-shared-db/postgres,shuttle-shared-db/sqlx
+cargo install sqlx-cli
+```
+
+We can then run `sqlx migrate add <name>` in our project to add a migrations folder that will contain an empty SQL file, with the naming convention `<timestamp>_<name>.sql`. We can then create our tables using the power of raw SQL:
+
+```sql
+CREATE TABLE IF NOT EXISTS users (
+id SERIAL PRIMARY KEY NOT NULL,
+name VARCHAR NOT NULL,
+email VARCHAR NOT NULL,
+password VARCHAR NOT NULL,
+created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP 
+);
+``` 
+
+When we run our migrations, this folder will be the default that will be used - when we're ready to run our migrations, we can run `sqlx migrate run --database-url <database-url>`. We can also just run the migrate macro programatically after connecting to the database:
+
+```rust
+sqlx::migrate!().run(&pool).await.expect("Migrations failed :(");
+```
+
+Be aware however that this will run every time the program starts, so if you only want your migrations to run once or you're not using `CREATE TABLE IF NOT EXISTS`, you will probably want to make sure you either comment this statement out or just delete it once the migrations have run.
+
+To get started with querying using SQLx, we'll need to connect to our database. Normally you'd have to set up your connection pool manually - however, with Shuttle you can just set the macro up and you'll receive the connection pool immediately:
+
+```rust
+#[shuttle_runtime::main]
+async fn axum(
+    #[shuttle_shared_db::Postgres] pool: PgPool
+) -> shuttle_axum::ShuttleAxum {
+... some code
+}
+```
+
+Now when you need to make a query, you can use `&pool` in your queries as the database connection you want to execute your query against. The query uses the referenced version of the variable to be able to keep the connection alive; if it doesn't, then the variable will get consumed and you'd lose your connection pool.
+
+At a basic level, we can use `sqlx::query` to query something and then chain the `.bind()` method to insert our own variables into the query:
+
+```rust
+// fetch one row
+let query = sqlx::query("SELECT * FROM users WHERE id = $1")
+    .bind(id)
+    .fetch_one(&pool)
+    .await;
+
+let number: i32 = query.get("id");
+```
+
+While this is pretty cool, what we probably want to do if we know what we want to extract from the database is to use SQLx's `sqlx::FromRow` derive macro on a struct with the data type we want from the database.  Let's have a look at what that might look like below:
+
+```rust
+#[derive(sqlx::FromRow)]
+struct Message {
+    id: i32,
+    message: String
+}
+
+let query = sqlx::query::_as<_, Message>("SELECT id, message FROM messages")
+    .fetch_all(&pool)
+    .await;
+```
+
+This is much more convenient for us for gathering information since we already know what we want the outputted data type from the query to be, so when we carry out the query it'll now automatically be converted into a vector of structs. 
+
+One of SQLx's main strengths in addition to the above is being able to create data for compile-time queries. To do this, we'll want to enable the macros flag for SQLx by adding the `macros` feature flag to SQLx in our Cargo.toml file, though if following this guide from the start you'll probably have it already. If not, you can run this command:
+
+```rust
+cargo add sqlx --features macros
+```
+
+This will allow us to be able to use the `query!()` and `query_as!()` macros, which like the above allows us to execute general queries as well as queries that can directly return structs. The main difference however is that these macros do compile-time syntactic and semantic verification of the SQL, meaning you'll get errors at compile time if the queries are invalid. Let's have a look at how we can use them below:
+
+```rust
+// as you can see this is pretty much the same
+let messages = sqlx::query!("SELECT * FROM messages")
+    .fetch_all(&pool)
+    .await;
+
+#[derive(sqlx::FromRow)]
+struct Message {
+    id: i32,
+    message: String
+}
+
+// as you can see we input the struct type in-macro, then the query & bound variables
+let messages_to_struct = sqlx::query_as!(Message, "SELECT id, message FROM messages
+ WHERE id = (1)", 1i32)
+    .fetch_one(&pool)
+    .await;
+```
+
+Once we've built all of our queries that we want to use, all we need to do is run the following command which will create query metadata at the current working directory:
+
+```bash
+cargo sqlx prepare --database-url <database-url>
+
+// use the command below if you're using a workspace
+cargo sqlx prepare --workspace
+```
+
+Now we can build and run our program as usual, and if there's no errors then it should work!
+
+If you're using SQLx in conjunction with a backend web development framework like Axum, bear in mind that you will want to use Serde to serialize your data to JSON - this can be enabled by installing Serde with the "derive" feature:
+
+```bash
+cargo add serde --features derive
+```
+
+Then you need to add the Serialize derive macro to your structs as required, and then when you return the JSON-serialized data it'll automatically be accepted as a HTTP-compatible response.
+
+## shuttle-persist
+Shuttle Persist is shuttle's own persistent key-value style store that you can use to store your data in and is great for storing long-term data that you might need on the server but you don't need a relational database for, or you want to be able to store data that's still structured via structs but you also might want to store metadata (ie total number of records, combined value of something from all structs in a vector, or similar). 
+
+To get started, we'll want to add `shuttle-persist` to an already initialised Rust program by adding the crate:
+
+```bash
+cargo add shuttle-persist 
+```
+
+`shuttle-persist` works by taking a struct or other type and using that as the basis of what we want to save our value as for the key-value store, using the Deserialize & Serialize derive macros from Serde to be able to convert it to/from JSON to make it HTTP response-compatible. We'll want to create a struct that will act as the field type and attach the macros mentioned previously:
+
+```rust
+// as you can see this allows for a nested struct
+#[derive(Deserialize, Serialize)]
+pub struct Data {
+    people: Vec<Person>,
+    total_records: i32
+}
+
+#[derive(Deserialize, Serialize)]
+pub struct Person {
+    name: String,
+    age: i32
+}
+
+// add a new() function so the struct can be initialised if it doesn't exist
+impl Data {
+    fn new() -> Self {
+        Self {
+        people: Vec::new(),
+        total_records: 0
+        }
+    }
+}
+```
+
+Now that it's in our dependencies, we can add it to the list of parameters passed into our main entry point function, like so - and then we can attempt to load whatever our data keys are and if they don't exist, we can just create a new one.
+
+```rust
+#[shuttle_runtime::main]
+async fn axum(
+    #[shuttle_persist::Persist] persist: PersistInstance
+) -> shuttle_axum::ShuttleAxum {
+
+if persist.load::<Data>("data").is_err() {
+    persist.save::<Data>("data", Data::new());
+}
+
+// ... etc
+
+}
+```
+
+If you already have a value set in your `persist` instance and you'd like to change something, the main way to do this would be to load the data as a variable, manipulate the data however you want (in this case we're simply running `.push()` to add a new record) and then saving the data back to the key value. Let's see what that would look like:
+
+```rust
+async fn add_record(
+    State(state): State<AppState>,
+    Json(req): Json<Person>,
+) -> Result<impl IntoResponse, impl IntoResponse> {
+    let mut data = state.persist.load::<Data>("data");
+    
+    data.people.push( Person { name: req.name, age: req.age } );
+    data.total_records += 1;
+    
+    match state.persist.save::<Data>("data", data) {
+        Ok(_) => Ok((StatusCode::OK, "Successful!".to_string())),
+        Err(e) => Err((StatusCode::INTERNAL_SERVER_ERROR, e.to_string()))
+    }
+}
+```
+
+As you can see, one of the main strengths of `shuttle-persist` is that if you have a data set and you want to manipulate the data to produce some new results, it's quite simple to do so as you can pull the data then manipulate the data using Rust methods then save it back - no SQL is required to do it.
+
+You can also extend `shuttle-persist` to include more than one key by simply just saving and loading using a different key - which means we can do things like emulating a NoSQL database like MongoDB by creating multiple nested structs for each key and then using keys like collection names.

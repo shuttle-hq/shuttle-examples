@@ -1,0 +1,150 @@
+This section contains examples for the following frameworks: Warp, Tower, Poem, Rocket, Salvo, Thruster, Poem & Tide.
+
+### Hello World
+
+This example provides a simple "Hello, world!" Rust application that you can deploy with Shuttle. It's a great starting point for learning how to use Shuttle and getting familiar with the deployment process for Rust applications.
+
+In order to get started, initialize your project with `cargo shuttle init` and pick the framework you want to use for this example.
+
+Once you are done, your project should be setup with all the required dependencies so go ahead and copy/paste the relevant code snippet from below into your `main.rs` file.
+
+<CodeGroup>
+
+```rust Rocket
+#[macro_use]
+extern crate rocket;
+
+#[get("/")]
+fn index() -> &'static str {
+    "Hello, world!"
+}
+
+#[shuttle_service::main]
+async fn rocket() -> shuttle_service::ShuttleRocket {
+    let rocket = rocket::build().mount("/hello", routes![index]);
+
+    Ok(rocket)
+}
+```
+
+```rust Tower
+use std::convert::Infallible;
+use std::future::Future;
+use std::pin::Pin;
+use std::task::{Context, Poll};
+
+#[derive(Clone)]
+struct HelloWorld;
+
+impl tower::Service<hyper::Request<hyper::Body>> for HelloWorld {
+    type Response = hyper::Response<hyper::Body>;
+    type Error = Infallible;
+    type Future = Pin<Box<dyn Future<Output = Result<Self::Response, Self::Error>> + Send + Sync>>;
+
+    fn poll_ready(&mut self, _cx: &mut Context<'_>) -> Poll<Result<(), Self::Error>> {
+        Poll::Ready(Ok(()))
+    }
+
+    fn call(&mut self, _req: hyper::Request<hyper::Body>) -> Self::Future {
+        let body = hyper::Body::from("Hello, world!");
+        let resp = hyper::Response::builder()
+            .status(200)
+            .body(body)
+            .expect("Unable to create the `hyper::Response` object");
+
+        let fut = async { Ok(resp) };
+
+        Box::pin(fut)
+    }
+}
+
+#[shuttle_service::main]
+async fn tower() -> Result<HelloWorld, shuttle_service::Error> {
+    Ok(HelloWorld)
+}
+```
+
+```rust Warp
+use warp::Filter;
+use warp::Reply;
+
+#[shuttle_service::main]
+async fn warp() -> shuttle_service::ShuttleWarp<(impl Reply,)> {
+    let route = warp::any().map(|| "Hello, World");
+    Ok(route.boxed())
+}
+```
+
+```rust Salvo
+use salvo::prelude::*;
+
+#[handler]
+async fn hello_world(res: &mut Response) {
+    res.render(Text::Plain("Hello, world!"));
+}
+
+#[shuttle_service::main]
+async fn salvo() -> shuttle_service::ShuttleSalvo {
+    let router = Router::with_path("hello").get(hello_world);
+
+    Ok(router)
+}
+```
+
+```rust Poem
+use poem::{get, handler, Route};
+
+#[handler]
+fn hello_world() -> &'static str {
+    "Hello, world!"
+}
+
+#[shuttle_service::main]
+async fn main() -> shuttle_service::ShuttlePoem<impl poem::Endpoint> {
+    let app = Route::new().at("/hello", get(hello_world));
+
+    Ok(app)
+}
+```
+
+```rust Thruster
+use thruster::{
+    context::basic_hyper_context::{generate_context, BasicHyperContext as Ctx, HyperRequest},
+    m, middleware_fn, App, HyperServer, MiddlewareNext, MiddlewareResult, ThrusterServer,
+};
+
+#[middleware_fn]
+async fn hello(mut context: Ctx, _next: MiddlewareNext<Ctx>) -> MiddlewareResult<Ctx> {
+    context.body("Hello, World!");
+    Ok(context)
+}
+
+#[shuttle_service::main]
+async fn thruster() -> shuttle_service::ShuttleThruster<HyperServer<Ctx, ()>> {
+    Ok(HyperServer::new(
+        App::<HyperRequest, Ctx, ()>::create(generate_context, ()).get("/hello", m![hello]),
+    ))
+}
+```
+
+```rust Tide
+#[shuttle_service::main]
+async fn tide() -> shuttle_service::ShuttleTide<()> {
+    let mut app = tide::new();
+    app.with(tide::log::LogMiddleware::new());
+
+    app.at("/hello").get(|_| async { Ok("Hello, world!") });
+
+    Ok(app)
+}
+```
+
+</CodeGroup>
+
+In order to deploy the example, simply run:
+
+```bash
+cargo shuttle deploy
+```
+---
+<Tip> If you're looking for other frameworks, we have more examples with other popular frameworks like Tower and Warp [right here](../examples/other). </Tip>

@@ -1,0 +1,38 @@
+---
+title: "Quick Start"
+---
+
+We will assume that you have already installed Shuttle and logged in.
+If you haven't, you should check out our [installation](./installation) section.
+
+**Creating your first project**
+
+To initialize your project, simply write:
+
+```sh
+cargo shuttle init
+```
+> Note: if you use [sparse registries](https://blog.rust-lang.org/inside-rust/2023/01/30/cargo-sparse-protocol.html) (which
+> is enabled by default on `nightly`), you may encounter [this bug](https://github.com/shuttle-hq/shuttle/issues/821) when 
+> running the `init` command. To resolve this, see [this comment](https://github.com/shuttle-hq/shuttle/issues/821#issuecomment-1525317860).
+
+![Shuttle Scaffolding](/images/actix-scaffold-demo.gif)
+
+If you didn't create the project environment in the init command, run:
+
+```sh
+cargo shuttle project start
+```
+
+And to deploy it:
+
+```sh
+cargo shuttle deploy
+```
+
+<Info> In case you haven't commited the changes to your repo, you'll have to add a `--allow-dirty` flag. </Info>
+
+You can also run your project locally for development, check out our [local run](./local-run) section.
+
+Feel free to build on top of the generated `hello-world` example or take a stab
+at one of our [examples](../examples/axum).

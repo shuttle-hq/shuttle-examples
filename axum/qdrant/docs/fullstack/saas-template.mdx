@@ -1,0 +1,49 @@
+---
+title: "SaaS Starter Template"
+---
+### Introduction
+We've created a SaaS template that you can use to bootstrap your apps faster & quicker in JavaScript while using the power of Rust.
+
+This app uses the power of the `create-shuttle-app` utility which you can find more about [here](https://docs.shuttle.rs/fullstack/rust-next).
+
+![SaaS frontend example collage](https://bear-images.sfo2.cdn.digitaloceanspaces.com/joshmo-1684444919-0.png)
+
+## Getting Started
+
+In order to get started, simply run this command:
+
+```
+npx create-shuttle-app --fullstack-example saas
+```
+
+In order to deploy your project, follow these steps:
+
+1. Login by running `npm run shuttle-login`
+2. Start your project by running `npm run start`
+3. And if you are ready to deploy it, run `npm run deploy`
+
+If you wish to develop locally, you can start a NextJS dev server as well as your Shuttle backend with the `npm run dev` command, and if you wish to stop your deployment, simply run `npm run stop`.
+
+
+### Features
+- Take subscription payments with Stripe
+- Email session-based login
+- Mailgun (email subscription, welcome email etc)
+- Pre-configured frontend routes for easy transition
+- Examples of how to implement simple dashboard analytics
+
+### Troubleshooting
+
+* If you change the migrations after running locally or deploying, you will need to go into the database itself and delete the tables. You can do this easily with something like [psql](https://www.postgresql.org/docs/current/app-psql.html) or [pgAdmin](https://www.pgadmin.org/).
+
+* If connecting to external services like Stripe doesn't work, try checking your Secrets.toml file.
+
+* Shuttle connects by default to port 8000 - if you're currently already using something at port 8000, you can add the `--port <port-number>` to the `cargo shuttle run` command to change this.
+
+
+
+<Note>
+**Windows troubleshooting**
+
+`create-shuttle-app` will install Rust and the cargo-shuttle crate with install scripts. It will try to do this automatically, but it may fail, and you might want to do this yourself. The install scripts may also cause PowerShell to not be able to run create-shuttle-app, since it disallows scripts by default. To override this, run the set-executionpolicy remotesigned command in a PowerShell started in administrator mode. Or use Git Bash, which doesn’t restrict this.
+</Note>

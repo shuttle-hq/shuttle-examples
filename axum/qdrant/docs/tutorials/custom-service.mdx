@@ -1,0 +1,191 @@
+---
+title: "Custom Service"
+description: "This example will explain how to create a custom shuttle service using Poise and Axum."
+---
+
+In this simple example we will implement `Service` for a custom service that serves a Discord bot alongside a web server created using Axum.
+
+### Prerequisites
+
+To be able to create this example, we'll need to grab an API token from the [Discord developer portal](https://discord.com/developers/applications).
+
+1. Click the New Application button, name your application and click Create.
+2. Navigate to the Bot tab in the lefthand menu, and add a new bot.
+3. On the bot page click the Reset Token button to reveal your token. Put this token in your `Secrets.toml` (explained below). It's very important that you don't reveal your token to anyone, as it can be abused. Create a `.gitignore` file to omit your `Secrets.toml` from version control.
+
+Your `Secrets.toml` file needs to be in the root of your directory once the project has been initialised - the file will use a format similar to a `.env` file, like so:
+```toml Secrets.toml
+DISCORD_TOKEN = 'the contents of my discord token'
+```
+
+To add the bot to a server, we need to create an invite link:
+
+1. On your bot's application page, open the OAuth2 page via the lefthand panel.
+2. Go to the URL Generator via the lefthand panel, and select the `bot` scope.
+3. Copy the URL, open it in your browser and select a Discord server you wish to invite the bot to.
+
+
+### Initial Setup
+Start by running the following command:
+```bash
+cargo shuttle init --template none
+```
+
+This will simply initialize a new cargo crate with a dependency on `shuttle-service`.
+
+We also want to add several dependencies for this - make sure your Cargo.toml looks like below:
+
+```toml Cargo.toml
+[package]
+name = "custom-service"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.62"
+axum = "0.6.4"
+hyper = "0.14.24"
+poise = "0.5.2"
+serde = "1.0"
+shuttle-runtime = "0.18.0"
+shuttle-secrets = "0.18.0"
+tokio = "1.26.0"
+```
+
+### Getting Started
+To get started, we need to return a wrapper struct from our `shuttle_runtime::main` function that 
+implements `shuttle_service::Service`, which we can declare like so:
+
+```rust main.rs
+pub struct CustomService {
+    discord_bot:
+        FrameworkBuilder<Data, Box<(dyn std::error::Error +
+         std::marker::Send + Sync + 'static)>>,
+    router: Router,
+}
+```
+
+Then we need to implement `shuttle_service::Service` for our wrapper. If you need to bind to an address,
+for example if you're implementing service for an HTTP server, you can use the `addr` argument from `bind`.
+You can only have one HTTP service bound to the `addr`, but you can start other services that don't rely on 
+binding to a socket, like so:
+
+```rust main.rs
+#[shuttle_runtime::async_trait]
+impl shuttle_runtime::Service for CustomService {
+    async fn bind(
+        mut self,
+        addr: std::net::SocketAddr,
+    ) -> Result<(), shuttle_runtime::Error> {
+        
+        let router = self.router.into_inner();
+
+        let serve_router = axum::Server::bind(&addr).serve(router.into_make_service());
+
+        tokio::select!(
+            _ = self.discord_bot.run() => {},
+            _ = serve_router => {}
+        );
+
+        Ok(())
+    }
+}
+```
+### Commands/Routing
+Before we can actually run the program, we will need to set up the commands and routing that it needs
+ before we can add them to the struct implementation. Let's do that now:
+
+```rust commands.rs
+use poise::serenity_prelude as serenity;
+
+// this is a blank struct initialised in main.rs and then imported here
+use crate::Data;
+
+type Error = Box<dyn std::error::Error + Send + Sync>;
+type Context<'a> = poise::Context<'a, Data, Error>;
+
+#[poise::command(slash_command, prefix_command)]
+pub async fn age(
+    ctx: Context<'_>,
+    #[description = "Selected user"] user: Option<serenity::User>,
+) -> Result<(), Error> {
+    let u = user.as_ref().unwrap_or_else(|| ctx.author());
+    let response = format!("{}'s account was created at {}", u.name, u.created_at());
+    ctx.say(response).await?;
+    Ok(())
+}
+```
+
+```rust router.rs
+use axum::http::StatusCode;
+use axum::response::IntoResponse;
+use axum::{routing::get, Router};
+
+pub fn build_router() -> Router {
+    Router::new().route("/", get(hello_world))
+}
+
+pub async fn hello_world() -> impl IntoResponse {
+    (StatusCode::OK, "Hello world!").into_response()
+}
+```
+
+### Struct Implementation
+To finish up, we return the wrapper struct from our `shuttle_runtime::main` function and add implementation
+for setting up each of our services for the struct, like so:
+
+```rust main.rs
+use poise::serenity_prelude as serenity;
+use shuttle_secrets::SecretStore;
+use std::sync::Arc;
+
+mod commands;
+use commands::age;
+
+mod router;
+use router::router;
+
+pub struct Data {}
+pub struct CustomService {
+    discord_bot:
+        FrameworkBuilder<Data, Box<(dyn std::error::Error +
+         std::marker::Send + Sync + 'static)>>,
+    router: Router,
+}
+
+#[shuttle_runtime::main]
+async fn init(
+    #[shuttle_secrets::Secrets] secrets: SecretStore,
+) -> Result<CustomService, shuttle_runtime::Error> {
+   let discord_api_key = secrets.get("DISCORD_API_KEY").unwrap();
+
+    let discord_bot = poise::Framework::builder()
+        .options(poise::FrameworkOptions {
+            commands: vec![age()],
+            ..Default::default()
+        })
+        .token(discord_api_key)
+        .intents(serenity::GatewayIntents::non_privileged())
+        .setup(|ctx, _ready, framework| {
+            Box::pin(async move {
+                poise::builtins::register_globally(
+                    ctx, &framework.options().commands
+                    ).await?;
+                Ok(Data {})
+            })
+        });
+
+    let router = build_router();
+
+    Ok(CustomService {
+        discord_bot,
+        router
+    })
+}
+```
+### Finishing Up
+Try it out with the `run` command:
+
+```bash
+cargo shuttle run
+```

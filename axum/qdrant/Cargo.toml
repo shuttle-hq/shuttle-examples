@@ -1,12 +1,24 @@
 [package]
-name = "shuttle-axum-qdrant"
+name = "llmsrch"
 version = "0.1.0"
 edition = "2021"
+publish = false
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-axum = "0.7.3"
+anyhow = "1.0.71"
+axum = { version = "0.7.2", features = ["macros"] }
+axum-streams = { version = "0.12.0", features = ["text"] }
+futures = "0.3.28"
+openai = "1.0.0-alpha.10"
 qdrant-client = "1.7.0"
-shuttle-axum = "0.39.0"
-shuttle-qdrant = "0.39.0"
-shuttle-runtime = "0.39.0"
-tokio = "1.26.0"
+serde = { version = "1.0.164", features = ["serde_derive"] }
+serde_json = "1.0.96"
+shuttle-axum = "0.41.0"
+shuttle-qdrant = "0.41.0"
+shuttle-runtime = "0.41.0"
+shuttle-secrets = "0.41.0"
+tokio = "1.28.2"
+tokio-stream = "0.1.14"
+tower-http = { version = "0.5.0", features = ["fs"] }
+uuid = "1.3.3"

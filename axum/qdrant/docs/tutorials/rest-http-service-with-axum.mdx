@@ -1,0 +1,353 @@
+---
+title: "Writing a Rest HTTP Service with Axum"
+---
+
+In this guide you'll learn the basics of how to write a competent Axum HTTP REST service - first starting off with basic routing and writing functions to act as our endpoints, adding app State and middleware functions, using cookies and CORS, then finally looking at testing our app.
+
+### Getting Started
+
+To get started, you'll want to initialise a Shuttle project with Axum (you can find more about getting started [here](https://docs.shuttle.rs/introduction/installation)).
+
+```rust
+cargo shuttle init --axum
+```
+
+This will initialise a project with a basic router and basic configuration so that it can be deployed immediately.
+
+## Routing
+
+In Axum, routers can be made by writing `Router::new()` to create it and then adding a route with the `route` method by chaining it. Below is an example that returns a router that has one route at the base that will return "Hello World!" if we go to `localhost:8000`.
+
+```rust
+#[shuttle_runtime::main]
+async fn axum() -> shuttle_axum::ShuttleAxum {
+let router = Router::new()
+    .route("/", get(hello_world));
+
+    Ok(router.into())
+}
+
+// this is a function that returns a static string
+// all functions used as endpoints must return a HTTP-compatible response
+async fn hello_world() -> &'static str {
+    "Hello world!"
+}
+```
+
+However, this is quite basic. We are also missing a HTTP status code from our function and perhaps we'd also maybe like to return a JSON response instead of just one raw string. One way we can solve this is to use the `impl IntoResponse` type from Axum, which allows us to return a tuple of things that can convert into a HTTP response.
+
+```rust
+async fn hello_world() -> impl IntoResponse {
+// the json! macro is from the serde_json library
+    let hello_world = json!({ "hello": "world" });
+
+    (StatusCode::OK, hello_world)
+}
+```
+
+Converting to and from JSON relies on the [Serde](https://serde.rs/) crate, which allows us to be able to convert things to and from JSON by either using the `json!()` macro, or adding a derive macro to a struct - you can find more about this [here](https://serde.rs/derive.html).
+
+We can also attach things like a request body type which we need to define as a type or a struct that can be (de)serialized to/from JSON via `serde`. Here's an example that takes a JSON request with a message field and spits it back out to the client that made the request as well as an OK status code indicating it was successful:
+
+```rust
+use serde::{Deserialize, Serialize};
+use axum::{State, Json, http::StatusCode};
+
+[derive(Serialize, Deserialize)]
+struct MyRequestType {
+    message: String
+}
+
+async fn hello_world(
+    Json(req): Json<MyRequestType>
+) -> impl IntoResponse {
+    (StatusCode::OK, req.message)
+}
+```
+
+So what's happening here is that when the client sends a HTTP request with the relevant JSON request body, the request type on Axum's side implements `serde::Deserialize` and `serde::Serialize` through the use of derive macros (a form of powerful Rust metaprogramming which you can find more about [here](https://doc.rust-lang.org/book/ch19-06-macros.html). This then converts the received JSON into the struct.
+
+We can also utilise dynamic routing by using the Path type, allowing us to use things like record IDs or article slugs as a variable in our function, as shown below.
+
+```rust
+// this assumes the dynamic variable is called "id"
+async fn hello_world(
+    Path(id): Path<i32>
+) -> impl IntoResponse {
+    let string = format!("Hello world {}!");
+
+    (StatusCode::OK, string)
+}
+```
+
+Now if we plug this into a router that has this function using a GET request at the base URL (at `/:id`) and then visit `localhost:8000/32` (for example - assuming the server is run at port 8000), it should return this:
+
+```
+Hello world 32!
+```
+
+Now that we know the basics of writing endpoint functions, we can use them to write a router that has a few endpoints and can take multiple request methods at an endpoint that uses dynamic routing. 
+
+```rust
+async fn router() -> Router {
+// make a route that uses dynamic routing at "/:id"
+    Router::new().route("/", get(get_worlds))
+        .route("/create", post(make_world))
+        .route("/:id",  get(get_one_world).put(edit_world).delete(delete_world))
+}
+```
+
+We can also nest routers in other routers, which is quite helpful for use cases where you might have a health check route on the top level (for example) then you might nest your CRUD routes inside. We can do this by using `.nest()` to nest the deeper-level router first, and then we can use `.route()` to add our higher-level routes.
+
+```rust
+async fn router() -> Router {
+
+    let world_router = Router::new()
+       .route("/", get(get_worlds))
+       .route("/create", post(make_world))
+       .route("/:id", get(get_one_world).put(edit_world).delete(delete_world))
+
+    Router::new()
+       .nest("/worlds", world_router)
+       .route("/health", get(hello_world))
+}
+```
+
+### Using State
+
+State in Axum is a way to share scoped app-wide variables over your Router - this is great for us as we can store things like a database connection pool, a hashmap key-value store or an API key for an external service inside. Basic usage of a state struct might look like this:
+
+```rust
+[derive(Deserialize, Serialize)]
+struct MyAppState {
+    db_connection: PgPool,
+}
+
+fn router() -> Router {
+    let db_connection = PgPoolOptions::new()
+        .max_connections(5)
+        .connect(<db-connection-string-here>).await;
+
+    let state = MyAppState { db_connection };
+
+    Router::new()
+    .route("/", get(hello_world)).with_state(state)
+}
+```
+
+As you can see, we have defined the struct and are initialising it in our function with the values we want to use then add it to our router with the `with_state` function. We can also use `FromRef<T>` to generate a subset of our original app state so that we can avoid having to share all of our variables everywhere:
+
+```rust
+// the application state
+#[derive(Clone)]
+struct AppState {
+// this holds some api specific state
+    api_state: ApiState,
+}
+
+// the api specific state
+#[derive(Clone)]
+struct ApiState {}
+
+// support converting an `AppState` in an `ApiState`
+impl FromRef<AppState> for ApiState {
+    fn from_ref(app_state: &AppState) -> ApiState {
+        app_state.api_state.clone()
+    }
+}
+```
+
+### Static Files
+
+Let's say you want to serve some static files using Axum - or that you have an application made using a frontend JavaScript framework like React, and you want to combine it with your Axum backend to make one large application instead of having to host your frontend and backend separately. How would you do that? 
+
+Axum does not by itself have capabilities to be able to do this; however, what it does have is super-strong compatibility with `tower-http`, which offers utility for serving your own static files whether you're running a SPA, statically-generated files from a framework like Next.js or simply just raw HTML, CSS and JavaScript. 
+
+If you're using static-generated files, you can easily slip this into your router (assuming your static files are in a 'dist' folder at the root of your project):
+
+```rust
+Router::new().nest_service("/", ServeDir::new("dist"));
+```
+
+If you're using a SPA like React, Vue or something similar, you can  build the assets into the relevant folder and then use the following:
+
+```rust
+Router::new().nest_service(
+    "/", ServeDir::new("dist").not_found_service(ServeFile::new("dist/index.html")),
+);
+```
+
+However, in rare cases this might not work - in which case, you will probably want to go for more of a low-level implementation by using `Tower`, which is the underlying crate for `tower-http`. We can build a fallback service that uses this:
+
+```rust
+Router::new()
+    .route("/api", get(hello_world))
+    .fallback_service(get(|req| async move {
+        match ServeDir::new(opt.static_dir).oneshot(req).await {
+            Ok(res) => res.map(boxed),
+            Err(err) => Response::builder()
+                .status(StatusCode::INTERNAL_SERVER_ERROR)
+                .body(boxed(Body::from(format!("error: {err}"))))
+                .expect("error response"),
+            }
+        }
+    )
+)
+```
+
+### Cookies
+
+Cookies are essentially a way to store data on the user side. They have a variety of uses for web development; we can use them for tracking metrics for targeted advertising, we can use them for storing player score data and more. Cookies are also used for application authentication; however, it should be said that although this is a valid use case, **no user information like username or passwords should be stored through cookies - only session IDs that get validated against a database.**
+
+Cookies in Axum can be easily handled through use of axum-extra's [cookiejar](https://docs.rs/axum-extra/latest/axum_extra/extract/cookie/struct.CookieJar.html) types. There are three types, a private cookiejar (where it uses private signing), a signed cookiejar where all cookies are signed publically and then a regular cookiejar. You will need to enable the relevant flag to be able to use cookies, but you can enable the private cookiejar (for example) by running the following command:
+
+```bash
+cargo add axum-extra --features cookie-private
+```
+
+Because cookiejars are extractor types, that means we can pass them in like we would our other parameters and they *just work*. No further configuration is needed for the normal cookiejar; however, if you are using the signed or private cookiejar types, you need to generate a cryptographically signed key:
+
+```rust
+#[derive(Clone)]
+struct AppState {
+    // that holds the key used to sign cookies
+    key: Key,
+}
+
+// this impl tells `SignedCookieJar` and `PrivateCookieJar how to access the 
+// key from our state
+impl FromRef<AppState> for Key {
+    fn from_ref(state: &AppState) -> Self {
+        state.key.clone()
+    }
+}
+
+[shuttle_runtime::main]
+async fn axum() -> shuttle_axum::ShuttleAxum {
+let state = AppState {
+    key: Key::generate() 
+};
+
+// ... the rest of your code
+}
+```
+
+Now that we're done with that, we can pass our cookiejar into whatever function we'd like to use it in, and if there's any changes to the cookiejar that we want to pass back to the requesting client then we need to add it as a return type, like so:
+
+```rust
+async fn check_cookie(
+    jar: PrivateCookieJar,
+) -> impl IntoResponse {
+    if !jar.get("hello") {
+// a similar thing can be done for deleting cookies, getting cookies etc
+         (jar.add(Cookie::new("hello", "world")), StatusCode::CREATED)
+    } 
+
+StatusCode::OK
+}
+```
+
+However, what if we want to make our own cookies? Suppose we have a backend that uses CORS and requires secure, same-site cookies - what would we do? In this case, we can declare a variable as a cookie using the `CookieBuilder` struct from the `cookie` crate, re-imported to `axum-extra` (requires the 'cookie' flag enabled). Let's see what building this might look like:
+
+```rust
+// bear in mind this uses the "time" crate for the duration
+
+let session_id = "Hello world!";
+
+let cookie = Cookie::build("foo", session_id)
+    .secure(true)
+    .same_site(SameSite::Strict)
+    .http_only(true)
+    .path("/")
+    .max_age(Duration::WEEK)
+    .finish();
+```
+
+Then we can put this cookie as the cookie we want to add to the jar as the return instead of `Cookie::new`! 
+
+Deleting a cookie is also pretty much the same as adding a cookie; to be able to pass the changes properly, the deletion of the cookie needs to be specified in the return otherwise it will not delete properly:
+
+```rust
+async fn logout(
+    jar: PrivateCookieJar
+) -> impl IntoResponse {
+    (jar.remove(Cookie::named("foo"), StatusCode::OK)
+}
+```
+
+### Middleware
+
+Middleware is essentially a function that runs before the client hits an endpoint; it can be used for things like adding a wait time to prevent server overload, to validating user sessions from cookies. Fortunately, middleware in Axum is quite simple to use! 
+
+There's two ways to be able to create middleware in Axum, but we will be focusing on the more simple way which is to just write a function that uses Axum's middleware utilities as parameters, then simply just adding it to our router and declaring it as middleware. We can also add middleware that uses state this way too, which is great as it means we can share a database connection pool (for example) in the middleware:
+
+```rust
+async fn check_hello_world<B>(
+    req: Request<B>,
+    next: Next<B>
+) -> Result<Response, StatusCode> {
+// requires the http crate to get the header name
+    if req.headers().get(CONTENT_TYPE).unwrap() != "application/json" {
+        return Err(StatusCode::BAD_REQUEST);
+        }
+
+    Ok(next.run(req).await)
+}
+```
+
+This function declares a string and if the string doesn't meet the criteria, we can return an error with an internal server error code. If it does, we can run the function at the endpoint. Things like cookiejars and state can also be used in request functions similarly to how we would use it for a regular endpoint function, which allows us to do things like run database queries in middleware which is quite useful for things like session validation.
+
+Now that we've written a middleware function, we can implement it in our router like so:
+
+```rust
+ Router::new()
+    .route("/", get(hello_world))
+    .layer(middleware::from_fn(check_hello_world))
+```
+
+The `layer` method is a very versatile method that we can use to layer multiple things - a CORS layer (which will be discussed later), middleware as well as tracing. what if we want to implement a middleware that has state? Thankfully, Axum has an aptly named `from_fn_with_state` method that we can use instead of `from fn`, like so:
+
+```rust
+ Router::new()
+    .route("/", get(hello_world))
+    .layer(middleware::from_fn_with_state(check_hello_world))
+    .with_state(state)
+```
+
+Ideally your middleware should come after all of the routes you are trying to cover with it, as well as before the `with_state` method if your middleware function requires state to access things like a database connection pool.
+
+You can read more about writing middleware with Axum [here](https://docs.rs/axum/latest/axum/middleware/index.html).
+
+### CORS
+
+CORS is a mechanism designed to allow servers to serve content to a domain where the content does not originate from (for instance: one website to another website). Despite CORS protecting legitimate sites from being interacted with by malicious websites written by bad actors, it's still considered to be something that can be quite tricky to set up.
+
+Like with middleware, although Axum does not deal with CORS by itself, it uses the `CorsLayer` type from [`tower-http`](https://docs.rs/tower-http/latest/tower_http/) to assist with us being able to quickly set up CORS quickly and efficiently so that we don't have to do everything ourselves. Let's see what that would look like:
+
+```rust
+let cors = CorsLayer::new()
+    // allow `GET` and `POST` when accessing the resource
+    .allow_methods([Method::GET, Method::POST])
+    // allow requests from any origin
+    .allow_origin(Any);
+```
+
+As you can see, this statement declares a new `CorsLayer` that accepts GET and POST HTTP request methods from any origin. If we try to put in a DELETE request anywhere, CORS will automatically deny the request as it fails to meet CORS. We can also add an origin URL by using a string literal then parsing and unwrapping it in the `allow_origin` method. However, if you're using an environmental variable to store it then you can also just parse it as a `http::HeaderValue` type like so:
+
+```rust
+let cors = CorsLayer::new()
+    .allow_credentials(true)
+    .allow_methods(vec![Method::GET, Method::POST, Method::PUT, Method::DELETE])
+    .allow_headers(vec![ORIGIN, AUTHORIZATION, ACCEPT])
+    .allow_origin(state.domain.parse::<HeaderValue>().unwrap());
+
+// once we've created our CORS layer, we can layer it on top of our router
+// in a nested router you'll want to layer it only after all the routes where it's required
+Router::new().layer(cors)
+```
+
+### Deployment
+
+With Shuttle, you can deploy your app with `cargo shuttle deploy` and then it'll deploy your app to a live URL (assuming there's no errors). No Docker containerisation required!
+
+If you're migrating to Shuttle, you need to wrap your entry point function with the Shuttle runtime macro and then add relevant code annotations, and it'll work without needing to do anything else. You can read more about this [here](https://docs.shuttle.rs/migration/migrating-to-shuttle).

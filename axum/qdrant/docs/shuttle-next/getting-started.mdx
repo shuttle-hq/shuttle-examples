@@ -1,0 +1,126 @@
+---
+title: "Examples"
+---
+
+Simple 'Hello world' app using Shuttle Next.
+
+```bash
+cargo new --lib hello-world
+cd hello-world
+```
+
+Make sure that your `Cargo.toml` file looks like the one below -- having the right dependencies is key!
+You'll also notice that this is a `cdylib` and not a binary, like other Shuttle projects.
+
+```toml Cargo.toml
+[package]
+name = "hello-world"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = [ "cdylib" ]
+
+[dependencies]
+shuttle-next = "0.18.0"
+```
+
+Using the `shuttle-next::app!` macro, we can create HTTP API endpoints, setting the
+method and the route endpoint in the `shuttle::endpoint()` macro arguments. Any function
+that is a valid `axum` handler can be used, and you are free to add functions that aren't
+annotated with the `shuttle_next::endpoint` macro and use them in your handlers. For now,
+everything has to go in the same file, inside the `shuttle_next::app!` macro.
+
+```Rust lib.rs
+shuttle_next::app! {
+    #[shuttle_next::endpoint(method = get, route = "/hello")]
+    async fn hello() -> &'static str {
+        "Hello, World!"
+    }
+}
+```
+
+To test your app locally you'll first need to add the `wasm32-wasi` target:
+
+```bash
+rustup target add wasm32-wasi
+```
+
+And we're ready to start it up:
+
+```bash
+cargo shuttle run
+```
+
+Next, curl it to verify that it's working:
+
+```bash
+curl localhost:8000/hello
+```
+
+We can also add an endpoint that takes the body from the request using the axum `BodyStream`
+extractor, lazily map its bytes to uppercase and stream it back in our response:
+
+First, lets add the `futures` crate to our `Cargo.toml`:
+```
+cargo add futures
+```
+
+```rust lib.rs
+shuttle_next::app! {
+    // We need to add some imports (inside the app! macro), 
+    // all re-exported from axum 0.6
+    use shuttle_next::body::StreamBody;
+    use shuttle_next::extract::BodyStream;
+    use shuttle_next::response::{Response, IntoResponse};
+    
+    // We'll also need the futures `TryStreamExt` trait to manipulate 
+    // the body stream
+    use futures::TryStreamExt;
+
+    #[shuttle_next::endpoint(method = post, route = "/uppercase")]
+    async fn uppercase(body: BodyStream) -> impl IntoResponse {
+        let chunk_stream = body.map_ok(|chunk| {
+            chunk
+                .iter()
+                .map(|byte| byte.to_ascii_uppercase())
+                .collect::<Vec<u8>>()
+        });
+        Response::new(StreamBody::new(chunk_stream))
+    }
+}
+```
+
+Let's run it again, and add a body to our request:
+```bash
+curl localhost:8000/uppercase -d "Please convert me to uppercase."
+```
+
+We can also add more handlers with the same route, granted they have different
+HTTP methods:
+
+```Rust lib.rs
+shuttle_next::app! {
+    #[shuttle_next::endpoint(method = get, route = "/hello")]
+    async fn get_hello() -> &'static str {
+        "Hello from get_hello!"
+    }
+
+	#[shuttle_next::endpoint(method = post, route = "/hello")]
+    async fn post_hello() -> &'static str {
+        "Hello from post_hello!"
+    }
+}
+```
+
+Finally, to deploy your app, all you need to do is:
+```bash
+cargo shuttle project start
+```
+
+And then:
+```bash
+cargo shuttle deploy
+```
+
+And your app is live! 🎉🎉🎉

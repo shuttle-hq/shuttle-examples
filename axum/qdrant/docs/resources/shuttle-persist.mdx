@@ -1,0 +1,27 @@
+---
+title: "Shuttle Persist"
+---
+
+This plugin allows persisting struct that implement `serde::Serialize` and loading them again using `serde::Deserialize`.
+
+## Usage
+Add `shuttle-persist` to the dependencies for your service. You can get this resource using the `shuttle-persist::Persist` attribute to get a `PersistInstance`. Objects can now be saved using `PersistInstance.save()` and loaded again using `PersistInstance.load()`.
+
+## Example
+This snippet shows a Shuttle rocket main function that uses the `shuttle_persist::Persist` attribute to provision and get access to a `PersistInstance`.
+
+```rust main.rs
+#[shuttle_runtime::main]
+async fn rocket(
+    #[shuttle_persist::Persist] persist: PersistInstance,
+) -> ShuttleRocket {
+    let state = MyState { persist };
+    let rocket = rocket::build()
+        .mount("/", routes![retrieve, add])
+        .manage(state);
+
+    Ok(rocket.into())
+}
+```
+
+The full example can be found on [GitHub](https://github.com/shuttle-hq/shuttle-examples/tree/main/rocket/persist)

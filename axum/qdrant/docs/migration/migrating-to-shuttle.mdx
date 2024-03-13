@@ -1,0 +1,101 @@
+---
+title: "Migrating to Shuttle"
+description: "Short guide on how to migrate your existing project over to Shuttle"
+---
+
+
+### Setup
+
+This guide assumes that you have Shuttle already setup. If you don't, head on over to our [installation](../introduction/installation) & [quick start](../introduction/quick-start) guides in order to install Shuttle & create your first project.
+
+For this example, we'll assume you are migrating your Axum project. Once you've created your project, you'll want to add `shuttle_runtime` and `shuttle_axum` to your dependencies to be able to use shuttle's runtime with the Axum framework. You can run the following command below like so to do this:
+
+```bash
+cargo add shuttle_runtime shuttle_axum
+```
+
+Any secrets you need to use will be kept in a `Secrets.toml` file (dev secrets to be held in `Secrets.dev.toml`) which will be placed at the `Cargo.toml` level - you'll want to use the `shuttle_secrets` crate to be able to use the new secrets:
+
+```bash
+cargo add shuttle_secrets
+```
+
+Your secrets file will look the same as your previous .env file, so you won't need to change anything.
+
+You can also easily get a provisioned database like so (this example will be for a provisioned PostgresQL instance specifically):
+
+```bash
+cargo add shuttle-shared-db --features postgres
+```
+
+If you have any database records you'd like to keep, it would be a good idea to make sure you export them before you start as you'll want to make sure those are preserved; otherwise, you'll lose the data. **You will not need a secrets file if you only need a provisioned PG database - this will be automatically be provisioned to you in the form of a SQLx connection.**
+
+### Migrating your Code
+
+To be able to run your project on Shuttle, you need to make a few changes to your code. Instead of running on the `tokio` runtime, you should use the `shuttle_service::main` macro instead like so and swap out `dotenvy` for Shuttle's Postgres annotation:
+
+This is what your `main.rs` file looks before:
+
+```rust
+// main.rs
+#[tokio::main]
+async fn main() {
+    dotenv().ok();
+
+    let postgres = dotenvy::var("DATABASE_URL").expect("No database URL was set!");
+
+    let postgres = sqlx::Pool::connect(&postgres).await.unwrap();
+
+    sqlx::migrate!()
+        .run(&postgres)
+        .await
+        .expect("Migrations failed :(");
+
+    let router = create_api_router(postgres);
+    let addr = SocketAddr::from(([0, 0, 0, 0], 8000));
+
+    Server::bind(&addr)
+        .serve(router.into_make_service())
+        .await
+        .unwrap()
+}
+```
+
+And this is what it looks like after:
+
+```rust
+#[shuttle_runtime::main]
+pub async fn axum (
+#[shuttle_shared_db::Postgres] postgres: PgPool,
+#[shuttle_secrets::Secrets] secrets: shuttle_secrets::SecretStore
+) -> shuttle_axum::ShuttleAxum {
+
+    sqlx::migrate!()
+        .run(&postgres)
+        .await
+        .expect("Migrations failed :(");
+
+ let router = create_api_router(postgres);
+
+Ok(router.into())
+}
+```
+
+If you need more than a simple router, you'll want to create a custom struct that holds all of your required app state information inside and then create an `impl` for the struct - you can find more about that [here.](https://docs.shuttle.rs/tutorials/custom-service) Anything outside of your entry point function (the function that uses the `shuttle_runtime::main` macro) doesn't need to be changed. If you are using secrets as well as a database connection, you may wish to create a struct that holds both of these values and then pass it into the function that generates the router.
+
+### Deploying
+
+If you haven't yet, you will probably want a `Shuttle.toml` file at the `Cargo.toml` level to name your project to whatever you'd like, like so:
+
+```ini
+name="<app-name-here>"
+```
+
+Now all you need to do is to run the following commands:
+
+```bash
+cargo shuttle project start
+cargo shuttle project deploy
+```
+
+Your project should now be deployed!

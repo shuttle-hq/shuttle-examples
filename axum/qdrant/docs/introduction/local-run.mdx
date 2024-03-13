@@ -1,0 +1,49 @@
+---
+title: "Local Run"
+description: "Test your Shuttle application on your local system."
+---
+
+We will assume that you have already initialized a project. If you haven't, you should
+check out our [quick start](./quick-start) section.
+
+While deploying to production is easy with Shuttle, running your project locally is
+useful for development. To start your project on your local system, while in your
+project directory, run:
+
+```bash
+cargo shuttle run
+```
+
+### Local runs with databases
+
+If your project relies on a database resource, it will default to starting a [docker](https://docs.docker.com/get-docker/) 
+container for that database. If you'd like to opt out of this behavior and rather supply your own database
+URI, simply pass it in as an argument to your resource. This argument also supports insertion of secrets from `Secrets.toml`
+with string interpolation:
+
+```rust
+#[shuttle_runtime::main]
+async fn tide(#[shuttle_aws_rds::Postgres(
+        local_uri = "postgres://postgres:{secrets.PASSWORD}@localhost:16695/postgres"
+    )] pool: PgPool) -> ShuttleTide<MyState> { ... }
+```
+
+### Expose your application to your local network
+
+If you'd like to expose your application to you local network, for example if you're serving a static
+website and you'd like to open it on your phone, simply pass in the `--external` flag:
+
+```bash
+cargo shuttle run --external
+```
+
+This will bind your local application to `0.0.0.0:8000`, and you will now be able to connect to it
+using your computer's local IP. If you'd also like to change the port, you can do so with the `--port`
+argument:
+
+
+```bash
+cargo shuttle run --external --port 8123
+```
+
+*PS: you may need to open the port your app is started on in your firewall.*

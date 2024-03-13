@@ -1,0 +1,48 @@
+---
+title: "Installation"
+---
+
+## Install Shuttle
+
+The `cargo-shuttle` CLI can be installed with a pre-built binary or from source with cargo.
+
+### Pre-built binary
+
+Shuttle provides pre-built binaries of the `cargo-shuttle` CLI with every release
+for most platforms, they can be found on [our GitHub](https://github.com/shuttle-hq/shuttle/releases/latest).
+
+Our binaries can also be installed using [cargo-binstall](https://github.com/cargo-bins/cargo-binstall),
+which will automatically install the correct target for your system.
+To install with `cargo-binstall`, run:
+
+```sh
+cargo binstall cargo-shuttle
+```
+
+### From source
+
+Although a bit slower, you can also install directly with cargo:
+
+```sh
+cargo install cargo-shuttle
+```
+
+### Arch Linux
+
+`cargo-shuttle` can be installed from the [community repository](https://archlinux.org/packages/community/x86_64/cargo-shuttle) using [pacman](https://wiki.archlinux.org/title/Pacman):
+
+```sh
+pacman -S cargo-shuttle
+```
+
+> This is a community package maintained by [orhun](https://github.com/orhun).
+## Login
+
+After installing, log in with:
+
+```sh
+cargo shuttle login
+```
+
+Once you've done this, you are good to go!
+To get up and running, proceed to our [Quick Start](./quick-start) page!

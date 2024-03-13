@@ -1,0 +1,596 @@
+---
+title: "Chat app with React & Rust"
+---
+
+Source code can be found [here](https://github.com/joshua-mo-143/react-websocket-chat-rust).
+
+A live deployment link can be found [here](https://websocket-chat-react-rust-example.shuttleapp.rs/) if you'd like to see the end result before we start.
+
+With Rust going from strength to strength within the web development space, it is clear why many developers and big names are starting to take notice. As one example of this, Meta has recently [recommended Rust](https://engineering.fb.com/2022/07/27/developer-tools/programming-languages-endorsed-for-server-side-use-at-meta/#:~:text=Meta's%20primary%20supported%20server%2Dside,new%20addition%20to%20this%20list.) as a server-side language. If that won't make people sit up and look, then it's hard to know what will - Rust's current offering easily stands on par with most other languages that you could use in a back-end API or microservice, and it will only get better with time.
+
+Let's explore Rust in everyday usage by creating a Typescript React app and combining it with a Rust API that uses WebSockets. While node.js is quick to set up, doesn't require context switching and is easy to use if you already have Javascript knowledge from learning it for writing front-end web apps, you don't need to have a high level of knowledge in Rust to get started writing competent web services that can easily carry out whatever you need.
+
+![screenshot](https://github.com/joshua-mo-143/react-websocket-chat-rust/raw/master/Screenshot.png)
+
+### Initial setup
+
+We will be using Vite to scaffold our project, as it's a quick and fast bundler for starting up your development environment quickly as well as being less opinionated than create-react-app. Let's get into it:
+`npm create vite@latest wschat-react-rust --template react-ts`
+
+This should now scaffold a project within a subfolder of your current working directory called `wschat-react-rust`.
+
+For our CSS, we'll be using TailwindCSS. Tailwind is a utility-first CSS library that allows you to be able to quickly and easily scaffold smaller projects without having to constantly fight media queries by providing utility classes with a mobile-first approach (as a side note: this isn't necessarily better or worse than regular CSS - this is just how I like to do it!). You can find out how to install it here. It's quick, easy, and very easy to configure.
+
+Before we start, make sure you delete all of the HTML from the App menu (make sure you return an empty div!), make sure any unnecessary imports are removed and ensure that Tailwind is in your main CSS file.
+
+Here are the contents of my CSS file if you'd like to use my CSS styles exactly:
+
+```css
+// index.css
+@import url('https://fonts.googleapis.com/css2?family=Text+Me+One&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+
+  input, button {
+    box-shadow: 5px 5px rgba(0,0,0,0.5);
+  }
+
+  input:active, button:active {
+    box-shadow: 3px 3px rgba(0,0,0,0.5);
+  }
+}
+
+body {
+  font-family: 'Text Me One', 'Sans Serif';
+  padding: 0;
+  margin: 0;
+  background-color: rgb(214 211 209);
+  box-sizing: box-border;
+  overflow-x: hidden;
+}
+```
+
+### Getting Started
+
+Before we do anything, let's quickly scaffold our page so that we have something that we can look at (we'll be putting this in the main App component but feel free to put this on a page component):
+
+```js
+// App.tsx
+import React, { SetStateAction } from 'react'
+
+type Message = {
+  name: string,
+  uid: number,
+  message: string
+}
+function App() {
+  const [message, setMessage] = React.useState<string>("");
+
+const [name, setName] = React.useState<string>("");
+const [vis, setVis] = React.useState<boolean>(true);
+
+  return (
+
+    <>
+      <div className="flex flex-row text-gray-100">
+        <div className='w-full bg-slate-700 flex flex-col pb-5' >
+          <div className='w-full min-h-screen flex flex-col justify-end gap-4 pb-20' id="chatbox">
+<div className="mx-8 break-all chat-message bg-slate-600 rounded-xl rounded-xl w-fit inline-block px-5 py-4">
+                <p>Hi! Welcome to Rustcord. Enjoy your stay!</p>
+              </div>
+          </div>
+          <form className='w-full h-10 fixed bottom-0 flex flex-row justify-center gap-4 mb-5 px-5' onSubmit={(e) => sendMessage(e, name, message, setMessage)}>
+            <input name="message" id="messageBox" type="text" className='bg-slate-400 w-full py-2 px-5 focus:outline-0 rounded-tl-xl rounded-bl-xl' value={message}
+              placeholder="Enter your message here..."
+              onInput={(e: React.ChangeEvent<HTMLInputElement>) => setMessage(e.target.value)} />
+            <button id="messageBtn" className='bg-slate-400 px-2 active:translate-y-0.5 active:translate-x-0.5 hover:text-black transition-all rounded-tr-xl rounded-br-xl'>Send Message</button>
+          </form>
+        </div>
+      </div></>
+
+  )
+}
+```
+
+If you've already used Typescript, this component should be simple to understand. For the uninitiated however: the only changes that are there at the moment in comparison to a pure JavaScript project is that we've declared a new type ("Message") which we'll be using later on, and we've also had to declare specific types for our state setters as well as `e.target.value`. This is important as TypeScript needs to know what type our events are, otherwise it'll complain and refuse to compile.
+
+That's pretty much it for the main component! We need a modal that can get a name, and then we just need to set up WebSocket functionality. Let's create our modal:
+
+```js
+// UserModal.tsx
+import React, { SetStateAction } from 'react'
+
+type Props = {
+  vis: boolean,
+  name: string,
+  setName: React.Dispatch<SetStateAction<string>>,
+  setVis: React.Dispatch<SetStateAction<boolean>>
+}
+
+const NamePrompt = ({vis, name, setName, setVis}: Props) => {
+
+  const submitName = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (name == "") {
+      return
+    }
+    setVis(false)
+  }
+
+  return (
+    <div className={vis ? 'z-40 transition-all flex flex-col justify-center items-center h-screen w-screen absolute backdrop-blur-xl' : "transition-all hidden flex flex-col justify-center items-center h-screen w-screen absolute backdrop-blur-xl"}}>
+          <div className='z-50 w-4/5 h-3/5 lg:w-2/5 lg:h-2/5 bg-slate-300 flex flex-col justify-center items-center rounded-xl shadow-md'>
+        <form className='flex gap-4 flex-col items-center' onSubmit={(e) => submitName(e)}>
+          <p className='text-lg lg:text-2xl'>Hi there! What's your name?</p>
+            <input type="text" className='px-5 py-2 rounded-xl required' value={name} onInput={(e:React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}/>
+            <button type="submit" className='text-gray-100 bg-slate-500 px-5 py-2 rounded-xl active:translate-y-0.5 active:translate-x-0.5 hover:bg-slate-400 transition-all'>Submit</button>
+        </form>
+        </div>
+    </div>
+
+  )
+}
+
+export default NamePrompt
+```
+
+When we initially load up our webpage, we want this modal to appear before the user enters the chatroom as we need the user to set a name, which means we should make it so that the modal is initially visible, but once the user has confirmed a name (and is in the chat), we should hide the modal. Like before, the only real difference here in comparison to Javascript is we've declared types for our props as Typescript needs to know what to parse them as - otherwise, it won't compile.
+
+Now we can simply proceed to import the modal into our page component like so (don't forget to pass props and use React fragments if required!):
+
+```js
+// App.tsx
+<NamePrompt vis={vis} name={name} setName={setName} setVis={setVis} />
+```
+Now that the main design of the app is done, let's think about how we can implement a WebSocket connection. To start with, we can open a WebSocket connection at a URL by simply writing the following:
+
+```js
+// App.tsx
+const websocket = new WebSocket(ws://localhost:8000/ws);
+```
+
+This opens a WebSocket connection at `localhost:8000/ws`. Not particularly useful at the moment because we currently don't have anything we can connect it to, but we'll need this for testing later on.
+
+Now that we've opened a WebSocket connection, we can add a method for when the connection opens, when it closes, and when we receive a message - like so:
+
+```js
+// App.tsx
+// On connection open, write "Connected" to the console
+websocket.onopen = () => {
+      console.log("Connected");
+}
+
+// On connection close, write "Disconnected" to the console
+websocket.onclose = () => {
+    console.log("Disconnected");
+}
+
+// On receiving a message from the server, write the WebSocket message to the console
+websocket.onmessage = (ev) => {
+  let message = JSON.parse(ev.data);
+  create_message(message);
+}
+```
+
+Although we've told our program that we want to create a message entry when we receive a message, we don't have a `create_message` function at the moment. This function will simply consist of creating a new HTML element, appending some classes and creating the text that will go inside the container div (and appending it to the container), and then appending our message itself to the chatbox as well as scrolling down to the bottom.
+
+```js
+// App.tsx (put this outside of the component)
+
+// store the message classes as an array by simply splitting the string of classes by whitespace
+const message_classes = "mx-8 break-all chat-message bg-slate-600 rounded-xl w-fit max-w-screen rounded-xl px-5 py-4".split(" ");
+const username_css_classes = "text-gray-200 text-sm".split(" ");
+
+// create message div and append it to the chatbox
+const create_message = (data: Message) => {
+  let messageContainer = document.createElement('div');
+
+// add an array of classes using the spread operator here
+  messageContainer.classList.add(...message_classes);
+  let chatbox = document.querySelector('#chatbox');
+  let username = document.createElement('span');
+  username.classList.add(...username_css_classes);
+  username.innerText = `${data.name}`;
+  messageContainer.append(username);
+  let message = document.createElement('p');
+  message.innerText = `${data.message}`;
+  messageContainer.append(message);
+  chatbox?.append(messageContainer);
+  window.scrollTo(0, document.body.scrollHeight);
+}
+```
+
+Now our front end is pretty much done!
+
+### Setting up Rust
+
+Getting started with Rust is very easy. You can install it on Linux or WSL (Windows Subsystems for Linux) by using the following command:
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+```
+
+If you're on Windows and don't have WSL, you can find the install page for Rust [here](https://www.rust-lang.org/learn/get-started).
+
+However you install it, you'll also get Rust's package manager called Cargo, which is like NPM for Rust. Cargo allows you to install Rust's packages which are called "crates".
+
+For the back end part, because we'll be serving the web server through shuttle, we will need to install their CLI which we can do with the following command:
+
+```bash
+cargo install cargo-shuttle
+```
+
+You can also use [`cargo-binstall`](https://github.com/cargo-bins/cargo-binstall) to install cargo-shuttle:
+
+```bash
+cargo binstall cargo-shuttle\
+```
+
+The installation may take a while depending on your Internet connection, so feel free to grab a drink while you wait. You will also want to log onto their website here through GitHub and make sure you have your API key as you will need to log in on the CLI with your key before you can make any projects.
+
+Once the installation is done, you can start a shuttle project with the following command below (run this in your React project at the packages.json level):
+
+```bash
+cargo shuttle init --template axum
+```
+
+This will prompt you to input a project name - once you've inputted a project name, this will scaffold a project for you that uses Axum, which is a Rust web framework that is easy to build on with simple syntax. The project will be built in a folder within the current working directory with the name you chose. **For this article, we will simply refer to the folder as "API" for clarity.**
+
+Once the project has been created, you'll want to go into your `Cargo.toml` and make sure it looks like the following:
+
+```toml
+[package]
+name = "websocket-chat-react-rust" # The name here should be whatever you've decided to name your project
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+axum = { version = "^0.6.2", features = ["ws"] }
+axum-extra = { version = "0.4.2", features = ["spa"] }
+chrono = { version = "0.4", features = ["serde"] }
+futures = "0.3"
+hyper = { version = "0.14", features = ["client", "http2"] }
+hyper-tls = "0.5"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+shuttle-axum = { version = "0.18.0" }
+shuttle-runtime = { version = "0.18.0" }
+shuttle-secrets = "0.18.0"
+shuttle-static-folder = "0.18.0"
+sync_wrapper = "0.1"
+tokio = { version = "1", features = ["full"] }
+tower-http = { version = "0.3.5", features = ["fs", "auth"]}
+```
+
+This will set up our project with all of the required dependencies for our project so we can simply just import them in as required.
+
+As it would be ideal for us to have our front and back end running at the same time, there is an npm package we can use called concurrently which we can install at the `packages.json` level like so:
+
+```bash
+npm i -D concurrently
+```
+
+Now we can write an npm script to run both our front and back ends in one command! Let's look at what that would look like:
+
+```json
+  "scripts": {
+    "dev": "concurrently new \"vite\" \"cargo shuttle run --working-directory API\"",
+// ... your other scripts  
+  },
+```
+
+Running this npm command while at the packages.json level simply starts up your React app and also launches your Rust project so you can work on both at the same time.
+
+### Getting Started (with Rust)
+
+To get started, let's create all the values we need for the server to work.
+
+```rust
+type Users = Arc<RwLock<HashMap<usize, UnboundedSender<Message>>>>;
+static NEXT_USERID: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(1);
+
+#[derive(Serialize, Deserialize)]
+struct Msg {
+    name: String,
+    uid: Option<usize>,
+    message: String,
+}
+```
+
+Let's quickly dissect what these types actually mean. If you'd like to read more about what an arc is you can do so [here](https://doc.rust-lang.org/std/sync/struct.Arc.html), but in short: it's a [smart pointer](https://doc.rust-lang.org/book/ch15-00-smart-pointers.html) that can be cloned and holds a value. In this case, we're using it to hold a reader-writer lock ("RwLock"), which is typically used when you want the value inside to be read across multiple threads at the same time, but you want exclusive thread access for write operations (ie, can't mutate the value in any way from another thread). In short: it's like having a box of stuff that lets you know what's inside when you look at it, but to change the contents you have to open the box itself (and only one person can open it at a time!).
+
+AtomicUsize is used for user IDs as we will want the value to be shared safely across threads. You can read more about Atomic values [here](https://doc.rust-lang.org/std/sync/atomic/). We will also want our messages to be able to be serialized and deserialized from JSON - hence, the derive macro provided to us by the [serde](https://serde.rs/) crate.
+
+Let's quickly make up our main function so that we have a working route that we can test with our front end:
+
+```rust
+#[shuttle_runtime::main]
+async fn axum() -> ShuttleAxum {
+    // set up router with Secrets
+    let router = router(secret, static_folder);
+
+    Ok(router.into())
+}
+
+fn router(secret: String, static_folder: PathBuf) -> Router {
+    // initialise the Users k/v store and allow the static files to be served
+    let users = Users::default();
+
+    // return a new router with a WebSocket route
+     Router::new()
+        .route("/ws", get(ws_handler))
+        .layer(Extension(users))
+}
+```
+
+Now at the moment we have our main application loop and a router, but as you may have noticed, `ws_handler` doesn't actually exist in our code at the moment. This is what we will be writing next, and it can be simply written as so:
+
+```rust
+// "impl IntoResponse" means we want our function to return a websocket connection
+async fn ws_handler(ws: WebSocketUpgrade, Extension(state): Extension<Users>) -> impl IntoResponse {
+    ws.on_upgrade(|socket| handle_socket(socket, state))
+}
+```
+
+This function simply receives a connection, upgrades the connection into a WebSocket connection and initiates the socket handling to be able to receive and send messages.
+
+Now let's implement the `handle_socket` function, as it currently doesn't actually exist:
+
+```rust
+async fn handle_socket(stream: WebSocket, state: Users) {
+    // When a new user enters the chat (opens the websocket connection), assign them a user ID
+    let my_id = NEXT_USERID.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+    // By splitting the websocket into a receiver and sender, we can send and receive at the same time.
+    let (mut sender, mut receiver) = stream.split();
+
+    // Create a new channel for async task management (stored in Users hashmap)
+    let (tx, mut rx): (UnboundedSender<Message>, UnboundedReceiver<Message>) = mpsc::unbounded_channel();
+
+// If a message has been received, send the message (expect on error)
+    tokio::spawn(async move {
+        while let Some(msg) = rx.recv().await {
+            sender.send(msg).await.expect("Error while sending message");
+        }
+        sender.close().await.unwrap();
+    });
+
+    // if there's a message and the message is OK, broadcast it along all available open websocket connections
+    while let Some(Ok(result)) = receiver.next().await {
+        println!("{:?}", result);
+    }
+```
+
+As you may have noticed in this function, we spawn a thread to await messages and send them back. We'll need a method of safely transporting messages across the thread we've created, which is why an Arc with a reader-writer lock is used.
+
+If you use `cargo shuttle run` to locally run this project and send "Hello" to the WebSocket connection from a front-end web app, on your terminal with the Rust project deployment should return `Some("Hello")`, which means we've successfully received a WebSocket message. Now we just need to figure out how we're going to send it back!
+
+Let's create a function that will broadcast messages along every connected WebSocket:
+
+```rust
+async fn broadcast_msg(msg: Message, users: &Users) {
+// "If let" is basically a simple match statement, which is perfect for this use case
+// as we want to only match against one condition.
+    if let Message::Text(msg) = msg {
+        for (&_uid, tx) in users.read().await.iter() {
+            tx.send(Message::Text(msg.clone()))
+                .expect("Failed to send Message")
+        }
+    }
+}
+```
+
+This function will basically check that the message type matches and if it does, iterate through every single user connection and read it. Nothing too crazy here.
+
+Let's have a look at enriching the results:
+
+```rust
+fn enrich_result(result: Message, id: usize) -> Result<Message, serde_json::Error> {
+    match result {
+        Message::Text(msg) => {
+            let mut msg: Msg = serde_json::from_str(&msg)?;
+            msg.uid = Some(id);
+            let msg = serde_json::to_string(&msg)?;
+            Ok(Message::Text(msg))
+        }
+        _ => Ok(result),
+    }
+}
+```
+
+This function adds the user ID to the incoming message. If the result is not a WebSocket message, return whatever the result was.
+
+Now we will incorporate both of these methods into the respective section in our `handle_socket` function, like so:
+
+```rust
+while let Some(Ok(result)) = receiver.next().await {
+        println!("{:?}", result);
+        if let Ok(result) = enrich_result(result, my_id) {
+            broadcast_msg(result, &state).await;
+        }
+    }
+```
+
+Now if you send a message from your front-end web app to your web server, you should receive a message in your React app from the server with the message, username and user ID! We are finally done building the bare bones of the app, but there are some other things before we're finished that you will probably want to consider.
+
+Now while the app is now technically a minimum viable product, there's a couple of other things we need to sort out, like compiling React assets into our Rust project and making sure that we have a way to manually disconnect users if they're being abusive or breaking the rules of the chat.
+
+### Admin Routing
+
+Before we get started however, let's quickly update our main function so that we can quickly pull in our environment variables and use static assets:
+
+```rust
+#[shuttle_runtime::main]
+async fn axum(
+    #[shuttle_secrets::Secrets] secrets: SecretStore,
+    #[shuttle_static_folder::StaticFolder] static_folder: PathBuf
+) -> ShuttleAxum {
+    // We use Secrets.toml to set the BEARER key, just like in a .env file and call it here
+    let secret = secrets.get("BEARER").unwrap_or("Bear".to_string());
+
+    // set up router with Secrets
+    let router = router(secret);
+
+    Ok(router.into())
+}
+```
+
+Let's dissect our new additions quickly. `shuttle_secrets::Secrets` allows us to set environmental variables using a Secrets.toml file, much like how you'd typically use a .env file to be able to use environment variables locally and in production. `shuttle_static_folder::StaticFolder` provides a path to our static assets folder so that when we deploy to shuttle, the deployment will know where to find our static assets (although we won't implement that just yet).
+
+Now that our setup for this section is out of the way, let's cover the admin route first as that'll mean we can make sure our WebSocket service is complete before we compile any assets. Let's make a function that will take a user ID and manually disconnect them using the disconnect function we already have:
+
+```rust
+async fn disconnect_user(
+    Path(user_id): Path<usize>,
+    Extension(users): Extension<Users>,
+) -> impl IntoResponse {
+    disconnect(user_id, &users).await;
+    "Done"
+}
+```
+
+Now we can easily set up an admin router within the router function that will allow us to disconnect people manually, given a user ID and an authentication secret which you should write like so:
+
+```rust
+// write this somewhere in your router function 
+// RequireAuthorizationLayer dictates we must send a Bearer auth token to authorise the kick/remove
+    let admin = Router::new()
+    .route("/disconnect/:user_id", get(disconnect_user))
+    .layer(RequireAuthorizationLayer::bearer(&secret));
+```
+
+Now that we have this route, we can actually embed it into our main router using the "nest" method. This method is actually great for us, as it means we can put together several different groups of similar routes and functions to create one router. Let's have a look at what this should look like on the router we're returning:
+
+```rust
+     Router::new()
+        .route("/ws", get(ws_handler))
+        .nest("/admin", admin)
+        .layer(Extension(users))
+```
+
+As you can see here, our admin route should actually be `<base-url>/ws/admin`, as dictated by the nest function. Now if we want to disconnect a user with the user ID of 5 manually for example, we would have to make a post request to `<base-url>/ws/admin/disconnect/5` with a Bearer authentication header - as an example, if you've set your secret as "keyboard cat", you need to enter an authentication header of `Bearer keyboard cat`).
+
+At this point, your router function should look like this (if not, you have likely missed a step somewhere):
+
+```rust
+    // initialise the Users k/v store and allow the static files to be served
+    let users = Users::default();
+
+    // make an admin route for kicking users
+    let admin = Router::new()
+    .route("/disconnect/:user_id", get(disconnect_user))
+    .layer(RequireAuthorizationLayer::bearer(&secret));
+
+    let static_assets = SpaRouter::new("/", static_folder)
+        .index_file("index.html");
+    // return a new router and nest the admin route into the websocket route
+     Router::new()
+        .route("/ws", get(ws_handler))
+        .nest("/admin", admin)
+        .layer(Extension(users))
+        .merge(static_assets)
+}
+```
+
+### Integrating Front & Back Endpoints
+
+Now we can start integrating our front and back end together. Let's set up our npm deploy scripts so that we can build our assets into our Rust folder:
+
+```json
+"scripts": {
+ // ... your other package.json scripts
+    "build": "tsc && vite build --emptyOutDir",
+// ... your other package.json scripts
+  },
+```
+
+Our build command basically tells npm that we want it to compile all of the Typescript files, and then build the compiled assets.
+
+Now in your `vite.config.ts` file you'll want to have your defineConfig look like so:
+
+```ts
+export default defineConfig({
+  base: '',
+  plugins: [react()],
+  build: {
+    outDir: 'API/static',
+    emptyOutDir: true
+  }
+})
+```
+
+This tells npm exactly where we want our compiled assets to be built and whether or not we should empty the target directory before building assets (outside of the regular directory, this is normally false by default so we need to set it to true).
+
+Now if we run `npm run build`, it should build our assets in the API folder in a subdirectory called `static`. We can serve this directory to our users on the Rust project, which is great for us as it means we can simply use one deployment instead of having to manage two different deployments. `shuttle_static_folder::StaticFolder` has a default value of "static", so we don't need to set the folder name manually.
+
+Before we move on, let's re-write the WebSocket URL so that it will dynamically match whatever the URL of our hosted project will be, instead of a fixed string. Let's change our WebSocket connection in the React front-end like so:
+
+```ts
+// Set up the websocket URL. 
+const wsUri = ((window.location.protocol == "https:" && "wss://") || "ws://") +
+  window.location.host +
+  "/ws";
+
+const websocket = new WebSocket(wsUri);
+```
+
+Now that we've changed the connection URL, our compiled assets in our Rust folder will work on the local Rust run without us having to use our local Vite deployment! However, if we try to run our front end by itself, it won't connect as this connection string relies on using the local Rust project - but you can change the connection string as required.
+
+Now we can update our main function and router together so that the router will use a `SpaRouter` function provided by `axum_extra`, as well as use the static file path:
+
+```rust
+#[shuttle_runtime::main]
+async fn axum(
+    #[shuttle_secrets::Secrets] secrets: SecretStore,
+    #[shuttle_static_folder::StaticFolder] static_folder: PathBuf
+) -> ShuttleAxum {
+    // We use Secrets.toml to set the BEARER key, just like in a .env file and call it here
+    let secret = secrets.get("BEARER").unwrap_or("Bear".to_string());
+
+    // set up router with Secrets
+    let router = router(secret, static_folder);
+
+    Ok(router.into())
+}
+
+fn router(secret: String, static_folder: PathBuf) -> Router {
+    // initialise the Users k/v store and allow the static files to be served
+    let users = Users::default();
+
+    // make an admin route for kicking users
+    let admin = Router::new()
+    .route("/disconnect/:user_id", get(disconnect_user))
+    .layer(RequireAuthorizationLayer::bearer(&secret));
+
+    let static_assets = SpaRouter::new("/", static_folder)
+        .index_file("index.html");
+    // return a new router and nest the admin route into the websocket route
+     Router::new()
+        .route("/ws", get(ws_handler))
+        .nest("/admin", admin)
+        .layer(Extension(users))
+        .merge(static_assets)
+}
+```
+
+### Finishing Up
+
+Now we're pretty much done and ready to deploy! We can call our deploy script at the `packages.json` level by setting up an npm script like below:
+```rust
+  "scripts": {
+  // ...your other scripts
+    "dev": "concurrently new \"vite\" \"cargo shuttle run --working-directory .API\"",
+    "build": "tsc && vite build --emptyOutDir",
+    "deploy": "npm run build && cargo shuttle deploy --working-directory ./API"
+  // ...your other scripts
+  }
+```
+
+Now if we run `npm run deploy`, it should build all of our assets into the required folder and then attempt to deploy to shuttle - assuming there are no issues, it should deploy successfully!
+
+If you would like to change the name of your folder while keeping the deployment name the same, you can do so by simply creating a file called `Shuttle.toml` at the `Cargo.toml` level and creating a variable for the `name` key like in a .env file (so for example if I wanted to call my project `keyboard-cat`, I'd type "name='keyboard-cat'" into the file).
+
+If you need to check the status of your shuttle project at any time, you can do so by using `cargo shuttle status` at the `Cargo.toml` file, or you can add the `--name` flag followed by the project's name to use it from any directory.
