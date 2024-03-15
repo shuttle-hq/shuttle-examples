@@ -36,11 +36,11 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Checkout main branch of the repository
-      if: ${{ github.ref == 'refs/heads/develop' }}
+      if: ${{ github.ref == 'refs/heads/feat/dev-ci-workflow' }}
       run: git clone https://github.com/shuttle-hq/shuttle.git
 
     - name: Apply patches
-      if: ${{ github.ref == 'refs/heads/develop' }}
+      if: ${{ github.ref == 'refs/heads/feat/dev-ci-workflow' }}
       run: scripts/apply-patches.sh
 
     - name: Install sccache
