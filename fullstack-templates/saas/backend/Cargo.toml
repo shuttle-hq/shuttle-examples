@@ -18,7 +18,6 @@ reqwest = "0.11.16"
 serde = { version = "1.0.160", features = ["derive"] }
 shuttle-axum = "0.41.0"
 shuttle-runtime = "0.41.0"
-shuttle-secrets = "0.41.0"
 shuttle-shared-db = { version = "0.41.0", features = ["postgres", "sqlx"] }
 sqlx = { version = "0.7.1", features = ["time"] }
 time = { version = "0.3.20", features = ["serde"] }

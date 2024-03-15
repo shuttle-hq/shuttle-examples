@@ -1,9 +1,9 @@
 use axum::{routing::get, Router};
-use shuttle_metadata::Metadata;
+use shuttle_runtime::DeploymentMetadata;
 
 #[shuttle_runtime::main]
 async fn axum(
-    #[shuttle_metadata::ShuttleMetadata] metadata: Metadata,
+    #[shuttle_runtime::Metadata] metadata: DeploymentMetadata,
 ) -> shuttle_axum::ShuttleAxum {
     let router = Router::new().route("/", get(format!("{:?}", metadata)));
 
