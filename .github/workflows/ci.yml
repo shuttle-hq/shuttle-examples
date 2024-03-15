@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main", "develop", "feat/dev-ci-workflow" ]
+    branches: [ "main", "feat/dev-ci-workflow" ]
   pull_request:
-    branches: [ "main", "develop", "feat/dev-ci-workflow" ]
+    branches: [ "main", "feat/dev-ci-workflow" ]
   workflow_dispatch:
 
 env:
@@ -41,7 +41,7 @@ jobs:
 
     - name: Apply patches
       if: ${{ github.ref == 'refs/heads/feat/dev-ci-workflow' }}
-      run: scripts/apply-patches.sh
+      run: ./shuttle/scripts/apply-patches.sh
 
     - name: Install sccache
       run: |
