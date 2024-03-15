@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main", "feat/dev-ci-workflow" ]
+    branches: [ "main", "develop" ]
   pull_request:
-    branches: [ "main", "feat/dev-ci-workflow" ]
+    branches: [ "main", "develop" ]
   workflow_dispatch:
 
 env:
@@ -35,16 +35,16 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Checkout main branch of the repository
-      if: ${{ github.ref == 'refs/heads/feat/dev-ci-workflow' }}
+    - name: Clone the Shuttle main repository
+      if: ${{ github.ref == 'refs/heads/develop' }}
       run: git clone https://github.com/shuttle-hq/shuttle.git
 
-    - name: Apply patches
-      if: ${{ github.ref == 'refs/heads/feat/dev-ci-workflow' }}
+    - name: Apply patches from Shuttle
+      if: ${{ github.ref == 'refs/heads/develop' }}
       run: |
         cd ./shuttle
         scripts/apply-patches.sh
-        cd ../
+        cd ..
 
     - name: Install sccache
       run: |
