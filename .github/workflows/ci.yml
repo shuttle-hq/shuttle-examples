@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", "feat/dev-ci-workflow" ]
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: [ "main", "develop", "feat/dev-ci-workflow" ]
   workflow_dispatch:
 
 env:
