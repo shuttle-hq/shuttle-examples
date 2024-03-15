@@ -41,7 +41,10 @@ jobs:
 
     - name: Apply patches
       if: ${{ github.ref == 'refs/heads/feat/dev-ci-workflow' }}
-      run: ./shuttle/scripts/apply-patches.sh
+      run: |
+        cd ./shuttle
+        scripts/apply-patches.sh
+        cd ../
 
     - name: Install sccache
       run: |
