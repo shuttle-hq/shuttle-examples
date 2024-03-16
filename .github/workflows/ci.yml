@@ -38,9 +38,12 @@ jobs:
 
     - name: Clone the Shuttle main repository
       if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
-      run: git clone --depth 1 https://github.com/shuttle-hq/shuttle.git
+      run: |
+        git clone --depth 1 --branch main https://github.com/shuttle-hq/shuttle.git
+        cd shuttle
+        git log -1 --format='%H'
 
-    - name: Apply patches from Shuttle
+    - name: Apply patches
       if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
       run: ./shuttle/scripts/apply-patches.sh .cargo/config.toml "$(pwd)/shuttle"
 
