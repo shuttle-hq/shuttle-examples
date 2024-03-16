@@ -41,10 +41,7 @@ jobs:
 
     - name: Apply patches from Shuttle
       if: ${{ github.ref == 'refs/heads/develop' }}
-      run: |
-        cd ./shuttle
-        scripts/apply-patches.sh
-        cd ..
+      run: ./shuttle/scripts/apply-patches.sh .cargo/config.toml "$(pwd)/shuttle"
 
     - name: Install sccache
       run: |
