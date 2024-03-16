@@ -37,7 +37,7 @@ jobs:
 
     - name: Clone the Shuttle main repository
       if: ${{ github.ref == 'refs/heads/develop' }}
-      run: git clone https://github.com/shuttle-hq/shuttle.git
+      run: git clone --depth 1 https://github.com/shuttle-hq/shuttle.git
 
     - name: Apply patches from Shuttle
       if: ${{ github.ref == 'refs/heads/develop' }}
