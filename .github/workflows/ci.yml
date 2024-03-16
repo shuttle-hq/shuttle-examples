@@ -35,15 +35,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - run: echo ${{ github.ref }} ${{ github.base_ref }}
-    - run: env
-
     - name: Clone the Shuttle main repository
-      if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'refs/heads/develop' }}
+      if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
       run: git clone --depth 1 https://github.com/shuttle-hq/shuttle.git
 
     - name: Apply patches from Shuttle
-      if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'refs/heads/develop' }}
+      if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
       run: ./shuttle/scripts/apply-patches.sh .cargo/config.toml "$(pwd)/shuttle"
 
     - name: Install sccache
