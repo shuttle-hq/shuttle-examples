@@ -4,11 +4,11 @@ use loco_rs::environment::Environment;
 
 #[shuttle_runtime::main]
 async fn main(
-    #[shuttle_metadata::ShuttleMetadata] meta: shuttle_metadata::Metadata,
+    #[shuttle_runtime::Metadata] meta: shuttle_runtime::DeploymentMetadata,
 ) -> shuttle_axum::ShuttleAxum {
     let environment = match meta.env {
-        shuttle_metadata::Environment::Local => Environment::Development,
-        shuttle_metadata::Environment::Deployment => Environment::Production,
+        shuttle_runtime::Environment::Local => Environment::Development,
+        shuttle_runtime::Environment::Deployment => Environment::Production,
     };
     let boot_result = create_app::<App>(StartMode::ServerOnly, &environment)
         .await
