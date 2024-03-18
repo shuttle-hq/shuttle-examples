@@ -39,13 +39,13 @@ jobs:
     - name: Clone the Shuttle main repository
       if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
       run: |
-        git clone --depth 1 --branch main https://github.com/shuttle-hq/shuttle.git
-        cd shuttle
+        git clone --depth 1 --branch main https://github.com/shuttle-hq/shuttle.git /home/runner/shuttle
+        cd /home/runner/shuttle
         git log -1 --format='%H'
 
     - name: Apply patches
       if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
-      run: ./shuttle/scripts/apply-patches.sh .cargo/config.toml "$(pwd)/shuttle"
+      run: /home/runner/shuttle/scripts/apply-patches.sh .cargo/config.toml /home/runner/shuttle
 
     - name: Install sccache
       run: |
