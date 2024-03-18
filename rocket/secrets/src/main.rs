@@ -16,9 +16,7 @@ struct MyState {
 }
 
 #[shuttle_runtime::main]
-async fn rocket(
-    #[shuttle_runtime::Secrets] secrets: SecretStore,
-) -> shuttle_rocket::ShuttleRocket {
+async fn rocket(#[shuttle_runtime::Secrets] secrets: SecretStore) -> shuttle_rocket::ShuttleRocket {
     // get secret defined in `Secrets.toml` file.
     let secret = secrets.get("MY_API_KEY").context("secret was not found")?;
 
