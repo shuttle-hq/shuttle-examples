@@ -3,7 +3,7 @@ use axum_extra::extract::cookie::Key;
 use oauth2::{basic::BasicClient, AuthUrl, ClientId, ClientSecret, RedirectUrl, TokenUrl};
 use reqwest::Client;
 use routes::oauth;
-use shuttle_secrets::SecretStore;
+use shuttle_runtime::SecretStore;
 use sqlx::PgPool;
 pub mod routes;
 
@@ -24,7 +24,7 @@ impl FromRef<AppState> for Key {
 #[shuttle_runtime::main]
 async fn axum(
     #[shuttle_shared_db::Postgres] db: PgPool,
-    #[shuttle_secrets::Secrets] secrets: SecretStore,
+    #[shuttle_runtime::Secrets] secrets: SecretStore,
 ) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!()
         .run(&db)
