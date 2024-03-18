@@ -35,7 +35,7 @@ impl FromRef<AppState> for Key {
 #[shuttle_runtime::main]
 async fn axum(
     #[shuttle_shared_db::Postgres] postgres: PgPool,
-    #[shuttle_secrets::Secrets] secrets: shuttle_secrets::SecretStore,
+    #[shuttle_runtime::Secrets] secrets: shuttle_runtime::SecretStore,
 ) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!()
         .run(&postgres)
@@ -64,7 +64,7 @@ async fn axum(
     Ok(router.into())
 }
 
-fn grab_secrets(secrets: shuttle_secrets::SecretStore) -> (String, String, String, String, String) {
+fn grab_secrets(secrets: shuttle_runtime::SecretStore) -> (String, String, String, String, String) {
     let stripe_key = secrets
         .get("STRIPE_KEY")
         .unwrap_or_else(|| "None".to_string());
