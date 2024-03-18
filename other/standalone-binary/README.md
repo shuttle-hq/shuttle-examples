@@ -7,4 +7,4 @@ All startup logic is placed in the binary source files, while the implementation
 - `src/bin/shuttle.rs` is the main binary with Shuttle, run with `cargo shuttle run`. Note that the `[[bin]]` entry in `Cargo.toml` needs to have the same name as the crate. The file can have any name you want.
 - `src/bin/standalone.rs` is without Shuttle, run with `cargo run --bin standalone` (you can change the name)
 
-This example shows how to use separate logic for getting secrets (`shuttle-secrets` vs homemade solution), but the same approach can be applied to other resources that are initiated by Shuttle's main function.
+This example shows how to use separate logic for getting secrets (Shuttle secrets vs homemade solution), but the same approach can be applied to other resources that are initiated by Shuttle's main function.

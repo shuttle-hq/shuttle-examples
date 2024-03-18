@@ -315,7 +315,7 @@ tags = ["actix-web", "tracing"]
 
 [examples.metadata]
 title = "Shuttle Metadata"
-description = "Basic usage of shuttle-metadata"
+description = "Basic usage of Shuttle Metadata"
 path = "axum/metadata"
 use_cases = []
 tags = ["axum"]
@@ -329,7 +329,7 @@ tags = ["rocket"]
 
 [examples.secrets]
 title = "Shuttle Secrets"
-description = "Basic usage of shuttle-secrets"
+description = "Basic usage of Shuttle Secrets"
 path = "rocket/secrets"
 use_cases = ["Web app"]
 tags = ["rocket"]
