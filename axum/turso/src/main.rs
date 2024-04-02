@@ -10,7 +10,7 @@ async fn get_posts(State(client): State<Arc<Connection>>) -> Json<Vec<User>> {
         .await
         .unwrap();
     let mut users = vec![];
-    while let Some(row) = rows.next().unwrap() {
+    while let Some(row) = rows.next().await.unwrap() {
         users.push(User {
             uid: row.get::<String>(0).unwrap(),
             email: row.get::<String>(1).unwrap(),
