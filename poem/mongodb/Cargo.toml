@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 mongodb = "2.4.0"
-poem = "2.0.0"
+poem = "3.0.0"
 shuttle-poem = "0.43.0"
 shuttle-shared-db = { version = "0.43.0", features = ["mongodb"] }
 shuttle-runtime = "0.43.0"
