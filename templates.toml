@@ -4,6 +4,29 @@
 # Use `rust-script _scripts/check-templates.rs` to validate this list.
 version = 1
 
+# mapping of tag name -> image url
+[logos]
+actix-web = "https://avatars.githubusercontent.com/u/32776943?v=4"
+axum = "https://avatars.githubusercontent.com/u/20248544?v=4"
+rocket = "https://avatars.githubusercontent.com/u/106361765?v=4"
+bevy = "https://avatars.githubusercontent.com/u/60047606?v=4"
+loco = "https://avatars.githubusercontent.com/u/151030972?v=4"
+poem = "https://avatars.githubusercontent.com/u/88869778?v=4"
+poise = "https://avatars.githubusercontent.com/u/32077193?v=4"
+serenity = "https://avatars.githubusercontent.com/u/32077193?v=4"
+salvo = "https://avatars.githubusercontent.com/u/77909452?v=4"
+tide = "https://avatars.githubusercontent.com/u/56456261?v=4"
+tower = "https://avatars.githubusercontent.com/u/26263939?v=4"
+postgres = "https://avatars.githubusercontent.com/u/177543?v=4"
+clerk = "https://avatars.githubusercontent.com/u/49538330?v=4"
+htmx = "https://raw.githubusercontent.com/bigskysoftware/htmx/8e26d12c33caf7dc99c49d4918e7b8abd8028f98/www/static/img/htmx_logo.2.png"
+qdrant = "https://avatars.githubusercontent.com/u/73504361?v=4"
+nextjs = "https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png"
+mongodb = "https://avatars.githubusercontent.com/u/45120?v=4"
+opendal = "https://avatars.githubusercontent.com/u/47359?v=4"
+# fallback
+shuttle = "https://avatars.githubusercontent.com/u/54710151?v=4"
+
 
 ## OFFICIAL STARTERS ##
 
@@ -126,14 +149,14 @@ title = "Postgres"
 description = "Todo list with a Postgres database"
 path = "actix-web/postgres"
 use_cases = ["Web app", "Storage"]
-tags = ["actix-web", "database", "postgres"]
+tags = ["postgres", "actix-web", "database"]
 
 [templates.actix-web-clerk-react]
 title = "Clerk authentication"
 description = "Fullstack Rust+React with auth provider logic"
 path = "actix-web/clerk"
 use_cases = ["Web app", "Authentication"]
-tags = ["actix-web", "clerk", "react", "typescript", "tailwind"]
+tags = ["clerk", "actix-web", "react", "typescript", "tailwind"]
 
 [templates.actix-cookie-authentication]
 title = "Cookie Authentication"
@@ -161,7 +184,7 @@ title = "HTMX"
 description = "Simple CRUD app using HTMX and Askama"
 path = "axum/htmx-crud"
 use_cases = ["Web app", "Storage"]
-tags = ["axum", "htmx", "database", "postgres"]
+tags = ["htmx", "axum", "database", "postgres"]
 
 [templates.axum-jwt-authentication]
 title = "JWT authentication"
@@ -182,14 +205,14 @@ title = "Postgres"
 description = "Todo list with a Postgres database"
 path = "axum/postgres"
 use_cases = ["Web app", "Storage"]
-tags = ["axum", "database", "postgres"]
+tags = ["postgres", "axum", "database"]
 
 [templates.axum-qdrant]
 title = "Qdrant"
 description = "Connecting to Qdrant cloud with shuttle-qdrant"
 path = "axum/qdrant"
 use_cases = ["Web app", "Storage", "AI"]
-tags = ["axum", "database", "qdrant"]
+tags = ["qdrant", "axum", "database"]
 
 [templates.axum-static-files]
 title = "File server"
@@ -203,7 +226,7 @@ title = "Turso"
 description = "Connect to a Turso DB with shuttle-turso"
 path = "axum/turso"
 use_cases = ["Web app", "Storage"]
-tags = ["axum", "database", "libsql", "sqlite"]
+tags = ["turso", "axum", "database", "libsql", "sqlite"]
 
 [templates.axum-websocket]
 title = "Websockets"
@@ -224,14 +247,14 @@ title = "Fullstack SaaS"
 description = "Opinionated fullstack web app with pre-made routes and assets"
 path = "fullstack-templates/saas"
 use_cases = ["Web app", "Authentication", "Storage", "Monetization"]
-tags = ["axum", "next.js", "database", "postgres", "typescript", "tailwind"]
+tags = ["nextjs", "axum", "database", "postgres", "typescript", "tailwind"]
 
 [templates.poem-mongodb]
 title = "MongoDB"
 description = "Todo list with a MongoDB database"
 path = "poem/mongodb"
 use_cases = ["Web app", "Storage"]
-tags = ["poem", "database", "mongodb"]
+tags = ["mongodb", "poem", "database"]
 
 [templates.rocket-dyn-templates]
 title = "Handlebars dynamic templates"
@@ -252,14 +275,14 @@ title = "OpenDAL in-memory store"
 description = "A key-value store using OpenDAL"
 path = "rocket/opendal-memory"
 use_cases = ["Web app", "Storage"]
-tags = ["rocket", "opendal"]
+tags = ["opendal", "rocket"]
 
 [templates.rocket-postgres]
 title = "Postgres"
 description = "Todo list with a Postgres database"
 path = "rocket/postgres"
 use_cases = ["Web app", "Storage"]
-tags = ["rocket", "database", "postgres"]
+tags = ["postgres", "rocket", "database"]
 
 [templates.rocket-static-files]
 title = "File server"
