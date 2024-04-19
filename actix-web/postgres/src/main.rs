@@ -7,7 +7,7 @@ use actix_web::{
 };
 use serde::{Deserialize, Serialize};
 use shuttle_actix_web::ShuttleActixWeb;
-use sqlx::{Executor, FromRow, PgPool};
+use sqlx::{FromRow, PgPool};
 
 #[get("/{id}")]
 async fn retrieve(path: web::Path<i32>, state: web::Data<AppState>) -> Result<Json<Todo>> {
