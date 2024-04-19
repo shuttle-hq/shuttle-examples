@@ -330,7 +330,7 @@ tags = ["axum", "apalis", "database", "postgres"]
 title = "Custom Tracing Subscriber"
 description = "How to use a custom tracing-subscriber on Shuttle"
 path = "tracing/custom-tracing-subscriber"
-use_cases = ["Web App", "Logging"]
+use_cases = ["Web app", "Logging"]
 tags = ["actix-web", "tracing"]
 
 
@@ -394,7 +394,7 @@ tags = ["diy", "axum"]
 [community_templates.actix-github-oauth]
 title = "GitHub Login (OAuth)"
 description = "Sample app demonstrating GitHub OAuth login using Actix Web"
-use_cases = ["Web App", "Authentication"]
+use_cases = ["Web app", "Authentication"]
 tags = ["actix-web", "oauth"]
 author = "robjtede"
 repo = "https://github.com/robjtede/actix-examples-oauth-github"
@@ -402,15 +402,15 @@ repo = "https://github.com/robjtede/actix-examples-oauth-github"
 [community_templates.fullstack-rust-axum-yew]
 title = "Fullstack Rust"
 description = "A template for fullstack Rust projects with Yew"
-use_cases = ["Web App"]
+use_cases = ["Web app"]
 tags = ["axum", "yew"]
 author = "TylerBloom"
 repo = "https://github.com/TylerBloom/shuttle-fullstack-rust-example"
 
 [community_templates.axum-web-app-yew]
-title = "Web App with Yew"
+title = "Web app with Yew"
 description = "A template for a web app using the Yew framework"
-use_cases = ["Web App"]
+use_cases = ["Web app"]
 tags = ["axum", "yew"]
 author = "sentinel1909"
 repo = "https://github.com/sentinel1909/shuttle-template-yew"
@@ -418,7 +418,7 @@ repo = "https://github.com/sentinel1909/shuttle-template-yew"
 [community_templates.actix-web-api]
 title = "Web API with Actix Web"
 description = "A template for starting an API with Actix Web"
-use_cases = ["Web App"]
+use_cases = ["Web app"]
 tags = ["actix-web"]
 author = "sentinel1909"
 repo = "https://github.com/sentinel1909/shuttle-template-actix"
@@ -426,7 +426,7 @@ repo = "https://github.com/sentinel1909/shuttle-template-actix"
 [community_templates.rocket-yew-sled]
 title = "Web API with Rocket and Sled"
 description = "A Full Stack CRUD template for starting an API with Rocket, Sled, and Yew"
-use_cases = ["Web App"]
+use_cases = ["Web app"]
 tags = ["rocket", "yew"]
 author = "wiseaidev"
 repo = "https://github.com/wiseaidev/rocket-yew-starter-pack"
