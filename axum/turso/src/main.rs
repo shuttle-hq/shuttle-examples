@@ -7,10 +7,7 @@ use serde::{Deserialize, Serialize};
 async fn get_posts(State(client): State<Arc<Database>>) -> Json<Vec<User>> {
     let conn = client.connect().unwrap();
 
-    let mut rows = conn
-        .query("select * from example_users", ())
-        .await
-        .unwrap();
+    let mut rows = conn.query("select * from example_users", ()).await.unwrap();
     let mut users = vec![];
     while let Some(row) = rows.next().unwrap() {
         users.push(User {
@@ -32,13 +29,12 @@ async fn create_users(
     Json(user): Json<User>,
 ) -> impl IntoResponse {
     let conn = client.connect().unwrap();
-    conn
-        .execute(
-            "insert into example_users (uid, email) values (?1, ?2)",
-            [user.uid, user.email],
-        )
-        .await
-        .unwrap();
+    conn.execute(
+        "insert into example_users (uid, email) values (?1, ?2)",
+        [user.uid, user.email],
+    )
+    .await
+    .unwrap();
 
     Json(serde_json::json!({ "ok": true }))
 }
@@ -51,13 +47,12 @@ async fn axum(
     let client = Arc::new(client);
     let conn = client.connect().unwrap();
 
-    conn
-        .execute(
-            "create table if not exists example_users ( uid text primary key, email text );",
-            (),
-        )
-        .await
-        .unwrap();
+    conn.execute(
+        "create table if not exists example_users ( uid text primary key, email text );",
+        (),
+    )
+    .await
+    .unwrap();
 
     let router = Router::new()
         .route("/", get(get_posts).post(create_users))
