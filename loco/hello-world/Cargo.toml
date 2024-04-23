@@ -13,8 +13,8 @@ async-trait = "0.1.74"
 axum = "0.7.1"
 eyre = "*"
 loco-rs = { version = "0.3.1", default-features = false, features = ["cli"] }
-shuttle-axum = "0.43.0"
-shuttle-runtime = { version = "0.43.0", default-features = false }
+shuttle-axum = "0.44.0"
+shuttle-runtime = { version = "0.44.0", default-features = false }
 serde = "*"
 serde_json = "*"
 tokio = "1.33.0"

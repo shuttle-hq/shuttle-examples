@@ -1,14 +1,13 @@
 use std::sync::Arc;
 
 use axum::{extract::State, response::IntoResponse, routing::get, Json, Router};
-use libsql::Connection;
+use libsql::Database;
 use serde::{Deserialize, Serialize};
 
-async fn get_posts(State(client): State<Arc<Connection>>) -> Json<Vec<User>> {
-    let mut rows = client
-        .query("select * from example_users", ())
-        .await
-        .unwrap();
+async fn get_posts(State(client): State<Arc<Database>>) -> Json<Vec<User>> {
+    let conn = client.connect().unwrap();
+
+    let mut rows = conn.query("select * from example_users", ()).await.unwrap();
     let mut users = vec![];
     while let Some(row) = rows.next().await.unwrap() {
         users.push(User {
@@ -26,16 +25,16 @@ struct User {
 }
 
 async fn create_users(
-    State(client): State<Arc<Connection>>,
+    State(client): State<Arc<Database>>,
     Json(user): Json<User>,
 ) -> impl IntoResponse {
-    client
-        .execute(
-            "insert into example_users (uid, email) values (?1, ?2)",
-            [user.uid, user.email],
-        )
-        .await
-        .unwrap();
+    let conn = client.connect().unwrap();
+    conn.execute(
+        "insert into example_users (uid, email) values (?1, ?2)",
+        [user.uid, user.email],
+    )
+    .await
+    .unwrap();
 
     Json(serde_json::json!({ "ok": true }))
 }
@@ -43,17 +42,17 @@ async fn create_users(
 #[shuttle_runtime::main]
 async fn axum(
     #[shuttle_turso::Turso(addr = "libsql://your-db.turso.io", token = "{secrets.TURSO_DB_TOKEN}")]
-    client: Connection,
+    client: Database,
 ) -> shuttle_axum::ShuttleAxum {
     let client = Arc::new(client);
+    let conn = client.connect().unwrap();
 
-    client
-        .execute(
-            "create table if not exists example_users ( uid text primary key, email text );",
-            (),
-        )
-        .await
-        .unwrap();
+    conn.execute(
+        "create table if not exists example_users ( uid text primary key, email text );",
+        (),
+    )
+    .await
+    .unwrap();
 
     let router = Router::new()
         .route("/", get(get_posts).post(create_users))
