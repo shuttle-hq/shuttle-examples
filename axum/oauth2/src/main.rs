@@ -2,10 +2,11 @@ use axum::{extract::FromRef, response::Html, routing::get, Extension, Router};
 use axum_extra::extract::cookie::Key;
 use oauth2::{basic::BasicClient, AuthUrl, ClientId, ClientSecret, RedirectUrl, TokenUrl};
 use reqwest::Client;
-use routes::oauth;
 use shuttle_runtime::SecretStore;
 use sqlx::PgPool;
-pub mod routes;
+
+pub mod errors;
+pub mod oauth;
 
 #[derive(Clone)]
 pub struct AppState {
@@ -22,14 +23,14 @@ impl FromRef<AppState> for Key {
 }
 
 #[shuttle_runtime::main]
-async fn axum(
+async fn main(
     #[shuttle_shared_db::Postgres] db: PgPool,
     #[shuttle_runtime::Secrets] secrets: SecretStore,
 ) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!()
         .run(&db)
         .await
-        .expect("Failed migrations :(");
+        .expect("Failed to run migrations");
 
     let oauth_id = secrets.get("GOOGLE_OAUTH_CLIENT_ID").unwrap();
     let oauth_secret = secrets.get("GOOGLE_OAUTH_CLIENT_SECRET").unwrap();
@@ -85,9 +86,12 @@ fn build_oauth_client(client_id: String, client_secret: String) -> BasicClient {
 
 #[axum::debug_handler]
 async fn homepage(Extension(oauth_id): Extension<String>) -> Html<String> {
-    Html(format!("<p>Welcome!</p>
-    
-    <a href=\"https://accounts.google.com/o/oauth2/v2/auth?scope=openid%20profile%20email&client_id={oauth_id}&response_type=code&redirect_uri=http://localhost:8000/api/auth/google_callback\">
-    Click here to sign into Google!
-     </a>"))
+    Html(format!(
+        r#"
+        <p>Welcome!</p>
+        <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=openid%20profile%20email&client_id={oauth_id}&response_type=code&redirect_uri=http://localhost:8000/api/auth/google_callback">
+            Click here to sign into Google!
+        </a>
+    "#
+    ))
 }

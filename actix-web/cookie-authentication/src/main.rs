@@ -2,11 +2,12 @@ use actix_identity::{Identity, IdentityMiddleware};
 use actix_session::{config::PersistentSession, storage::CookieSessionStore, SessionMiddleware};
 use actix_web::{
     cookie::{time::Duration, Key},
-    error,
+    error, get,
     http::StatusCode,
-    middleware, web, HttpMessage as _, HttpRequest, Responder,
+    middleware,
+    web::{self, ServiceConfig},
+    HttpMessage as _, HttpRequest, Responder,
 };
-use actix_web::{get, web::ServiceConfig};
 use shuttle_actix_web::ShuttleActixWeb;
 
 const FIVE_MINUTES: Duration = Duration::minutes(5);
@@ -24,6 +25,9 @@ async fn index(identity: Option<Identity>) -> actix_web::Result<impl Responder> 
 
 #[get("/login")]
 async fn login(req: HttpRequest) -> impl Responder {
+    // some kind of authentication should happen here
+
+    // attach a verified user identity to the active session
     Identity::login(&req.extensions(), "user1".to_owned()).unwrap();
 
     web::Redirect::to("/").using_status_code(StatusCode::FOUND)
@@ -37,18 +41,19 @@ async fn logout(id: Identity) -> impl Responder {
 }
 
 #[shuttle_runtime::main]
-async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
+async fn main() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
     // Generate a random secret key. Note that it is important to use a unique
     // secret key for every project. Anyone with access to the key can generate
     // authentication cookies for any user!
     //
-    // If the secret key is read from a file or the environment, make sure it is generated securely.
+    // When deployed the secret key should be read from deployment secrets.
+    //
     // For example, a secure random key (in base64 format) can be generated with the OpenSSL CLI:
     // ```
     // openssl rand -base64 64
     // ```
     //
-    // Then decoded and used converted to a Key:
+    // Then decoded and converted to a Key:
     // ```
     // let secret_key = Key::from(base64::decode(&private_key_base64).unwrap());
     // ```
@@ -56,7 +61,7 @@ async fn actix_web() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send +
 
     let config = move |cfg: &mut ServiceConfig| {
         cfg.service(
-            web::scope("/")
+            web::scope("")
                 .service(index)
                 .service(login)
                 .service(logout)

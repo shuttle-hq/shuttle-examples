@@ -36,7 +36,7 @@ struct Response {
 }
 
 #[shuttle_runtime::main]
-async fn axum() -> ShuttleAxum {
+async fn main() -> ShuttleAxum {
     let (tx, rx) = watch::channel(Message::Text("{}".to_string()));
 
     let state = Arc::new(Mutex::new(State {

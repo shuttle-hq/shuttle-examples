@@ -6,7 +6,6 @@ use axum::{
     Json, Router,
 };
 use serde::{Deserialize, Serialize};
-use shuttle_runtime::CustomError;
 use sqlx::{FromRow, PgPool};
 
 async fn retrieve(
@@ -43,11 +42,11 @@ struct MyState {
 }
 
 #[shuttle_runtime::main]
-async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
+async fn main(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!()
         .run(&pool)
         .await
-        .map_err(CustomError::new)?;
+        .expect("Failed to run migrations");
 
     let state = MyState { pool };
     let router = Router::new()

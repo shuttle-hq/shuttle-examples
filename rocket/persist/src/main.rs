@@ -51,7 +51,7 @@ async fn retrieve(
 }
 
 #[shuttle_runtime::main]
-async fn rocket(
+async fn main(
     #[shuttle_persist::Persist] persist: PersistInstance,
 ) -> shuttle_rocket::ShuttleRocket {
     let state = MyState { persist };

@@ -22,7 +22,7 @@ pub fn hello(name: &str) -> Template {
 }
 
 #[shuttle_runtime::main]
-async fn rocket() -> shuttle_rocket::ShuttleRocket {
+async fn main() -> shuttle_rocket::ShuttleRocket {
     let rocket = rocket::build()
         // If you also wish to serve static content, uncomment line below and corresponding 'use' on line 4
         // .mount("/", FileServer::from(relative!("templates")))

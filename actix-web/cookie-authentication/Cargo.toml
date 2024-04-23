@@ -4,8 +4,8 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-actix-identity = "0.6.0"
-actix-session = { version = "0.8.0", features = ["cookie-session"] }
+actix-identity = "0.7.1"
+actix-session = { version = "0.9.0", features = ["cookie-session"] }
 actix-web = "4.3.1"
 shuttle-actix-web = "0.44.0"
 shuttle-runtime = "0.44.0"
