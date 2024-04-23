@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-poem = "2.0.0"
-shuttle-poem = "0.43.0"
-shuttle-runtime = "0.43.0"
+poem = "3.0.0"
+shuttle-poem = "0.44.0"
+shuttle-runtime = "0.44.0"
 tokio = "1.26.0"
