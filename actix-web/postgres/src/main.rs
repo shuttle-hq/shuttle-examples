@@ -1,13 +1,13 @@
-use actix_web::middleware::Logger;
 use actix_web::{
-    error, get, post,
+    error, get,
+    middleware::Logger,
+    post,
     web::{self, Json, ServiceConfig},
     Result,
 };
 use serde::{Deserialize, Serialize};
 use shuttle_actix_web::ShuttleActixWeb;
-use shuttle_runtime::CustomError;
-use sqlx::{Executor, FromRow, PgPool};
+use sqlx::{FromRow, PgPool};
 
 #[get("/{id}")]
 async fn retrieve(path: web::Path<i32>, state: web::Data<AppState>) -> Result<Json<Todo>> {
@@ -37,12 +37,13 @@ struct AppState {
 }
 
 #[shuttle_runtime::main]
-async fn actix_web(
+async fn main(
     #[shuttle_shared_db::Postgres] pool: PgPool,
 ) -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
-    pool.execute(include_str!("../schema.sql"))
+    sqlx::migrate!()
+        .run(&pool)
         .await
-        .map_err(CustomError::new)?;
+        .expect("Failed to run migrations");
 
     let state = web::Data::new(AppState { pool });
 

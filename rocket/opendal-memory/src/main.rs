@@ -39,7 +39,7 @@ async fn retrieve(path: String, state: &State<MyState>) -> Result<String, BadReq
 }
 
 #[shuttle_runtime::main]
-async fn rocket(
+async fn main(
     #[shuttle_opendal::Opendal(scheme = "memory")] storage: Operator,
 ) -> shuttle_rocket::ShuttleRocket {
     let state = MyState { storage };

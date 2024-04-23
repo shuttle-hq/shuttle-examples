@@ -40,7 +40,7 @@ async fn create_users(
 }
 
 #[shuttle_runtime::main]
-async fn axum(
+async fn main(
     #[shuttle_turso::Turso(addr = "libsql://your-db.turso.io", token = "{secrets.TURSO_DB_TOKEN}")]
     client: Database,
 ) -> shuttle_axum::ShuttleAxum {

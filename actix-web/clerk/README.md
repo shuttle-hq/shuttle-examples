@@ -8,8 +8,6 @@ The template simply shows a list of all signed up users after you sign in, but i
 
 ## How to use this template
 
-Clone this template with `cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder actix-web/clerk`.
-
 Sign up at clerk.com, go to the dashboard and create an application with the sign-in options you prefer.
 
 Get the `CLERK_SECRET_KEY` secret and put it in `backend/Secrets.toml`.

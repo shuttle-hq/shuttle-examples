@@ -108,7 +108,10 @@ impl CronRunner {
             crontab.jobs.push(raw);
 
             debug!("Persisting {:?} jobs", crontab.jobs.len());
-            let res = self.persist.save("crontab", crontab).map_err(From::from);
+            let res = self
+                .persist
+                .save("crontab", crontab)
+                .map_err(|_| CrontabServiceError);
             let _ = resp.send(res);
 
             tokio::spawn(async move {
