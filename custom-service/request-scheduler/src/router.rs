@@ -7,7 +7,6 @@ use axum::{extract::Form, Router};
 use tokio::sync::oneshot;
 use tracing::debug;
 
-use crate::error::CrontabServiceError;
 use crate::{CrontabServiceState, Msg, RawJob};
 
 pub(crate) fn make_router(cron_state: Arc<CrontabServiceState>) -> Router {
@@ -19,7 +18,7 @@ pub(crate) fn make_router(cron_state: Arc<CrontabServiceState>) -> Router {
 async fn set_schedule(
     State(state): State<Arc<CrontabServiceState>>,
     Form(job): Form<RawJob>,
-) -> Result<impl IntoResponse, CrontabServiceError> {
+) -> impl IntoResponse {
     debug!("Accepted new job: {:?}", job);
     let (tx, rx) = oneshot::channel();
 
