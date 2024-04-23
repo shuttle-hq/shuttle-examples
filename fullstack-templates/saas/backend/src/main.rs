@@ -2,7 +2,6 @@ use axum::extract::FromRef;
 use axum::Router;
 use axum_extra::extract::cookie::Key;
 use sqlx::PgPool;
-
 use tower_http::services::{ServeDir, ServeFile};
 
 mod auth;
@@ -33,14 +32,14 @@ impl FromRef<AppState> for Key {
 }
 
 #[shuttle_runtime::main]
-async fn axum(
+async fn main(
     #[shuttle_shared_db::Postgres] postgres: PgPool,
     #[shuttle_runtime::Secrets] secrets: shuttle_runtime::SecretStore,
 ) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!()
         .run(&postgres)
         .await
-        .expect("Had some errors running migrations :(");
+        .expect("Failed to run migrations");
 
     let (stripe_key, stripe_sub_price, mailgun_key, mailgun_url, domain) = grab_secrets(secrets);
 

@@ -14,7 +14,7 @@ pub async fn serve(mut path: PathBuf) -> Option<NamedFile> {
 }
 
 #[shuttle_runtime::main]
-async fn rocket() -> shuttle_rocket::ShuttleRocket {
+async fn main() -> shuttle_rocket::ShuttleRocket {
     let rocket = rocket::build().mount("/", rocket::routes![serve]);
 
     Ok(rocket.into())

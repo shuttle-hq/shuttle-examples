@@ -1,6 +1,3 @@
-use crate::routes::errors::ApiError;
-
-use crate::AppState;
 use axum::{
     extract::{FromRequest, FromRequestParts, Query, Request, State},
     http::StatusCode,
@@ -12,6 +9,9 @@ use chrono::{Duration, Local};
 use oauth2::{basic::BasicClient, reqwest::async_http_client, AuthorizationCode, TokenResponse};
 use serde::Deserialize;
 use time::Duration as TimeDuration;
+
+use crate::errors::ApiError;
+use crate::AppState;
 
 #[derive(Debug, Deserialize)]
 pub struct AuthRequest {
@@ -62,8 +62,8 @@ pub async fn google_callback(
         "INSERT INTO sessions (user_id, session_id, expires_at) VALUES (
         (SELECT ID FROM USERS WHERE email = $1 LIMIT 1),
          $2, $3)
-        ON CONFLICT (user_id) DO UPDATE SET 
-        session_id = excluded.session_id, 
+        ON CONFLICT (user_id) DO UPDATE SET
+        session_id = excluded.session_id,
         expires_at = excluded.expires_at",
     )
     .bind(profile.email)
@@ -94,11 +94,11 @@ impl FromRequest<AppState> for UserProfile {
         };
 
         let res = sqlx::query_as::<_, UserProfile>(
-            "SELECT 
+            "SELECT
         users.email
-        FROM sessions 
+        FROM sessions
         LEFT JOIN USERS ON sessions.user_id = users.id
-        WHERE sessions.session_id = $1 
+        WHERE sessions.session_id = $1
         LIMIT 1",
         )
         .bind(cookie)

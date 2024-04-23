@@ -6,13 +6,13 @@ mod routes;
 mod templates;
 
 #[shuttle_runtime::main]
-async fn main(#[shuttle_shared_db::Postgres] db: PgPool) -> shuttle_axum::ShuttleAxum {
+async fn main(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!()
-        .run(&db)
+        .run(&pool)
         .await
-        .expect("Looks like something went wrong with migrations :(");
+        .expect("Failed to run migrations");
 
-    let router = router::init_router(db);
+    let router = router::init_router(pool);
 
     Ok(router.into())
 }
