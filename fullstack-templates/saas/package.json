@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "cross-env ROARR_LOG=true npm exec turbowatch ./turbowatch.ts",
-    "next-dev": "next dev --turbo",
+    "dev": "cross-env ROARR_LOG=false npm exec turbowatch ./turbowatch.ts",
+    "static": "npm run build && cargo shuttle run",
     "analyze": "cross-env ANALYZE=true next build",
     "build": "next build && cargo build",
     "shuttle-login": "cargo shuttle login",
