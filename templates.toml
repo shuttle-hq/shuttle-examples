@@ -320,7 +320,7 @@ use_cases = ["Discord bot"]
 tags = ["serenity"]
 
 [templates.shuttle-cron]
-title = "Shutte custom Cron service"
+title = "Shuttle custom Cron service"
 description = "Schedule tasks on a cron schedule with apalis"
 path = "shuttle-cron"
 use_cases = ["Cron jobs", "Storage"]
