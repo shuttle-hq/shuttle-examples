@@ -371,6 +371,13 @@ path = "custom-resource/pdo"
 use_cases = []
 tags = ["diy"]
 
+[examples.feature-flags]
+title = "Shuttle feature flag"
+description = "How to use cargo feature flags on Shuttle"
+path = "other/feature-flags"
+use_cases = []
+tags = ["diy", "axum"]
+
 [examples.standalone-binary]
 title = "Standalone binary"
 description = "How to run an app both with Shuttle and standalone"
