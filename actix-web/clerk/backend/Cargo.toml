@@ -10,5 +10,5 @@ clerk-rs = "0.2.3"
 openssl-sys = { version = "0.9.9", features = ["vendored"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-shuttle-actix-web = "0.45.0"
-shuttle-runtime = "0.45.0"
+shuttle-actix-web = "0.46.0"
+shuttle-runtime = "0.46.0"
