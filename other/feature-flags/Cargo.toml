@@ -6,8 +6,8 @@ publish = false
 
 [dependencies]
 axum = "0.7.3"
-shuttle-axum = "0.45.0"
-shuttle-runtime = "0.45.0"
+shuttle-axum = "0.46.0"
+shuttle-runtime = "0.46.0"
 
 [features]
 # Shuttle will disable default features and enable the feature "shuttle" if it exists.
