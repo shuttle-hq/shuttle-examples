@@ -1,5 +1,5 @@
 build:
-	cargo build --package game --release --target wasm32-unknown-unknown && \
-		wasm-bindgen --out-dir dist --target web target/wasm32-unknown-unknown/release/game.wasm	
-up: build
-	cargo shuttle run
+	cargo build --release --target wasm32-unknown-unknown --manifest-path ./game/Cargo.toml && \
+		wasm-bindgen --out-dir server/dist --target web game/target/wasm32-unknown-unknown/release/game.wasm	
+up: 
+	build && cargo shuttle run
