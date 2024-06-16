@@ -1,2 +1,1 @@
 assets = ["dist/*"]
-name = "my-project-axum"
