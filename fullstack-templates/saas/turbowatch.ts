@@ -15,6 +15,7 @@ function executeCommand(command: string | string[], abortSignal?: AbortSignal): 
         process = spawn(cmd, args, {
             cwd: __dirname,
             stdio: 'inherit',
+            shell: true,
         });
 
         // When the process exits, resolve or reject the promise
