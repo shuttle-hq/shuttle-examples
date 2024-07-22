@@ -5,7 +5,7 @@ edition = "2021"
 
 [dependencies]
 axum = "0.7.3"
-qdrant-client = "1.7.0"
+qdrant-client = "1.10.1"
 shuttle-axum = "0.46.0"
 shuttle-qdrant = "0.46.0"
 shuttle-runtime = "0.46.0"
