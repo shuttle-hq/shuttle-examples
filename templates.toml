@@ -24,6 +24,7 @@ qdrant = "https://avatars.githubusercontent.com/u/73504361?v=4"
 nextjs = "https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png"
 mongodb = "https://avatars.githubusercontent.com/u/45120?v=4"
 opendal = "https://avatars.githubusercontent.com/u/47359?v=4"
+openai = "https://avatars.githubusercontent.com/u/14957082?v=4"
 # fallback
 shuttle = "https://avatars.githubusercontent.com/u/54710151?v=4"
 
@@ -199,6 +200,13 @@ description = "Use Google OAuth to authenticate API endpoints"
 path = "axum/oauth2"
 use_cases = ["Web app", "Authentication"]
 tags = ["axum", "oauth"]
+
+[templates.axum-openai]
+title = "OpenAI ChatGPT chat"
+description = "Connect your app to OpenAI ChatGPT"
+path = "axum/openai"
+use_cases = ["Web app", "AI"]
+tags = ["openai", "axum"]
 
 [templates.axum-postgres]
 title = "Postgres"
