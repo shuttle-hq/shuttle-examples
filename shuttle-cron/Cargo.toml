@@ -10,6 +10,6 @@ chrono = { version = "0.4.32", features = ["clock", "serde"] }
 serde = { version = "1.0.195", features = ["derive"] }
 shuttle-runtime = "0.37.0"
 shuttle-shared-db = { version = "0.37.0", features = ["postgres"] }
-sqlx = { version = "0.7.3", features = ["runtime-tokio-native-tls", "postgres"] }
+sqlx = { version = "0.8.0", features = ["runtime-tokio-native-tls", "postgres"] }
 tokio = "1"
 tower = { version = "0.4.13" }
