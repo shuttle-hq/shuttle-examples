@@ -6,21 +6,21 @@ publish = false
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-async-stripe = { version = "0.31.0", features = ["runtime-tokio-hyper"] }
-axum = "0.7.3"
-axum-extra = { version = "0.9.1", features = ["cookie-private"] }
-axum-macros = "0.4.0"
-bcrypt = "0.15.0"
-http = "1.0.0"
-lettre = "0.11.4"
+async-stripe = { version = "0.38.0", features = ["runtime-tokio-hyper"] }
+axum = "0.7.5"
+axum-extra = { version = "0.9.3", features = ["cookie-private"] }
+axum-macros = "0.4.1"
+bcrypt = "0.15.1"
+http = "1.1.0"
+lettre = "0.11.7"
 rand = "0.8.5"
-reqwest = "0.11.16"
-serde = { version = "1.0.160", features = ["derive"] }
+reqwest = "0.12.5"
+serde = { version = "1.0.204", features = ["derive"] }
 shuttle-axum = "0.47.0"
 shuttle-runtime = "0.47.0"
 shuttle-shared-db = { version = "0.47.0", features = ["postgres", "sqlx"] }
-sqlx = { version = "0.7.1", features = ["time"] }
-time = { version = "0.3.20", features = ["serde"] }
-tokio = "1.27.0"
+sqlx = { version = "0.7.4", features = ["time"] }
+time = { version = "0.3.36", features = ["serde"] }
+tokio = "1.39.2"
 tower = "0.4.13"
-tower-http = { version = "0.5.0", features = ["cors", "fs"] }
+tower-http = { version = "0.5.2", features = ["cors", "fs"] }

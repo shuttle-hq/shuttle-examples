@@ -1,15 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
-    trailingSlash: false, // Enable trailing slash (e.g. /about/)
+    trailingSlash: false,
 
     // Export settings
     output: process.env.NODE_ENV === 'development' ? undefined : 'export',
-    distDir: './dist',
+    distDir: 'dist',
 
-    // Image settings
+    // Optimization settings
     images: {
-        unoptimized: true, // Disable image optimization
+        unoptimized: true,
     },
 
     // Rewrites settings
@@ -31,7 +31,7 @@ const nextConfig = {
             },
         }
         : {}),
-};
+}
 
 // Bundle analyzer settings
 const withBundleAnalyzer = require('@next/bundle-analyzer')({

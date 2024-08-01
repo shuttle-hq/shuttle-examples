@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="EMPTY_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/actix-web/clerk/backend/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/actix-web/cookie-authentication/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/actix-web/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/actix-web/postgres/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/actix-web/static-files/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/actix-web/websocket-actorless/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/htmx-crud/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/jwt-authentication/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/metadata/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/oauth2/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/openai/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/postgres/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/qdrant/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/static-files/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/turso/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/axum/websocket/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bevy/hello-world/game/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/bevy/hello-world/server/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/custom-resource/pdo/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/custom-service/none/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/custom-service/request-scheduler/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/fullstack-templates/saas/backend/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loco/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/loco/hello-world/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/other/feature-flags/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/other/standalone-binary/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/poem/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/poem/mongodb/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/poise/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/dyn-templates/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/jwt-authentication/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/opendal-memory/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/persist/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/postgres/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/secrets/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/static-files/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/url-shortener/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/workspace/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/rocket/workspace/shared/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/salvo/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/salvo/image-rescaler/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/serenity/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/serenity/postgres/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/serenity/weather-forecast/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/shuttle-cron/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/thruster/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tide/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tower/hello-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tracing/custom-tracing-subscriber/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/warp/hello-world/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/actix-web/clerk/target" />
+      <excludeFolder url="file://$MODULE_DIR$/actix-web/cookie-authentication/target" />
+      <excludeFolder url="file://$MODULE_DIR$/actix-web/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/actix-web/postgres/target" />
+      <excludeFolder url="file://$MODULE_DIR$/actix-web/static-files/target" />
+      <excludeFolder url="file://$MODULE_DIR$/actix-web/websocket-actorless/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/htmx-crud/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/jwt-authentication/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/metadata/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/oauth2/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/openai/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/postgres/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/qdrant/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/static-files/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/turso/target" />
+      <excludeFolder url="file://$MODULE_DIR$/axum/websocket/target" />
+      <excludeFolder url="file://$MODULE_DIR$/bevy/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/custom-resource/pdo/target" />
+      <excludeFolder url="file://$MODULE_DIR$/custom-service/none/target" />
+      <excludeFolder url="file://$MODULE_DIR$/custom-service/request-scheduler/target" />
+      <excludeFolder url="file://$MODULE_DIR$/fullstack-templates/saas/target" />
+      <excludeFolder url="file://$MODULE_DIR$/loco/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/other/feature-flags/target" />
+      <excludeFolder url="file://$MODULE_DIR$/other/standalone-binary/target" />
+      <excludeFolder url="file://$MODULE_DIR$/poem/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/poem/mongodb/target" />
+      <excludeFolder url="file://$MODULE_DIR$/poise/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rocket/dyn-templates/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rocket/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rocket/jwt-authentication/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rocket/opendal-memory/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rocket/persist/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rocket/postgres/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rocket/secrets/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rocket/static-files/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rocket/url-shortener/target" />
+      <excludeFolder url="file://$MODULE_DIR$/rocket/workspace/target" />
+      <excludeFolder url="file://$MODULE_DIR$/salvo/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/salvo/image-rescaler/target" />
+      <excludeFolder url="file://$MODULE_DIR$/serenity/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/serenity/postgres/target" />
+      <excludeFolder url="file://$MODULE_DIR$/serenity/weather-forecast/target" />
+      <excludeFolder url="file://$MODULE_DIR$/shuttle-cron/target" />
+      <excludeFolder url="file://$MODULE_DIR$/thruster/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/tide/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/tower/hello-world/target" />
+      <excludeFolder url="file://$MODULE_DIR$/tracing/custom-tracing-subscriber/target" />
+      <excludeFolder url="file://$MODULE_DIR$/warp/hello-world/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
