@@ -57,7 +57,7 @@ async fn main(
 
     let router = Router::new().nest("/api", api_router).nest_service(
         "/",
-        ServeDir::new("dist").not_found_service(ServeFile::new("dist/index.html")),
+        ServeDir::new("frontend/dist").not_found_service(ServeFile::new("frontend/dist/index.html")),
     );
 
     Ok(router.into())

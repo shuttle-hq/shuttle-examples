@@ -17,8 +17,8 @@ users will be able to view their customers, sales records as well as some analyt
 ## Pre-requisites
 
 - Rust
-- Node.js/NPM.
-- Typescript.
+- Node.js/NPM
+- Typescript
 - [cargo-shuttle](https://www.shuttle.rs)
 
 ## Instructions for Usage
@@ -37,20 +37,17 @@ users will be able to view their customers, sales records as well as some analyt
 ## Development Scripts
 
 - **Using `dev` for Development:**
-    - Run `npm run dev` to start your application with live reload capabilities. This script uses `turbowatch` to
-      monitor changes in both the frontend and backend.
-    - Visit [http://localhost:8000](http://localhost:8000) once the app has built.
-    - If you prefer using `cargo-watch` instead of `turbowatch`, the watch feature can be disabled in
-      the `turbowatch.ts` file.
-- **Frontend-Focused Development with `next-dev`:**
-    - For a frontend-specific development workflow, use `npm run next-dev`.
-    - This script runs Next.js in a development mode optimized for faster builds and reloads, enhancing your frontend
-      development experience.
+  - Run `npm run dev` to start your application with live reload capabilities. This script uses `concurrently` to run both the Next.js dev server and the Rust backend simultaneously. API requests are proxied to the backend during development for seamless integration.
+  - Visit [http://localhost:3000](http://localhost:3000) once the app has built.
+
+- **Serving Static Files with `static`:**
+  - Run `npm run static` to build your application and serve it as a static site.
+  - Visit [http://localhost:8000](http://localhost:8000) to view the statically exported site.
+
 - **Analyzing Bundle Size with `analyze`:**
-    - The `analyze` script is designed to provide insights into the bundle size of your Next.js application.
+    - The `analyze` script is designed to provide insights into the bundle size of your application.
     - Run `npm run analyze` to generate a detailed report of the size of each component and dependency in your bundle.
-    - This is particularly useful for identifying large dependencies or components that could be optimized for better
-      performance.
+    - This is particularly useful for identifying large dependencies or components that could be optimized for better performance.
 
 ![Main page for Next.js + Shuttle Saas Template](./Mainpage.png)
 
