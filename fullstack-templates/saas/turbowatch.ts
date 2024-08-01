@@ -25,6 +25,7 @@ function executeCommand(command: string | string[], abortSignal?: AbortSignal): 
         process = spawn(cmd, args, {
             cwd: __dirname,
             stdio: 'inherit',
+            shell: true,
         });
 
         process.on('close', (code) => {

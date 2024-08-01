@@ -5,6 +5,6 @@ edition = "2021"
 
 [dependencies]
 poem = "3.0.0"
-shuttle-poem = "0.45.0"
-shuttle-runtime = "0.45.0"
+shuttle-poem = "0.47.0"
+shuttle-runtime = "0.47.0"
 tokio = "1.26.0"

@@ -24,6 +24,7 @@ qdrant = "https://avatars.githubusercontent.com/u/73504361?v=4"
 nextjs = "https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png"
 mongodb = "https://avatars.githubusercontent.com/u/45120?v=4"
 opendal = "https://avatars.githubusercontent.com/u/47359?v=4"
+openai = "https://avatars.githubusercontent.com/u/14957082?v=4"
 # fallback
 shuttle = "https://avatars.githubusercontent.com/u/54710151?v=4"
 
@@ -200,6 +201,13 @@ path = "axum/oauth2"
 use_cases = ["Web app", "Authentication"]
 tags = ["axum", "oauth"]
 
+[templates.axum-openai]
+title = "OpenAI ChatGPT chat"
+description = "Connect your app to OpenAI ChatGPT"
+path = "axum/openai"
+use_cases = ["Web app", "AI"]
+tags = ["openai", "axum"]
+
 [templates.axum-postgres]
 title = "Postgres"
 description = "Todo list with a Postgres database"
@@ -320,7 +328,7 @@ use_cases = ["Discord bot"]
 tags = ["serenity"]
 
 [templates.shuttle-cron]
-title = "Shutte custom Cron service"
+title = "Shuttle custom Cron service"
 description = "Schedule tasks on a cron schedule with apalis"
 path = "shuttle-cron"
 use_cases = ["Cron jobs", "Storage"]
@@ -370,6 +378,13 @@ description = "A custom PDO resource for the Shuttle main macro"
 path = "custom-resource/pdo"
 use_cases = []
 tags = ["diy"]
+
+[examples.feature-flags]
+title = "Shuttle feature flag"
+description = "How to use cargo feature flags on Shuttle"
+path = "other/feature-flags"
+use_cases = []
+tags = ["diy", "axum"]
 
 [examples.standalone-binary]
 title = "Standalone binary"
