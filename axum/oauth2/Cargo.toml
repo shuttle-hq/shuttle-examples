@@ -14,7 +14,7 @@ serde = { version = "1.0.183", features = ["derive"] }
 shuttle-axum = "0.47.0"
 shuttle-runtime = "0.47.0"
 shuttle-shared-db = { version = "0.47.0", features = ["postgres", "sqlx"] }
-sqlx = { version = "0.8.0", features = ["macros", "chrono"] }
+sqlx = { version = "0.8.2", features = ["macros", "chrono"] }
 thiserror = "1.0.57"
 time = "0.3.25"
 tokio = "1.28.2"
