@@ -1,0 +1,11 @@
+[package]
+name = "firecrawl-example"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.7.4"
+shuttle-firecrawl = { version = "0.47.0", git = "https://github.com/joshua-mo-143/shuttle.git" }
+shuttle-axum = "0.47.0"
+shuttle-runtime = "0.47.0"
+tokio = "1.28.2"
