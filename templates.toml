@@ -47,10 +47,18 @@ use_cases = ["Web app"]
 tags = ["axum"]
 template = "axum"
 
+[starters.axum-firecrawl]
+title = "Axum with Firecrawl"
+description = "Using the Firecrawl annotation resource with Shuttle"
+path = "axum/firecrawl"
+use_cases = ["Web app"]
+tags = ["axum", "firecrawl"]
+template = "axum"
+
 [starters.bevy-hello-world]
 title = "Bevy"
 description = "Data driven game engine that compiles to WASM"
-path = "bevy/hello-world"
+path = "bevy/hello-world/"
 use_cases = ["Web app", "Game"]
 tags = ["bevy", "axum"]
 
