@@ -1,6 +1,5 @@
 use axum::{extract::State, http::StatusCode, response::IntoResponse, Json};
 use serde::{Deserialize, Serialize};
-// use time::Date;
 
 use crate::AppState;
 
@@ -50,7 +49,7 @@ pub async fn get_dashboard_data(
         FROM deals
         WHERE owner_id = (SELECT id FROM users WHERE email = $1)",
     )
-    .bind(&req.email.to_string())
+    .bind(&req.email)
     .fetch_one(&state.postgres)
     .await
     {
