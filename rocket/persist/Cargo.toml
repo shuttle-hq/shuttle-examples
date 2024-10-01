@@ -6,7 +6,7 @@ edition = "2021"
 [dependencies]
 rocket = { version = "0.5.0", features = ["json"] }
 serde = { version = "1.0.148", features = ["derive"] }
-shuttle-persist = "0.47.0"
-shuttle-rocket = "0.47.0"
-shuttle-runtime = "0.47.0"
+shuttle-persist = "0.48.0"
+shuttle-rocket = "0.48.0"
+shuttle-runtime = "0.48.0"
 tokio = "1.26.0"
