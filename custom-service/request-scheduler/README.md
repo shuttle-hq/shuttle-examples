@@ -13,7 +13,7 @@ and sets up an [`axum::Server`](https://github.com/tokio-rs/axum) that sends
 jobs to a `CronRunner`.
 
 # Usage
-Run `cargo shuttle run` to spin up the service locally.
+Run `shuttle run` to spin up the service locally.
 
 Fire a POST request to the `set-schedule` URL to create a new cron job. Use 
 the provided `request.sh` for a quick example or the below snippet:

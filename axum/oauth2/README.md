@@ -13,4 +13,4 @@ GOOGLE_OAUTH_CLIENT_ID = "your-client-id"
 GOOGLE_OAUTH_CLIENT_SECRET = "your-client-secret"
 ```
 
-Use `cargo shuttle run` and visit `http://localhost:8000` once the app is running, then try it out!
+Use `shuttle run` and visit `http://localhost:8000` once the app is running, then try it out!
