@@ -1,1 +1,4 @@
-assets = ["assets/*"]
+[build]
+assets = [
+    "assets",
+]

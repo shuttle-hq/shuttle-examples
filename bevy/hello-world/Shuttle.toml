@@ -1,1 +1,9 @@
-assets = ["dist/*"]
+[deploy]
+include = [
+    "dist/*",
+]
+
+[build]
+assets = [
+    "dist/*",
+]
