@@ -1,4 +1,9 @@
-name = "shuttle-actix-react-clerk"
+[deploy]
+include = [
+    "frontend/dist/*",
+]
+
+[build]
 assets = [
     "frontend/dist/*",
 ]

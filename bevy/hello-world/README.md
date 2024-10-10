@@ -17,4 +17,4 @@ If you don't have `make` installed, you can run the command manually.
 make build
 ```
 
-Go to the project workspace root or the `server` folder, run `cargo shuttle run`, then visit `http://localhost:8000/game`, you should see your Bevy program in action!
+Go to the project workspace root or the `server` folder, run `shuttle run`, then visit `http://localhost:8000/game`, you should see your Bevy program in action!

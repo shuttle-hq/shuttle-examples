@@ -20,8 +20,8 @@ Get the `VITE_CLERK_PUBLISHABLE_KEY` secret and put it in `frontend/.env`.
 
 cd into the frontend and run `npm install` and `npm run build`. This builds the frontend assets and places them in `frontend/dist`.
 
-cd back to the root and run `cargo shuttle run`.
+cd back to the root and run `shuttle run`.
 The backend serves the web page from the dist folder, and an auth-protected API that fetches the list of all users that have signed up so far.
 
-You can then do `cargo shuttle project start` and `cargo shuttle deploy`, but consider switching to a production key from Clerk.
+You can then do `shuttle deploy`, but consider switching to a production key from Clerk.
 The development key can still be used in `Secrets.dev.toml`.

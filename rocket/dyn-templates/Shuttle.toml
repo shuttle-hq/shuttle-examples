@@ -1,1 +1,4 @@
-name = "static-files-rocket-app"
+[build]
+assets = [
+    "templates",
+]

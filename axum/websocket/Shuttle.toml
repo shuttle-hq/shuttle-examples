@@ -1,1 +1,4 @@
-name = "websocket-axum-app"
+[build]
+assets = [
+    "static",
+]
