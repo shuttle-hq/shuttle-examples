@@ -26,7 +26,7 @@ users will be able to view their customers, sales records as well as some analyt
 - Initialize the template with:
 
     ```sh
-    cargo shuttle init --from shuttle-hq/shuttle-examples --subfolder fullstack-templates/saas
+    shuttle init --from shuttle-hq/shuttle-examples --subfolder fullstack-templates/saas
     ```
 
 - cd into the folder
@@ -61,4 +61,4 @@ users will be able to view their customers, sales records as well as some analyt
   like [psql](https://www.postgresql.org/docs/current/app-psql.html) or [pgAdmin](https://www.pgadmin.org/).
 - If connecting to external services like Stripe doesn't work, try checking your Secrets.toml file.
 - Shuttle connects by default to port 8000 - if you're currently already using something at port 8000, you can add
-  the `--port <port-number>` to the `cargo shuttle run` command to change this.
+  the `--port <port-number>` to the `shuttle run` command to change this.

@@ -38,10 +38,10 @@ function executeCommand(command: string | string[], abortSignal?: AbortSignal): 
 
 let shuttleCliAvailable = false;
 
-// Function to check if cargo shuttle is installed
+// Function to check if shuttle is installed
 function checkShuttleCli(): Promise<void> {
     return new Promise((resolve, reject) => {
-        exec('cargo shuttle --version', (error, stdout, _stderr) => {
+        exec('shuttle --version', (error, stdout, _stderr) => {
             if (error) {
                 console.error(`Shuttle check failed: ${error}`);
                 return reject(error);
@@ -53,13 +53,13 @@ function checkShuttleCli(): Promise<void> {
     });
 }
 
-// Check for cargo shuttle once at the start
+// Check for shuttle once at the start
 (async () => {
     try {
-        console.log('Checking for cargo shuttle...');
+        console.log('Checking for shuttle CLI...');
         await checkShuttleCli();
     } catch (error) {
-        console.error('Failed to check cargo shuttle:', error);
+        console.error('Failed to check shuttle CLI:', error);
         shuttleCliAvailable = false;
     }
 })();
@@ -108,9 +108,9 @@ export default defineConfig({
             // Routine that is executed when file changes are detected
             onChange: async ({abortSignal}) => {
                 if (shuttleCliAvailable) {
-                    await executeCommand(['cargo', 'shuttle', 'run'], abortSignal);
+                    await executeCommand(['shuttle', 'run'], abortSignal);
                 } else {
-                    console.error('Shuttle not available, skipping cargo shuttle run');
+                    console.error('Shuttle not available, skipping shuttle run');
                 }
             },
             // Retry a task if it fails. Otherwise, watch program will throw an error if trigger fails.
