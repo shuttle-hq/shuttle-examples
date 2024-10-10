@@ -15,7 +15,7 @@ shuttle init --from https://github.com/shuttle-hq/shuttle-examples --subfolder a
 
 # GitHub prefix. Change to 'gl:' or 'bb:' for GitLab or BitBucket
 shuttle init --from gh:username/repository
-# Also GitHub
+# By default, 'gh:' (GitHub) is assumed
 shuttle init --from username/repository
 
 # From local folder
