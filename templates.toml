@@ -58,7 +58,7 @@ template = "axum"
 [starters.bevy-hello-world]
 title = "Bevy"
 description = "Data driven game engine that compiles to WASM"
-path = "bevy/hello-world/"
+path = "bevy/hello-world"
 use_cases = ["Web app", "Game"]
 tags = ["bevy", "axum"]
 
