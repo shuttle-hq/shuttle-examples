@@ -49,7 +49,7 @@ template = "axum"
 
 [starters.axum-firecrawl]
 title = "Axum with Firecrawl"
-description = "Using the Firecrawl annotation resource with Shuttle"
+description = "Using the Firecrawl AI service with Shuttle to scrape pages"
 path = "axum/firecrawl"
 use_cases = ["Web app"]
 tags = ["axum", "firecrawl"]

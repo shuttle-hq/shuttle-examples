@@ -4,10 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-shuttle-runtime = { version = "0.47.0", git = "https://github.com/joshua-mo-143/shuttle.git", branch = "firecrawl" }
-
 axum = "0.7.4"
-shuttle-firecrawl = { version = "0.47.0", git = "https://github.com/joshua-mo-143/shuttle.git", branch = "firecrawl" }
-shuttle-axum = { version = "0.47.0", git = "https://github.com/joshua-mo-143/shuttle.git", branch = "firecrawl" }
+firecrawl = "1.0.0"
+serde = { version = "1.0.210", features = ["derive"] }
+shuttle-axum = "0.48.0"
+shuttle-runtime = "0.48.0"
 tokio = "1.28.2"
-serde_json = "1.0.128"
+url = { version = "2.5.2", features = ["serde"] }
