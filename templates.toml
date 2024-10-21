@@ -46,6 +46,14 @@ use_cases = ["Web app"]
 tags = ["axum"]
 template = "axum"
 
+[starters.axum-firecrawl]
+title = "Axum with Firecrawl"
+description = "Using the Firecrawl AI service with Shuttle to scrape pages"
+path = "axum/firecrawl"
+use_cases = ["Web app"]
+tags = ["axum", "firecrawl"]
+template = "axum"
+
 [starters.bevy-hello-world]
 title = "Bevy"
 description = "Data driven game engine that compiles to WASM"
