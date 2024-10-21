@@ -22,7 +22,6 @@ clerk = "https://avatars.githubusercontent.com/u/49538330?v=4"
 htmx = "https://raw.githubusercontent.com/bigskysoftware/htmx/8e26d12c33caf7dc99c49d4918e7b8abd8028f98/www/static/img/htmx_logo.2.png"
 qdrant = "https://avatars.githubusercontent.com/u/73504361?v=4"
 nextjs = "https://assets.vercel.com/image/upload/v1662130559/nextjs/Icon_light_background.png"
-mongodb = "https://avatars.githubusercontent.com/u/45120?v=4"
 opendal = "https://avatars.githubusercontent.com/u/47359?v=4"
 openai = "https://avatars.githubusercontent.com/u/14957082?v=4"
 # fallback
@@ -265,13 +264,6 @@ path = "fullstack-templates/saas"
 use_cases = ["Web app", "Authentication", "Storage", "Monetization"]
 tags = ["nextjs", "axum", "database", "postgres", "typescript", "tailwind"]
 
-[templates.poem-mongodb]
-title = "MongoDB"
-description = "Todo list with a MongoDB database"
-path = "poem/mongodb"
-use_cases = ["Web app", "Storage"]
-tags = ["mongodb", "poem", "database"]
-
 [templates.rocket-dyn-templates]
 title = "Handlebars dynamic templates"
 description = "HTML templating with Handlebars"
@@ -358,13 +350,6 @@ description = "Basic usage of Shuttle Metadata"
 path = "axum/metadata"
 use_cases = []
 tags = ["axum"]
-
-[examples.persist]
-title = "Shuttle Persist"
-description = "Basic usage of shuttle-persist"
-path = "rocket/persist"
-use_cases = ["Web app", "Storage"]
-tags = ["rocket"]
 
 [examples.secrets]
 title = "Shuttle Secrets"

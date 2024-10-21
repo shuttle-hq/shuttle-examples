@@ -1,1 +1,4 @@
-name = "websocket-actorless-actix-web-app"
+[build]
+assets = [
+    "static/*",
+]
