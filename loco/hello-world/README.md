@@ -14,10 +14,6 @@ Welcome to the [Loco](https://loco.rs) Hello World Shuttle Template, designed wi
 
 So see more Loco features, check out our [documentation website](https://loco.rs/docs/getting-started/tour/).
 
-## Quick Start
+## How to use this template
 
-To launch your app, simply use the following command:
-
-```sh
-shuttle run
-```
+Run the project and visit <http://localhost:8000>.

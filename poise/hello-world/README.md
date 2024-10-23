@@ -2,6 +2,8 @@
 
 In this example we will deploy a Poise/Serenity bot with Shuttle that responds to the `/hello` command with `world!`. To run this bot we need a valid Discord Token. To get started log in to the [Discord developer portal](https://discord.com/developers/applications).
 
+## How to use this template
+
 1. Click the New Application button, name your application and click Create.
 2. Navigate to the Bot tab in the lefthand menu, and add a new bot.
 3. On the bot page click the Reset Token button to reveal your token. Put this token in your `Secrets.toml`. It's very important that you don't reveal your token to anyone, as it can be abused. Create a `.gitignore` file to omit your `Secrets.toml` from version control.

@@ -1,8 +1,10 @@
-# Shuttle shared Postgres DB with Actix Web
+# Actix Web with Shuttle Shared DB (Postgres)
 
 This template shows how to connect a Postgres database and use it for a simple TODO list app.
 
-## Example usage
+## How to use this template:
+
+Run the project then run the following `curl` commands below:
 
 ```bash
 curl -X POST -H 'content-type: application/json' localhost:8000/todos --data '{"note":"My todo"}'

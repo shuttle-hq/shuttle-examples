@@ -1,6 +1,8 @@
+# Shuttle Custom Service
+
 This template shows how to create your own custom Shuttle service that can run anything HTTP-based.
 
-## Example usage
+## How to use this template
 
 Set up whatever you want to do in the `bind()` function, then visit <http://localhost:8000> (or your relevant routes) to try it out.
 

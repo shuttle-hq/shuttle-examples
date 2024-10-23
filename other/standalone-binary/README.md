@@ -8,3 +8,9 @@ All startup logic is placed in the binary source files, while the implementation
 - `src/bin/standalone.rs` is without Shuttle, run with `cargo run --bin standalone` (you can change the name)
 
 This example shows how to use separate logic for getting secrets (Shuttle secrets vs homemade solution), but the same approach can be applied to other resources that are initiated by Shuttle's main function.
+
+## How to use this template
+
+Run the project and visit <http://localhost:8000>.
+
+You can use `cargo run --bin standalone` to run the non-Shuttle binary.

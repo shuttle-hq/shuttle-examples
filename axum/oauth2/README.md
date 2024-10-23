@@ -1,8 +1,8 @@
-# Google OAuth in Axum
+# Axum with Google OAuth
 
 This template is an example of how you can implement Google OAuth using the Axum web framework in Rust.
 
-## Prerequisites
+## How to use this template
 
 Make sure you set up your Google OAuth, which you can find a link to set up [here.](https://console.cloud.google.com/apis/dashboard)
 

@@ -1,4 +1,4 @@
-# Actix Web static files
+## Actix Web Static Files
 
 This template uses `actix_files` to serve the files in the `assets` directory.
 

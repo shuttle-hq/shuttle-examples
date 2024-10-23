@@ -8,7 +8,8 @@ When the cron job is called, the data is grabbed from the `JobContext` and we th
 
 The actual function to be ran itself is stored in `job_fn()` in the main function, as a function pointer.
 
-# Usage
+## How to use this template
+
 Run `shuttle run` to spin up the service locally.
 
 You can change the behavior of the cronjob by editing the `execute()` function for `CronjobData`.

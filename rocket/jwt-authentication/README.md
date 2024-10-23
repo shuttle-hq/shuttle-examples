@@ -1,4 +1,4 @@
-# Issue and verify JWT for authentication
+# Rocket with JWT authentication
 
 This example shows how to use [Rocket request guards](https://rocket.rs/v0.5-rc/guide/requests/#request-guards) for authentication with [JSON Web Tokens](https://jwt.io/) (JWT for short).
 The idea is that all requests authenticate first at <https://authentication-rocket-app.shuttleapp.rs/login> to get a JWT.
@@ -35,7 +35,7 @@ shuttle deploy
 
 Now make a note of the `Host` for the deploy to use in the examples below. Or just use `authentication-rocket-app.shuttleapp.rs` as the host below.
 
-### Seeing it in action
+## How to use this template
 
 First, we should be able to access the public endpoint without any authentication using:
 

@@ -1,6 +1,8 @@
+# Axum with Turso
+
 An example that showcases using Turso with Axum and Shuttle.
 
-## Example usage
+## How to use this template
 
 Set your `TURSO_DB_TOKEN` in Secrets.toml and Turso database in `src/main.rs` in the annotation.
 

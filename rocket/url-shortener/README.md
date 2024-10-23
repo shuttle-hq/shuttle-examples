@@ -1,8 +1,8 @@
-# Url Shortener
+# Rocket URL Shortener
 
 A URL shortener that you can use from your terminal - built with shuttle, rocket and postgres/sqlx.
 
-## How to use it
+## How to use this template
 
 You can use this URL shortener directly from your terminal. Just copy and paste this command to your terminal and replace `<URL>` with the URL that you want to shorten
 

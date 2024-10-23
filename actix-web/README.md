@@ -1,4 +1,4 @@
-# Actix Web with shuttle
+# Actix Web with Shuttle
 
 Normally one would configure an application with [Actix Web](https://docs.rs/actix-web/latest/actix_web/index.html) using the [App](https://docs.rs/actix-web/latest/actix_web/struct.App.html) struct. However, shuttle needs to move the users configuration across threads to start the server on our backend, and the `App` struct is `!Send` and `!Sync`.
 

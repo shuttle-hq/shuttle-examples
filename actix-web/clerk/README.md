@@ -1,4 +1,4 @@
-# Using Clerk auth with a Rust Actix web backend
+# Actix Web with Clerk auth
 
 This template uses Actix-web and the clerk-rs crate for providing authentication from Clerk in the backend.
 

@@ -21,7 +21,7 @@ users will be able to view their customers, sales records as well as some analyt
 - Typescript.
 - [cargo-shuttle](https://www.shuttle.rs)
 
-## Instructions for Usage
+## How to use this template
 
 - Initialize the template with:
 
