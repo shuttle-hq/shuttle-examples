@@ -25,7 +25,7 @@ struct State {
 }
 
 const PAUSE_SECS: u64 = 15;
-const STATUS_URI: &str = "https://api.shuttle.rs";
+const STATUS_URI: &str = "https://api.shuttle.dev";
 
 #[derive(Serialize)]
 struct Response {

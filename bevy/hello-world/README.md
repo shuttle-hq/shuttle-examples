@@ -1,6 +1,19 @@
 # Bevy on Shuttle (with Axum)
 
+## Introduction
+
 Example of how you can compile Bevy to WASM and run it on Shuttle.
+
+## Features
+
+- A Bevy program that prints `Hello, world!`.
+- A server that runs the WASM-compiled Bevy program.
+
+## Pre-requisites
+
+- Rust
+- [Bevy dependencies](https://github.com/bevyengine/bevy/blob/main/docs/linux_dependencies.md)
+- [cargo-shuttle](https://www.shuttle.dev)
 
 ## How to use this template
 
@@ -20,3 +33,10 @@ make build
 ```
 
 Go to the project workspace root or the `server` folder, run `shuttle run`, then visit `http://localhost:8000/game`, you should see your Bevy program in action!
+
+Once you're ready to deploy, use `shuttle deploy`.
+
+## Troubleshooting
+- Shuttle connects by default to port 8000 - if you're currently already using something at port 8000, you can add
+  the `--port <port-number>` to the `shuttle run` command to change this.
+- Don't forget to install Bevy dependencies (as above) if you get compilation errors.
