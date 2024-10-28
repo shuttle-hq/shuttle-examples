@@ -1,8 +1,8 @@
-# Actix Web Static Files
+## Serving Static Assets with Rocket
 
 ## Introduction
 
-This template uses `actix_files` to serve the files in the `assets` directory.
+This example shows how to serve static assets using [rocket](https://github.com/rwf2/rocket) and Shuttle.
 
 ## Features
 
@@ -15,14 +15,9 @@ This template uses `actix_files` to serve the files in the `assets` directory.
 
 ## How to use this template
 
-Run the project with `shuttle run`.
+Run this project with `shuttle run`.
 
-Then run the following `curl` command below (or visit <http://localhost:8000/index.html>):
-
-```bash
-curl localhost:8000/index.html
-# <h1>Hello world!</h1>
-```
+Visit <http://localhost:8000/index.html> to try it out.
 
 Once you're ready to deploy, use `shuttle deploy`.
 

@@ -1,12 +1,12 @@
-# Salvo image rescaler
+# Axum Hello World
 
 ## Introduction
 
-This is a simple example showing how to use path parameters in Salvo and the `image` crate to load and manipulate an image.
+A `Hello world!` example for using Axum with Shuttle.
 
 ## Features
 
-- A route that returns a resized version of the Shuttle logo.
+- A route that returns `Hello, world!`.
 
 ## Pre-requisites
 
@@ -17,11 +17,10 @@ This is a simple example showing how to use path parameters in Salvo and the `im
 
 Run the project with `shuttle run`.
 
-Visiting <http://localhost:8000/400/400> returns the Shuttle logo image but rescaled to 400 x 400 pixels.
+Visiting <http://localhost:8000> should output `Hello, world!`.
 
-When you're ready to deploy, use `shuttle deploy`.
+Once you're ready to deploy, use `shuttle deploy`.
 
 ## Troubleshooting
-
 - Shuttle connects by default to port 8000 - if you're currently already using something at port 8000, you can add
   the `--port <port-number>` to the `shuttle run` command to change this.

@@ -1,12 +1,12 @@
-# Salvo image rescaler
+# Poem Hello World
 
 ## Introduction
 
-This is a simple example showing how to use path parameters in Salvo and the `image` crate to load and manipulate an image.
+An example that showcases using the `poem` web service framework with shuttle.
 
 ## Features
 
-- A route that returns a resized version of the Shuttle logo.
+- A route that returns `Hello, world!`.
 
 ## Pre-requisites
 
@@ -17,7 +17,7 @@ This is a simple example showing how to use path parameters in Salvo and the `im
 
 Run the project with `shuttle run`.
 
-Visiting <http://localhost:8000/400/400> returns the Shuttle logo image but rescaled to 400 x 400 pixels.
+Visit <http://localhost:8000> to try it out.
 
 When you're ready to deploy, use `shuttle deploy`.
 

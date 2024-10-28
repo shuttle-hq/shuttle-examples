@@ -5,7 +5,7 @@ const cards = [
   {
     title: 'Deployed from Shuttle',
     description: 'Deployed via Shuttle, a Rust-native cloud dev platform.',
-    href: 'https://www.shuttle.rs',
+    href: 'https://www.shuttle.dev',
   },
   {
     title: 'Learn About Rust',
@@ -50,7 +50,7 @@ export default function Home() {
 
           <p className="text-xs">
             Powered by{' '}
-            <a className="font-semibold" href="https://shuttle.rs" target="_blank">
+            <a className="font-semibold" href="https://shuttle.dev" target="_blank">
               🚀 Shuttle
             </a>
           </p>

@@ -1,27 +1,29 @@
-# Actix Web Static Files
+# Axum with Turso
 
 ## Introduction
 
-This template uses `actix_files` to serve the files in the `assets` directory.
+An example that showcases using Turso with Axum and Shuttle.
 
 ## Features
 
-- Plain HTML-based frontend
+- Use Turso to store and retrieve database records.
 
 ## Pre-requisites
 
 - Rust
+- Turso user account
 - [cargo-shuttle](https://www.shuttle.dev)
 
 ## How to use this template
 
+Set your `TURSO_DB_TOKEN` in Secrets.toml and Turso database in `src/main.rs` in the annotation.
+
 Run the project with `shuttle run`.
 
-Then run the following `curl` command below (or visit <http://localhost:8000/index.html>):
+Then try it out with the following `curl` command:
 
-```bash
-curl localhost:8000/index.html
-# <h1>Hello world!</h1>
+```sh
+curl http://localhost:8000 -H 'content-type: application/json' --data '{"uid":"1","email":"foo@bar.xyz"}'
 ```
 
 Once you're ready to deploy, use `shuttle deploy`.

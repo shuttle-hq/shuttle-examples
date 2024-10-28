@@ -1,12 +1,15 @@
-# Axum JWT authentication
+# Custom Shuttle Resource
 
 ## Introduction
 
-This template uses the `jsonwebtoken` crate to encode and decode claims in a JWT, which clients use in the Authorization HTTP header to access protected resources (endpoints).
+This template shows how to create your own custom Shuttle resource in a Shuttle project, using Axum for the `main.rs` file to set up the route.
+
+Note that PDO is short for Plain Data Object.
 
 ## Features
 
-- JWT based authentication
+- A `lib.rs` file that contains code for a custom Shuttle resource
+- A `main.rs` file that uses the
 
 ## Pre-requisites
 
@@ -15,7 +18,7 @@ This template uses the `jsonwebtoken` crate to encode and decode claims in a JWT
 
 ## How to use this template
 
-Run the project with `shuttle run`.
+Run the project using `shuttle run`.
 
 Visit <http://localhost:8000> to try it out.
 

@@ -1,12 +1,11 @@
-# Actix Web Static Files
+# Axum with Websockets
 
-## Introduction
-
-This template uses `actix_files` to serve the files in the `assets` directory.
+This template shows how to use websockets with Axum in a Shuttle project.
 
 ## Features
 
 - Plain HTML-based frontend
+- Websocket connection
 
 ## Pre-requisites
 
@@ -17,12 +16,7 @@ This template uses `actix_files` to serve the files in the `assets` directory.
 
 Run the project with `shuttle run`.
 
-Then run the following `curl` command below (or visit <http://localhost:8000/index.html>):
-
-```bash
-curl localhost:8000/index.html
-# <h1>Hello world!</h1>
-```
+Visit <http://localhost:8000> to try it out.
 
 Once you're ready to deploy, use `shuttle deploy`.
 

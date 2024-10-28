@@ -15,7 +15,7 @@ use std::{
 use tokio::sync::{mpsc, watch};
 
 const PAUSE_SECS: u64 = 15;
-const STATUS_URI: &str = "https://api.shuttle.rs";
+const STATUS_URI: &str = "https://api.shuttle.dev";
 
 type AppState = (
     mpsc::UnboundedSender<WsState>,
