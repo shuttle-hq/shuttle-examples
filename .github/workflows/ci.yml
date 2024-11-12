@@ -60,7 +60,7 @@ jobs:
 
     - name: Check formatting and Clippy
       shell: bash
-      run: ./ci.sh ${{ matrix.from-to }}
+      run: _scripts/ci.sh ${{ matrix.from-to }}
       env:
         RUSTC_WRAPPER: /home/runner/.cargo/bin/sccache
         CARGO_TARGET_DIR: /tmp/target
