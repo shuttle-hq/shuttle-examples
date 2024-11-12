@@ -25,7 +25,7 @@ struct State {
 }
 
 const PAUSE_SECS: u64 = 15;
-const STATUS_URI: &str = "https://api.shuttle.rs";
+const STATUS_URI: &str = "https://api.shuttle.dev/.healthz";
 
 #[derive(Serialize)]
 struct Response {
@@ -50,8 +50,9 @@ async fn main() -> ShuttleAxum {
         let duration = Duration::from_secs(PAUSE_SECS);
 
         loop {
-            let is_up = reqwest::get(STATUS_URI).await;
-            let is_up = is_up.is_ok();
+            let is_up = reqwest::get(STATUS_URI)
+                .await
+                .is_ok_and(|r| r.status().is_success());
 
             let response = Response {
                 clients_count: state_send.lock().await.clients_count,
