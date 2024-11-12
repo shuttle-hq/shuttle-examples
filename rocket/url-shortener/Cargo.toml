@@ -7,9 +7,9 @@ edition = "2021"
 nanoid = "0.4.0"
 rocket = { version = "0.5.0", features = ["json"] }
 serde = "1.0.148"
-shuttle-rocket = "0.48.0"
-shuttle-runtime = "0.48.0"
-shuttle-shared-db = { version = "0.48.0", features = ["postgres", "sqlx"] }
+shuttle-rocket = "0.49.0"
+shuttle-runtime = "0.49.0"
+shuttle-shared-db = { version = "0.49.0", features = ["postgres", "sqlx"] }
 sqlx = "0.8.2"
 tokio = "1.26.0"
 url = "2.3.1"
