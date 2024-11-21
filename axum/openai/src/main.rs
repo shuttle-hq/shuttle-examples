@@ -1,53 +1,71 @@
-use std::sync::Arc;
-
-use async_openai::{
-    config::OpenAIConfig,
-    types::{
-        ChatCompletionRequestMessage, ChatCompletionRequestUserMessageArgs,
-        CreateChatCompletionRequestArgs,
+use axum::{
+    http::{
+        header::{ACCEPT, AUTHORIZATION},
+        Method,
     },
-    Client,
+    routing::{get, post},
+    Router,
 };
-use axum::{extract::State, routing::post, Json, Router};
-use serde_json::{json, Value};
 
-struct AppState {
-    openai: Client<OpenAIConfig>,
-}
+pub mod endpoints;
+pub mod error;
+pub mod state;
 
-async fn chat(State(state): State<Arc<AppState>>, Json(v): Json<Value>) -> Result<Json<Value>, ()> {
-    let user_msg: ChatCompletionRequestMessage = ChatCompletionRequestUserMessageArgs::default()
-        .content(v["message"].as_str().unwrap())
-        .build()
-        .unwrap()
-        .into();
-    let req = CreateChatCompletionRequestArgs::default()
-        .model("gpt-4o-mini")
-        .messages(vec![user_msg])
-        .n(1)
-        .build()
-        .unwrap();
-    let res = state.openai.chat().create(req).await.unwrap();
-    let reply = res
-        .choices
-        .first()
-        .unwrap()
-        .message
-        .content
-        .as_ref()
-        .unwrap()
-        .to_owned();
-
-    Ok(Json(json!({ "response": reply })))
-}
+use shuttle_openai::async_openai::{config::OpenAIConfig, Client};
+use shuttle_runtime::DeploymentMetadata;
+use state::AppState;
+use tokio::net::TcpListener;
+use tower_http::{
+    cors::CorsLayer,
+    services::{ServeDir, ServeFile},
+};
 
 #[shuttle_runtime::main]
 async fn main(
+    #[shuttle_shared_db::Postgres] conn: String,
     #[shuttle_openai::OpenAI(api_key = "{secrets.OPENAI_API_KEY}")] openai: Client<OpenAIConfig>,
+    #[shuttle_runtime::Metadata] metadata: DeploymentMetadata,
 ) -> shuttle_axum::ShuttleAxum {
-    let state = Arc::new(AppState { openai });
+    let state = AppState::new(conn, openai)
+        .await
+        .map_err(|e| format!("Could not create application state: {e}"))
+        .unwrap();
 
-    let router = Router::new().route("/", post(chat)).with_state(state);
+    state.seed().await;
+
+    let origin = if metadata.env == shuttle_runtime::Environment::Deployment {
+        format!("{}.shuttle.app", metadata.project_name)
+    } else {
+        "127.0.0.1:8000".to_string()
+    };
+
+    let cors = CorsLayer::new()
+        .allow_credentials(true)
+        .allow_origin(vec![origin.parse().unwrap()])
+        .allow_headers(vec![AUTHORIZATION, ACCEPT])
+        .allow_methods(vec![Method::GET, Method::POST]);
+
+    let router = Router::new()
+        .route("/api/health", get(endpoints::health_check))
+        .route("/api/auth/register", post(endpoints::auth::register))
+        .route("/api/auth/login", post(endpoints::auth::login))
+        .route(
+            "/api/chat/conversations",
+            get(endpoints::openai::get_conversation_list),
+        )
+        .route(
+            "/api/chat/conversations/:id",
+            get(endpoints::openai::fetch_conversation_messages)
+                .post(endpoints::openai::send_message),
+        )
+        .route("/api/chat/create", post(endpoints::openai::create_chat))
+        .layer(cors)
+        .nest_service(
+            "/",
+            ServeDir::new("frontend/dist")
+                .not_found_service(ServeFile::new("frontend/dist/index.html")),
+        )
+        .with_state(state);
 
     Ok(router.into())
 }
