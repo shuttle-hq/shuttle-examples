@@ -8,13 +8,11 @@ use axum::{
 };
 
 pub mod endpoints;
-pub mod error;
 pub mod state;
 
 use shuttle_openai::async_openai::{config::OpenAIConfig, Client};
 use shuttle_runtime::DeploymentMetadata;
 use state::AppState;
-use tokio::net::TcpListener;
 use tower_http::{
     cors::CorsLayer,
     services::{ServeDir, ServeFile},

@@ -10,8 +10,8 @@ use shuttle_openai::async_openai::types::{
     ChatCompletionRequestMessage, ChatCompletionRequestSystemMessageArgs,
     ChatCompletionRequestUserMessageArgs, CreateChatCompletionRequestArgs,
 };
+use sqlx::postgres::PgRow;
 use sqlx::Row;
-use sqlx::{postgres::PgRow, types::JsonValue};
 
 use crate::state::AppState;
 
@@ -167,7 +167,7 @@ pub async fn send_message(
                     .unwrap(),
             ),
 
-            err => {
+            _ => {
                 return Err((
                     StatusCode::INTERNAL_SERVER_ERROR,
                     "Invalid chat role".to_string(),

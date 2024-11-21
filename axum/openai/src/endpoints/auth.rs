@@ -3,10 +3,10 @@ use argon2::{
     Argon2,
 };
 use axum::{
-    extract::{FromRequest, FromRequestParts, State},
+    extract::{FromRequestParts, State},
     http::StatusCode,
     response::IntoResponse,
-    Json, RequestPartsExt,
+    Json,
 };
 use axum_extra::extract::{
     cookie::{Cookie, SameSite},
