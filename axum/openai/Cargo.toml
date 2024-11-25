@@ -5,9 +5,22 @@ edition = "2021"
 
 [dependencies]
 async-openai = "0.23.0"
-axum = "0.7.3"
-serde_json = "1"
-shuttle-axum = "0.49.0"
-shuttle-openai = "0.49.0"
+argon2 = "0.5.3"
+axum = "0.7.4"
+axum-extra = { version = "0.9.4", features = ["cookie", "cookie-private"] }
+derive_more = { version = "1.0.0", features = ["full"] }
+jsonwebtoken = "9.3.0"
+serde = { version = "1.0.215", features = ["derive"] }
+serde_json = "1.0.133"
+
+sqlx = { version = "0.8.2", features = [
+    "runtime-tokio-rustls",
+    "postgres",
+    "macros",
+] }
+tokio = { version = "1.28.2", features = ["macros", "rt-multi-thread"] }
+tower-http = { version = "0.6.2", features = ["cors", "fs"] }
 shuttle-runtime = "0.49.0"
-tokio = "1.26.0"
+shuttle-axum = "0.49.0"
+shuttle-shared-db = { version = "0.49.0", features = ["postgres"] }
+shuttle-openai = "0.49.0"
