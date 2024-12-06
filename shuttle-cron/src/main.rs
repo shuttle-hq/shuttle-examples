@@ -1,13 +1,13 @@
-use apalis::cron::CronStream;
-use apalis::cron::Schedule;
-use apalis::layers::{DefaultRetryPolicy, Extension, RetryLayer};
-use apalis::postgres::PostgresStorage;
+use apalis::layers::retry::RetryPolicy;
 use apalis::prelude::*;
+use apalis_cron::CronStream;
+use apalis_cron::Schedule;
+use apalis_sql::postgres::PostgresStorage;
+use apalis_sql::Config;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use sqlx::{postgres::PgPoolOptions, PgPool};
 use std::str::FromStr;
-use tower::ServiceBuilder;
 
 #[derive(Clone)]
 struct CronjobData {
@@ -27,14 +27,8 @@ impl From<DateTime<Utc>> for Reminder {
     }
 }
 
-impl Job for Reminder {
-    const NAME: &'static str = "reminder::DailyReminder";
-}
-
-async fn say_hello_world(job: Reminder, ctx: JobContext) {
+async fn say_hello_world(job: Reminder, svc: Data<CronjobData>) {
     println!("Hello world from send_reminder()!");
-    // this lets you use variables stored in the CronjobData struct
-    let svc = ctx.data_opt::<CronjobData>().unwrap();
     // this executes CronjobData::execute()
     svc.execute(job);
 }
@@ -62,9 +56,13 @@ struct MyService {
 #[shuttle_runtime::async_trait]
 impl shuttle_runtime::Service for MyService {
     async fn bind(self, _addr: std::net::SocketAddr) -> Result<(), shuttle_runtime::Error> {
-        let storage = PostgresStorage::new(self.db);
         // set up storage
-        storage.setup().await.expect("Unable to run migrations :(");
+        PostgresStorage::setup(&self.db)
+            .await
+            .expect("Unable to run migrations :(");
+
+        let config = Config::new("reminder::DailyReminder");
+        let storage = PostgresStorage::new_with_config(self.db, config);
 
         let schedule = Schedule::from_str("* * * * * *").expect("Couldn't start the scheduler!");
 
@@ -72,28 +70,17 @@ impl shuttle_runtime::Service for MyService {
             message: "Hello world".to_string(),
         };
 
-        // create a servicebuilder for the cronjob
-        let service = ServiceBuilder::new()
-            .layer(RetryLayer::new(DefaultRetryPolicy))
-            .layer(Extension(cron_service_ext))
-            .service(job_fn(say_hello_world));
+        let persisted_cron = CronStream::new(schedule).pipe_to_storage(storage);
 
         // create a worker that uses the service created from the cronjob
         let worker = WorkerBuilder::new("morning-cereal")
-            .with_storage(storage.clone())
-            .stream(
-                CronStream::new(schedule.clone())
-                    .timer(apalis::prelude::timer::TokioTimer)
-                    .to_stream(),
-            )
-            .build(service.clone());
+            .data(cron_service_ext)
+            .retry(RetryPolicy::retries(5))
+            .backend(persisted_cron)
+            .build_fn(say_hello_world);
 
         // start your worker up
-        Monitor::new()
-            .register(worker)
-            .run()
-            .await
-            .expect("Unable to start worker");
+        worker.run().await;
 
         Ok(())
     }
