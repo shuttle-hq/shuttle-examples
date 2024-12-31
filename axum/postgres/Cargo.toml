@@ -6,8 +6,8 @@ edition = "2021"
 [dependencies]
 axum = "0.7.3"
 serde = { version = "1.0.188", features = ["derive"] }
-shuttle-axum = "0.49.0"
-shuttle-runtime = "0.49.0"
-shuttle-shared-db = { version = "0.49.0", features = ["postgres", "sqlx"] }
+shuttle-axum = { git = "https://github.com/shuttle-hq/shuttle", branch = "feat/enable-rds-on-new-platform"}
+shuttle-runtime = { git = "https://github.com/shuttle-hq/shuttle", branch = "feat/enable-rds-on-new-platform"}
+shuttle-aws-rds = { git = "https://github.com/shuttle-hq/shuttle", features = ["postgres", "sqlx"], branch = "feat/enable-rds-on-new-platform" } 
 sqlx = "0.8.2"
 tokio = "1.28.2"

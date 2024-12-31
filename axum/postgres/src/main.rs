@@ -42,7 +42,7 @@ struct MyState {
 }
 
 #[shuttle_runtime::main]
-async fn main(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
+async fn main(#[shuttle_aws_rds::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!()
         .run(&pool)
         .await
@@ -53,7 +53,6 @@ async fn main(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::Shut
         .route("/todos", post(add))
         .route("/todos/:id", get(retrieve))
         .with_state(state);
-
     Ok(router.into())
 }
 
