@@ -50,9 +50,9 @@ Setting Up the Development Environment
 
 1. Clone the Repository:
 
-   git clone https://github.com/your-username/your-repository.git
+   git clone https://github.com/shuttle-hq/shuttle-examples/detailed-api-examples/
 
-   cd your-repository
+   cd shuttle-examples/detailed-api-examples/
 
 
 
