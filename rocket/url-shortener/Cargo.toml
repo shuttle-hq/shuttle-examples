@@ -10,6 +10,6 @@ rocket = { version = "0.5.0", features = ["json"] }
 serde = "1.0.148"
 shuttle-rocket = "0.50.0"
 shuttle-runtime = "0.50.0"
-shuttle-shared-db = { version = "0.50.0", features = ["opendal"] }
+shuttle-shared-db = { version = "0.50.0", features = ["opendal-postgres"] }
 tokio = "1.26.0"
 url = "2.5.4"
