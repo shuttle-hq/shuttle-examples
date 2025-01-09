@@ -9,14 +9,20 @@ use rocket::{
 use url::Url;
 
 struct AppState {
-    op: opendal::Operator,
+    op: shuttle_shared_db::SerdeJsonOperator,
+}
+
+// for showcasing SerdeJsonOperator
+#[derive(serde::Serialize, serde::Deserialize)]
+struct U {
+    inner: String,
 }
 
 #[get("/<id>")]
 async fn redirect(id: String, state: &State<AppState>) -> Result<Redirect, status::Custom<String>> {
-    let url = state
+    let url: U = state
         .op
-        .read(&id.to_string())
+        .read_serialized(&id)
         .await
         .map_err(|err| match err.kind() {
             opendal::ErrorKind::NotFound => status::Custom(
@@ -26,7 +32,7 @@ async fn redirect(id: String, state: &State<AppState>) -> Result<Redirect, statu
             _ => status::Custom(Status::InternalServerError, "something went wrong".into()),
         })?;
 
-    Ok(Redirect::to(String::from_utf8(url.to_vec()).unwrap()))
+    Ok(Redirect::to(url.inner))
 }
 
 #[post("/", data = "<url>")]
@@ -45,7 +51,7 @@ async fn shorten<'r>(
 
     state
         .op
-        .write(&id.to_string(), url.into_bytes())
+        .write_serialized(&id.to_string(), &U { inner: url })
         .await
         .map_err(|_| status::Custom(Status::InternalServerError, "something went wrong".into()))?;
 
@@ -54,7 +60,7 @@ async fn shorten<'r>(
 
 #[shuttle_runtime::main]
 async fn main(
-    #[shuttle_shared_db::Postgres] op: opendal::Operator,
+    #[shuttle_shared_db::Postgres] op: shuttle_shared_db::SerdeJsonOperator,
 ) -> shuttle_rocket::ShuttleRocket {
     let state = AppState { op };
     let rocket = rocket::build()
