@@ -34,7 +34,7 @@ async fn retrieve(path: String, state: &State<MyState>) -> Result<String, BadReq
         .read(&path)
         .await
         .map_err(|e| BadRequest(e.to_string()))?;
-    let data = String::from_utf8_lossy(&bs).to_string();
+    let data = String::from_utf8_lossy(&bs.to_vec()).to_string();
     Ok(data)
 }
 
