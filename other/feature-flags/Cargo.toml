@@ -6,7 +6,7 @@ publish = false
 
 [dependencies]
 axum = "0.7.3"
-shuttle-axum = "0.50.0"
+shuttle-axum = { version = "0.50.0", default-features = false, features = ["axum-0-7"] }
 shuttle-runtime = "0.50.0"
 
 [features]
