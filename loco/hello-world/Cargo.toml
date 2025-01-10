@@ -12,8 +12,8 @@ edition = "2021"
 async-trait = "0.1.74"
 axum = "0.7.1"
 loco-rs = { version = "0.9.0", default-features = false, features = ["cli"] }
-shuttle-axum = { version = "0.50.0", default-features = false, features = ["axum-0-7"] }
-shuttle-runtime = { version = "0.50.0", default-features = false }
+shuttle-axum = { version = "0.51.0", default-features = false, features = ["axum-0-7"] }
+shuttle-runtime = { version = "0.51.0", default-features = false }
 serde = "*"
 serde_json = "*"
 tokio = "1.33.0"
