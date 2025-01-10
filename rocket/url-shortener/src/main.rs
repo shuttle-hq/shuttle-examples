@@ -6,74 +6,63 @@ use rocket::{
     response::{status, Redirect},
     routes, State,
 };
-use serde::Serialize;
-use sqlx::{FromRow, PgPool};
 use url::Url;
 
 struct AppState {
-    pool: PgPool,
+    op: shuttle_shared_db::SerdeJsonOperator,
 }
 
-#[derive(Serialize, FromRow)]
-struct StoredURL {
-    pub id: String,
-    pub url: String,
+// for showcasing SerdeJsonOperator
+#[derive(serde::Serialize, serde::Deserialize)]
+struct U {
+    inner: String,
 }
 
 #[get("/<id>")]
 async fn redirect(id: String, state: &State<AppState>) -> Result<Redirect, status::Custom<String>> {
-    let stored_url: StoredURL = sqlx::query_as("SELECT * FROM urls WHERE id = $1")
-        .bind(id)
-        .fetch_one(&state.pool)
+    let url: U = state
+        .op
+        .read_serialized(&id)
         .await
-        .map_err(|err| match err {
-            sqlx::Error::RowNotFound => status::Custom(
+        .map_err(|err| match err.kind() {
+            opendal::ErrorKind::NotFound => status::Custom(
                 Status::NotFound,
                 "the requested shortened URL does not exist".into(),
             ),
-            _ => status::Custom(
-                Status::InternalServerError,
-                "something went wrong, sorry 🤷".into(),
-            ),
+            _ => status::Custom(Status::InternalServerError, "something went wrong".into()),
         })?;
 
-    Ok(Redirect::to(stored_url.url))
+    Ok(Redirect::to(url.inner))
 }
 
 #[post("/", data = "<url>")]
-async fn shorten(url: String, state: &State<AppState>) -> Result<String, status::Custom<String>> {
-    let id = &nanoid::nanoid!(6);
-
-    let parsed_url = Url::parse(&url).map_err(|err| {
+async fn shorten<'r>(
+    url: String,
+    state: &State<AppState>,
+    host: &'r rocket::http::uri::Host<'r>,
+) -> Result<String, status::Custom<String>> {
+    let _ = Url::parse(&url).map_err(|err| {
         status::Custom(
             Status::UnprocessableEntity,
             format!("url validation failed: {err}"),
         )
     })?;
+    let id = &nanoid::nanoid!(6);
 
-    sqlx::query("INSERT INTO urls(id, url) VALUES ($1, $2)")
-        .bind(id)
-        .bind(parsed_url.as_str())
-        .execute(&state.pool)
+    state
+        .op
+        .write_serialized(&id.to_string(), &U { inner: url })
         .await
-        .map_err(|_| {
-            status::Custom(
-                Status::InternalServerError,
-                "something went wrong, sorry 🤷".into(),
-            )
-        })?;
+        .map_err(|_| status::Custom(Status::InternalServerError, "something went wrong".into()))?;
 
-    Ok(format!("https://s.shuttleapp.rs/{id}"))
+    Ok(format!("http://{host}/{id}\n"))
 }
 
 #[shuttle_runtime::main]
-async fn main(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_rocket::ShuttleRocket {
-    sqlx::migrate!()
-        .run(&pool)
-        .await
-        .expect("Failed to run migrations");
-
-    let state = AppState { pool };
+async fn main(
+    #[shuttle_shared_db::Postgres] op: shuttle_shared_db::SerdeJsonOperator,
+) -> shuttle_rocket::ShuttleRocket {
+    let state = AppState { op };
     let rocket = rocket::build()
         .mount("/", routes![redirect, shorten])
         .manage(state);

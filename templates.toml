@@ -293,10 +293,10 @@ tags = ["rocket"]
 
 [templates.rocket-url-shortener]
 title = "URL shortener"
-description = "Save long URLs behind a short one, with Postgres storage"
+description = "Save long URLs behind a short one, with OpenDAL/Postgres storage"
 path = "rocket/url-shortener"
 use_cases = ["Web app", "Storage"]
-tags = ["rocket", "database", "postgres"]
+tags = ["rocket", "database", "opendal", "postgres"]
 
 [templates.salvo-image-rescaler]
 title = "Image Rescaler"
