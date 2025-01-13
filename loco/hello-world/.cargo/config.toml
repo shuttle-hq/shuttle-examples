@@ -1,2 +1,5 @@
 [alias]
 loco = "run --bin hello_world-cli --"
+loco-tool = "run --"
+
+playground = "run --example playground"
