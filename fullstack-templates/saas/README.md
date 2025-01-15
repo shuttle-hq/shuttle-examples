@@ -17,9 +17,9 @@ users will be able to view their customers, sales records as well as some analyt
 ## Pre-requisites
 
 - Rust
-- Node.js/NPM.
-- Typescript.
-- [cargo-shuttle](https://www.shuttle.rs)
+- Node.js/NPM
+- Typescript
+- Shuttle CLI
 
 ## Instructions for Usage
 
