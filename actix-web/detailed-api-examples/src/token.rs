@@ -63,7 +63,6 @@ pub async fn verify_token(rdata : web::Json<TokenStruct>) -> Result<HttpResponse
         )));
     }
 
-    // Role ayırımı yap
     match rdata.role.as_str() {
         "admin" => {
             if rdata.requested_page == "admin_page" {
