@@ -1,0 +1,10 @@
+[package]
+name = "hello-world"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rama = "0.2.0-alpha.6"
+shuttle-rama = "0.50.0"
+shuttle-runtime = "0.50.0"
+tokio = "1.28.2"
