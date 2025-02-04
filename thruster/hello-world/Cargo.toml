@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-shuttle-thruster = "0.51.0"
-shuttle-runtime = "0.51.0"
+shuttle-thruster = "0.52.0"
+shuttle-runtime = "0.52.0"
 thruster = { version = "1.3.0", features = ["hyper_server"] }
 tokio = "1.26.0"

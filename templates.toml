@@ -242,13 +242,6 @@ path = "axum/websocket"
 use_cases = ["Web app", "Monitoring"]
 tags = ["axum", "websocket"]
 
-[templates.request-scheduler]
-title = "Request Scheduler"
-description = "Schedule requests with a cron schedule"
-path = "custom-service/request-scheduler"
-use_cases = ["Web app", "Cron jobs", "Storage"]
-tags = ["axum"]
-
 [templates.axum-next-fullstack-saas]
 title = "Fullstack SaaS"
 description = "Opinionated fullstack web app with pre-made routes and assets"
