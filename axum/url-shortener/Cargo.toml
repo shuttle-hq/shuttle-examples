@@ -1,0 +1,24 @@
+[package]
+name = "url-shortener"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.8.1"
+axum-extra = { version = "0.10.0", features = [ "typed-header" ] }
+axum-macros = "0.5.0"
+nanoid = "0.4.0"
+regex = "1.11.1"
+shuttle-axum = "0.51.0"
+shuttle-runtime = { version = "0.51.0", default-features = false }
+shuttle-shared-db = { version = "0.51.0", features = ["postgres", "sqlx"] }
+sqlx = "0.8.3"
+tokio = "1.43.0"
+tower = "0.5.2"
+tower-http = { version = "0.6.2", features = ["request-id", "trace", "util"] }
+tracing = { version = "0.1.41", features = ["log"] }
+tracing-bunyan-formatter = "0.3.10"
+tracing-log = "0.2.0"
+tracing-subscriber = { version = "0.3.19", features = ["registry", "env-filter"] }
+url = "2.5.4"
+uuid = { version = "1.12.1", features = ["v4"] }
