@@ -20,7 +20,7 @@ sqlx = { version = "0.8.2", features = [
 ] }
 tokio = { version = "1.28.2", features = ["macros", "rt-multi-thread"] }
 tower-http = { version = "0.6.2", features = ["cors", "fs"] }
-shuttle-runtime = "0.51.0"
-shuttle-axum = { version = "0.51.0", default-features = false, features = ["axum-0-7"] }
-shuttle-shared-db = { version = "0.51.0", features = ["postgres"] }
-shuttle-openai = "0.51.0"
+shuttle-runtime = "0.52.0"
+shuttle-axum = { version = "0.52.0", default-features = false, features = ["axum-0-7"] }
+shuttle-shared-db = { version = "0.52.0", features = ["postgres"] }
+shuttle-openai = "0.52.0"

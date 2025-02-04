@@ -13,8 +13,8 @@ default-run = "hello_world-cli"
 loco-rs = { version = "0.14.0", default-features = false }
 
 [dependencies]
-shuttle-axum = "0.51.0"
-shuttle-runtime = { version = "0.51.0", default-features = false }
+shuttle-axum = "0.52.0"
+shuttle-runtime = { version = "0.52.0", default-features = false }
 
 loco-rs = { workspace = true , features = ["cli"] }
 serde = { version = "1", features = ["derive"] }
