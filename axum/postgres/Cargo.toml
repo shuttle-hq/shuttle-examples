@@ -6,8 +6,8 @@ edition = "2021"
 [dependencies]
 axum = "0.7.3"
 serde = { version = "1.0.188", features = ["derive"] }
-shuttle-axum = { version = "0.52.0", default-features = false, features = ["axum-0-7"] }
-shuttle-runtime = "0.52.0"
-shuttle-shared-db = { version = "0.52.0", features = ["postgres", "sqlx"] }
+shuttle-axum = { version = "0.53.0", default-features = false, features = ["axum-0-7"] }
+shuttle-runtime = "0.53.0"
+shuttle-shared-db = { version = "0.53.0", features = ["postgres", "sqlx"] }
 sqlx = "0.8.2"
 tokio = "1.28.2"
