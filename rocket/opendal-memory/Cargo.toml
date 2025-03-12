@@ -7,7 +7,7 @@ edition = "2021"
 opendal = "0.51"
 rocket = { version = "0.5.0", features = ["json"] }
 serde = { version = "1.0.148", features = ["derive"] }
-shuttle-opendal = "0.52.0"
-shuttle-rocket = "0.52.0"
-shuttle-runtime = "0.52.0"
+shuttle-opendal = "0.53.0"
+shuttle-rocket = "0.53.0"
+shuttle-runtime = "0.53.0"
 tokio = "1.26.0"

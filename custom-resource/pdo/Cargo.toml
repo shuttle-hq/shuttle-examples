@@ -7,7 +7,7 @@ edition = "2021"
 async-trait = "0.1.56"
 axum = "0.7.3"
 serde = { version = "1", features = ["derive"] }
-shuttle-service = "0.52.0"
-shuttle-axum = { version = "0.52.0", default-features = false, features = ["axum-0-7"] }
-shuttle-runtime = "0.52.0"
+shuttle-service = "0.53.0"
+shuttle-axum = { version = "0.53.0", default-features = false, features = ["axum-0-7"] }
+shuttle-runtime = "0.53.0"
 tokio = "1.28.2"
