@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-async-openai = "0.23.0"
+async-openai = "0.28.0"
 argon2 = "0.5.3"
 axum = "0.7.4"
 axum-extra = { version = "0.9.4", features = ["cookie", "cookie-private"] }
@@ -12,7 +12,10 @@ derive_more = { version = "1.0.0", features = ["full"] }
 jsonwebtoken = "9.3.0"
 serde = { version = "1.0.215", features = ["derive"] }
 serde_json = "1.0.133"
-
+shuttle-axum = { version = "0.53.0", default-features = false, features = ["axum-0-7"] }
+shuttle-openai = "0.53.0"
+shuttle-runtime = "0.53.0"
+shuttle-shared-db = { version = "0.53.0", features = ["postgres"] }
 sqlx = { version = "0.8.2", features = [
     "runtime-tokio-rustls",
     "postgres",
@@ -20,7 +23,3 @@ sqlx = { version = "0.8.2", features = [
 ] }
 tokio = { version = "1.28.2", features = ["macros", "rt-multi-thread"] }
 tower-http = { version = "0.6.2", features = ["cors", "fs"] }
-shuttle-runtime = "0.53.0"
-shuttle-axum = { version = "0.53.0", default-features = false, features = ["axum-0-7"] }
-shuttle-shared-db = { version = "0.53.0", features = ["postgres"] }
-shuttle-openai = "0.53.0"
