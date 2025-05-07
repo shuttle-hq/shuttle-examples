@@ -5,9 +5,9 @@ edition = "2021"
 
 [dependencies]
 axum = "0.7.3"
-shuttle-axum = { version = "0.53.0", default-features = false, features = ["axum-0-7"] }
-shuttle-runtime = "0.53.0"
-shuttle-turso = "0.53.0"
+shuttle-axum = { version = "0.54.0", default-features = false, features = ["axum-0-7"] }
+shuttle-runtime = "0.54.0"
+shuttle-turso = "0.54.0"
 libsql = "0.6.0"
 tokio = "1.26.0"
 serde = { version = "1.0.164", features = ["derive"] }
