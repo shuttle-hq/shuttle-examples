@@ -1,10 +1,10 @@
 [package]
 name = "hello-world-tcp"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
-rama = "0.2.0-alpha.6"
-shuttle-rama = "0.50.0"
-shuttle-runtime = "0.50.0"
-tokio = "1.28.2"
+rama = "0.2"
+shuttle-rama = "0.54"
+shuttle-runtime = "0.54"
+tokio = "1.45"
