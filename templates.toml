@@ -149,7 +149,7 @@ title = "Postgres"
 description = "Todo list with a Postgres database"
 path = "actix-web/postgres"
 use_cases = ["Web app", "Storage"]
-tags = ["postgres", "actix-web", "database"]
+tags = ["actix-web", "postgres", "database"]
 
 [templates.actix-web-clerk-react]
 title = "Clerk authentication"
@@ -212,7 +212,7 @@ title = "Postgres"
 description = "Todo list with a Postgres database"
 path = "axum/postgres"
 use_cases = ["Web app", "Storage"]
-tags = ["postgres", "axum", "database"]
+tags = ["axum", "postgres", "database"]
 
 [templates.axum-qdrant]
 title = "Qdrant"
@@ -241,13 +241,6 @@ description = "Health monitoring service using websockets"
 path = "axum/websocket"
 use_cases = ["Web app", "Monitoring"]
 tags = ["axum", "websocket"]
-
-[templates.request-scheduler]
-title = "Request Scheduler"
-description = "Schedule requests with a cron schedule"
-path = "custom-service/request-scheduler"
-use_cases = ["Web app", "Cron jobs", "Storage"]
-tags = ["axum"]
 
 [templates.axum-next-fullstack-saas]
 title = "Fullstack SaaS"
@@ -282,7 +275,7 @@ title = "Postgres"
 description = "Todo list with a Postgres database"
 path = "rocket/postgres"
 use_cases = ["Web app", "Storage"]
-tags = ["postgres", "rocket", "database"]
+tags = ["rocket", "postgres", "database"]
 
 [templates.rocket-static-files]
 title = "File server"

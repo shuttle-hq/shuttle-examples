@@ -10,7 +10,7 @@ futures = "0.3.28"
 reqwest = "0.11.23"
 serde = { version = "1.0.163", features = ["derive"] }
 serde_json = "1.0.96"
-shuttle-axum = { version = "0.51.0", default-features = false, features = ["axum-0-7"] }
-shuttle-runtime = "0.51.0"
+shuttle-axum = { version = "0.54.0", default-features = false, features = ["axum-0-7"] }
+shuttle-runtime = "0.54.0"
 tokio = "1.28.2"
 tower-http = { version = "0.5.0", features = ["fs"] }

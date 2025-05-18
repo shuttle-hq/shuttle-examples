@@ -10,7 +10,7 @@ apalis-sql = { version = "0.6", features = ["postgres"] }
 apalis-cron = { version = "0.6" }
 chrono = { version = "0.4.32", features = ["clock", "serde"] }
 serde = { version = "1.0.195", features = ["derive"] }
-shuttle-runtime = "0.51.0"
-shuttle-shared-db = { version = "0.51.0", features = ["postgres"] }
+shuttle-runtime = "0.54.0"
+shuttle-shared-db = { version = "0.54.0", features = ["postgres"] }
 sqlx = { version = "0.8", features = ["runtime-tokio-native-tls", "postgres"] }
 tokio = "1"
