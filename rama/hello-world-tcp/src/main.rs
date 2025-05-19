@@ -4,16 +4,8 @@ use tokio::io::AsyncWriteExt;
 
 async fn hello_world<S>(mut stream: S) -> Result<(), Infallible>
 where
-    S: net::stream::Socket + net::stream::Stream + Unpin,
+    S: net::stream::Stream + Unpin,
 {
-    println!(
-        "Incoming connection from: {}",
-        stream
-            .peer_addr()
-            .map(|a| a.to_string())
-            .unwrap_or_else(|_| "???".to_owned())
-    );
-
     const TEXT: &str = "Hello, Shuttle!";
 
     let resp = [
