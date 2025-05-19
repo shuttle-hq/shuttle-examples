@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-rama = "0.2"
+rama = { version = "0.2", features = ["http"] }
 shuttle-rama = "0.54"
 shuttle-runtime = "0.54"
 tokio = "1.45"
