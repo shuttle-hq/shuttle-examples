@@ -1,0 +1,10 @@
+[package]
+name = "hello-world"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rama = { version = "0.2", features = ["http"] }
+shuttle-rama = "0.55.0"
+shuttle-runtime = "0.55.0"
+tokio = "1.45"
