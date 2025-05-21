@@ -13,6 +13,7 @@ bevy = "https://avatars.githubusercontent.com/u/60047606?v=4"
 loco = "https://avatars.githubusercontent.com/u/151030972?v=4"
 poem = "https://avatars.githubusercontent.com/u/88869778?v=4"
 poise = "https://avatars.githubusercontent.com/u/32077193?v=4"
+rama = "https://avatars.githubusercontent.com/u/87996217?v=4"
 serenity = "https://avatars.githubusercontent.com/u/32077193?v=4"
 salvo = "https://avatars.githubusercontent.com/u/77909452?v=4"
 tide = "https://avatars.githubusercontent.com/u/56456261?v=4"
@@ -76,6 +77,14 @@ path = "poise/hello-world"
 use_cases = ["Discord bot"]
 tags = ["poise", "serenity"]
 template = "poise"
+
+[starters.rama-hello-world]
+title = "Rama"
+description = "Modular service framework to move and transform network packets"
+path = "rama/hello-world"
+use_cases = ["Web app"]
+tags = ["rama"]
+template = "rama"
 
 [starters.rocket-hello-world]
 title = "Rocket"
@@ -248,6 +257,20 @@ description = "Opinionated fullstack web app with pre-made routes and assets"
 path = "fullstack-templates/saas"
 use_cases = ["Web app", "Authentication", "Storage", "Monetization"]
 tags = ["nextjs", "axum", "database", "postgres", "typescript", "tailwind"]
+
+[templates.rama-hello-world-tcp]
+title = "Rama TCP"
+description = "HTTP Hello world with Rama using raw TCP"
+path = "rama/hello-world-tcp"
+use_cases = ["Web app"]
+tags = ["rama"]
+
+[templates.rama-static-files]
+title = "File server"
+description = "Hello World static file server with Rama"
+path = "rama/static-files"
+use_cases = ["Web app"]
+tags = ["rama"]
 
 [templates.rocket-dyn-templates]
 title = "Handlebars dynamic templates"

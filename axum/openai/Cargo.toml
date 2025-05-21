@@ -12,10 +12,10 @@ derive_more = { version = "1.0.0", features = ["full"] }
 jsonwebtoken = "9.3.0"
 serde = { version = "1.0.215", features = ["derive"] }
 serde_json = "1.0.133"
-shuttle-axum = { version = "0.54.0", default-features = false, features = ["axum-0-7"] }
-shuttle-openai = "0.54.0"
-shuttle-runtime = "0.54.0"
-shuttle-shared-db = { version = "0.54.0", features = ["postgres"] }
+shuttle-axum = { version = "0.55.0", default-features = false, features = ["axum-0-7"] }
+shuttle-openai = "0.55.0"
+shuttle-runtime = "0.55.0"
+shuttle-shared-db = { version = "0.55.0", features = ["postgres"] }
 sqlx = { version = "0.8.2", features = [
     "runtime-tokio-rustls",
     "postgres",
