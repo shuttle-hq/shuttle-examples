@@ -1,0 +1,12 @@
+[package]
+name = "custom-metrics"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = { version = "0.8.1", features = ["tracing"] }
+shuttle-axum = "0.55.0"
+shuttle-runtime = { version = "0.55.0", features = ["setup-otel-exporter"] }
+tokio = "1.28.2"
+tracing = "0.1"
+rand = "0.8"
