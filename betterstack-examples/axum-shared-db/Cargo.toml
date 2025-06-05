@@ -1,0 +1,14 @@
+[package]
+name = "shared-db"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.7.3"
+serde = { version = "1.0.188", features = ["derive"] }
+shuttle-axum = { version = "0.55.0", default-features = false, features = ["axum-0-7"] }
+shuttle-runtime = { version = "0.55.0", features = ["setup-otel-exporter"] }
+shuttle-shared-db = { version = "0.55.0", features = ["postgres", "sqlx"] }
+sqlx = "0.8.2"
+tokio = "1.28.2"
+tracing = "0.1.41"
