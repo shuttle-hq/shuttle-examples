@@ -1,0 +1,288 @@
+{
+  "refresh_interval": 15,
+  "date_range_from": "now-3h",
+  "date_range_to": "now",
+  "preset": {
+    "id": 538311,
+    "name": null,
+    "preset_type": "implicit",
+    "preset_variables": [
+      {
+        "name": "source",
+        "variable_type": "source",
+        "values": [
+          ""
+        ]
+      },
+      {
+        "name": "end_time",
+        "variable_type": "datetime",
+        "values": [
+          "now"
+        ]
+      },
+      {
+        "name": "start_time",
+        "variable_type": "datetime",
+        "values": [
+          "now-3h"
+        ]
+      }
+    ]
+  },
+  "charts": [
+    {
+      "chart_type": "line_chart",
+      "name": "Memory allocated",
+      "description": null,
+      "x": 7,
+      "y": 0,
+      "w": 5,
+      "h": 7,
+      "transform_with": "// Transform chart data before rendering.\n// Following function is called when new data arrives, and again with `completed = true` after all data arrives.\n// You can transform the data here arbitrarily.\n// Most chart types expect columns 'time', 'value' and optionally 'series' by default.\nasync (existingDataByQuery, newDataByQuery, completed) => {\n  return Object.keys(newDataByQuery).reduce((result, queryIndex) => {\n    result[queryIndex] = result[queryIndex].concat(newDataByQuery[queryIndex]);\n    return result;\n  }, existingDataByQuery);\n}\n",
+      "finalize_with": null,
+      "fake_with": "async (fromString, toString) => {\n  const from = new Date(fromString)\n  const to = new Date(toString)\n\n  function addSeconds(date, seconds) {\n    return new Date(date.getTime() + seconds*1000)\n  }\n\n  function randomIntFromInterval(min, max) { // min and max included\n    return Math.floor(Math.random() * (max - min + 1) + min)\n  }\n\nfunction randomFloatFromInterval(min, max) {\n let cal = (Math.random() * (max - min) + min);\n return parseFloat(cal);\n}\n\n  let data = []\n\n  let time = from\n\n  do {\n    data.push({ time: time.toISOString(), value: randomFloatFromInterval(235,262), series: 'Memory obtained from the OS' })\n    data.push({ time: time.toISOString(), value: randomFloatFromInterval(145,158), series: 'Size of allocated heap objects' })\n    data.push({ time: time.toISOString(), value: randomFloatFromInterval(512,546), series: 'Total physical memory' })\n\n    time = addSeconds(time, 3600)\n  } while (time.getTime() <= to.getTime())\n\n  return { 0: data }\n}",
+      "settings": {
+        "unit": "B_iec",
+        "label": "shown_below",
+        "legend": "shown_right",
+        "ttl_cache": "auto",
+        "lat_column": "lat",
+        "lng_column": "lng",
+        "time_column": "time",
+        "x_axis_type": "time",
+        "y_axis_scale": "linear",
+        "series_colors": {
+          "RSS memory": "#55bfc1",
+          "Heap allocated": "#009fe3",
+          "Total obtained from system": "#00af79"
+        },
+        "series_column": "series",
+        "value_columns": [
+          "value"
+        ],
+        "decimal_places": 2,
+        "point_size_column": "size",
+        "aggregation_period": 0,
+        "treat_missing_values": "connected",
+        "guessed_series_colors": {
+          "instance = 0.0.0.0:8888, job = otel-collector, service_instance_id = 7ed3f017-de26-4c9d-af43-77e6fa6d932f, service_name = otelcol, service_version = 0.90.1 - RSS memory": "#00af79",
+          "instance = 0.0.0.0:8888, job = otel-collector, service_instance_id = 7ed3f017-de26-4c9d-af43-77e6fa6d932f, service_name = otelcol, service_version = 0.90.1 - Heap allocated": "#55bfc1",
+          "instance = 0.0.0.0:8888, job = otel-collector, service_instance_id = 7ed3f017-de26-4c9d-af43-77e6fa6d932f, service_name = otelcol, service_version = 0.90.1 - Total obtained from system": "#009fe3"
+        },
+        "manual_aggregation_period": false
+      },
+      "chart_queries": [
+        {
+          "query_type": "query_builder",
+          "sql_query": "WITH grouped_rate AS (\n  \n  SELECT\n    {{time}} AS time,\n    name,\n    avgMerge(value_avg) AS inner_value,\n    'instance = ' || COALESCE(metricTag('instance'), 'null') || ', ' || 'job = ' || COALESCE(metricTag('job'), 'null') || ', ' || 'service_instance_id = ' || COALESCE(metricTag('service_instance_id'), 'null') || ', ' || 'service_name = ' || COALESCE(metricTag('service_name'), 'null') || ', ' || 'service_version = ' || COALESCE(metricTag('service_version'), 'null') AS inner_series\n  FROM {{source}}\n  WHERE\n    name IN ('otelcol_process_runtime_total_sys_memory_bytes', 'otelcol_process_runtime_heap_alloc_bytes', 'otelcol_process_memory_rss')\n    AND time BETWEEN {{start_time}} AND {{end_time}}\n  GROUP BY time, name, inner_series, series_id\n  \n),\narrayJoin([\n  (inner_series || ' - ' || 'Total obtained from system', maxIf(inner_value, name = 'otelcol_process_runtime_total_sys_memory_bytes')),\n  (inner_series || ' - ' || 'Heap allocated', maxIf(inner_value, name = 'otelcol_process_runtime_heap_alloc_bytes')),\n  (inner_series || ' - ' || 'RSS memory', maxIf(inner_value, name = 'otelcol_process_memory_rss'))\n]) AS arrayJoinValues\nSELECT\n  time,\n  arrayJoinValues.1 AS series,\n  arrayJoinValues.2 AS value\nFROM grouped_rate\nGROUP BY time, inner_series",
+          "group_by": [],
+          "where_condition": null,
+          "y_axis": [
+            {
+              "type": "float",
+              "value": "otelcol_process_runtime_total_sys_memory_bytes",
+              "measure": "max",
+              "value_type": "value",
+              "series_name": "Total obtained from system"
+            },
+            {
+              "type": "float",
+              "value": "otelcol_process_runtime_heap_alloc_bytes",
+              "measure": "max",
+              "value_type": "value",
+              "series_name": "Heap allocated"
+            },
+            {
+              "type": "float",
+              "value": "otelcol_process_memory_rss",
+              "measure": "max",
+              "value_type": "value",
+              "series_name": "RSS memory"
+            }
+          ],
+          "filters": [],
+          "static_text": null,
+          "default_group_by": "nothing"
+        }
+      ],
+      "chart_alerts": []
+    },
+    {
+      "chart_type": "number_chart",
+      "name": "Status",
+      "description": null,
+      "x": 0,
+      "y": 0,
+      "w": 2,
+      "h": 7,
+      "transform_with": "// Transform chart data before rendering.\n// Following function is called when new data arrives, and again with `completed = true` after all data arrives.\n// You can transform the data here arbitrarily.\n// Most chart types expect columns 'time', 'value' and optionally 'series' by default.\nasync (existingDataByQuery, newDataByQuery, completed) => {\n  return Object.keys(newDataByQuery).reduce((result, queryIndex) => {\n    result[queryIndex] = result[queryIndex].concat(newDataByQuery[queryIndex]);\n    return result;\n  }, existingDataByQuery);\n}\n",
+      "finalize_with": null,
+      "fake_with": "async (fromString, toString) => {\n  const from = new Date(fromString)\n  const to = new Date(toString)\n\n  function addSeconds(date, seconds) {\n    return new Date(date.getTime() + seconds*1000)\n  }\n\n  function randomIntFromInterval(min, max) { // min and max included\n    return Math.floor(Math.random() * (max - min + 1) + min)\n  }\n\nfunction randomFloatFromInterval(min, max) {\n let cal = (Math.random() * (max - min) + min);\n return parseFloat(cal);\n}\n\n  let data = []\n\n  let time = from\n\n  do {\n    data.push({ time: time.toISOString(), value: randomFloatFromInterval(0,16), series: '1xx' })\n    data.push({ time: time.toISOString(), value: randomFloatFromInterval(24312,27890), series: '2xx' })\n    data.push({ time: time.toISOString(), value: randomFloatFromInterval(89,187), series: '3xx' })\n    data.push({ time: time.toISOString(), value: randomFloatFromInterval(235,432), series: '4xx' })\n    data.push({ time: time.toISOString(), value: randomFloatFromInterval(89,161), series: '5xx' })\n\n    time = addSeconds(time, 3600)\n  } while (time.getTime() <= to.getTime())\n\n  return [ {value: 'Up'} ]\n}",
+      "settings": {
+        "unit": "auto",
+        "legend": "shown_below",
+        "ttl_cache": "auto",
+        "time_column": "time",
+        "y_axis_scale": "linear",
+        "series_column": "series",
+        "value_columns": [
+          "value"
+        ],
+        "decimal_places": 2,
+        "point_size_column": "size",
+        "aggregation_period": 0,
+        "treat_missing_values": "connected",
+        "manual_aggregation_period": false
+      },
+      "chart_queries": [
+        {
+          "query_type": "sql_expression",
+          "sql_query": "SELECT\n  {{time}} AS time,\n  CASE\n    WHEN maxMerge(value_max) = 1 THEN 'Up'\n    ELSE 'Down'\n  END AS value\nFROM {{source}}\nWHERE\n  time BETWEEN {{start_time}} AND {{end_time}}\n  AND name = 'up'\nGROUP BY time",
+          "group_by": [],
+          "where_condition": "AND",
+          "y_axis": null,
+          "filters": null,
+          "static_text": null,
+          "default_group_by": "everything"
+        }
+      ],
+      "chart_alerts": []
+    },
+    {
+      "chart_type": "line_chart",
+      "name": "Drag & drop query: avg(cpu.usage.vcpu) by level",
+      "description": null,
+      "x": 0,
+      "y": 7,
+      "w": 6,
+      "h": 8,
+      "transform_with": "// Transform chart data before rendering.\n// Following function is called when new data arrives, and again with `completed = true` after all data arrives.\n// You can transform the data here arbitrarily.\n// Most chart types expect columns 'time', 'value' and optionally 'series' by default.\nasync (existingDataByQuery, newDataByQuery, completed) => {\n  return Object.keys(newDataByQuery).reduce((result, queryIndex) => {\n    result[queryIndex] = result[queryIndex].concat(newDataByQuery[queryIndex]);\n    return result;\n  }, existingDataByQuery);\n}\n",
+      "finalize_with": null,
+      "fake_with": null,
+      "settings": {
+        "unit": "shortened",
+        "fresh": true,
+        "label": "shown_below",
+        "legend": "shown_below",
+        "stacking": "dont_stack",
+        "lat_column": "latitude",
+        "lng_column": "longitude",
+        "time_column": "time",
+        "x_axis_type": "time",
+        "y_axis_scale": "linear",
+        "series_colors": {
+          "level = INFO": "#009fe3",
+          "level = WARN": "#00af79",
+          "level = null": "#55bfc1"
+        },
+        "series_column": "series",
+        "value_columns": [
+          "value"
+        ],
+        "decimal_places": 2,
+        "point_size_column": "size",
+        "treat_missing_values": "connected",
+        "guessed_series_colors": {
+          "instance.id = 07dbdc7d23ef406cb2d56ccd3d059a08-1153448235, build.id = bld_01JW91EYYT792JTVM0PRJ0789K, deployment.version = 2, shuttle.project.id = proj_01JW911KDGA1QXENA3PXZYWAEX, service.name = test-2, shuttle.project.name = test-2, shuttle.deployment.env = null, telemetry.sdk.version = null, telemetry.sdk.language = null, telemetry.sdk.name = null, service.version = null, shuttle.project.crate.name = null, message = null": "#009fe3",
+          "instance.id = f00f584b752e4fec9157f46e8d543ba5-1153448235, build.id = bld_01JW923JJPSW6ZQAY6AHHGCMXN, deployment.version = 3, shuttle.project.id = proj_01JW911KDGA1QXENA3PXZYWAEX, service.name = test-2, shuttle.project.name = test-2, shuttle.deployment.env = null, telemetry.sdk.version = null, telemetry.sdk.language = null, telemetry.sdk.name = null, service.version = null, shuttle.project.crate.name = null, message = null": "#007bb1",
+          "instance.id = 04786d96bc3347a3a022df715ae13464-1153448235, build.id = bld_01JEMEBT857HXGSAV4JR5RJD0S, deployment.version = 8, shuttle.project.id = proj_01JE3HDXYJCEANBZB1V6M8F291, service.name = shuttlings-cch24-new, shuttle.project.name = shuttlings-cch24-new, shuttle.deployment.env = null, telemetry.sdk.version = null, telemetry.sdk.language = null, telemetry.sdk.name = null, service.version = null, shuttle.project.crate.name = null, message = null": "#005e88"
+        }
+      },
+      "chart_queries": [
+        {
+          "query_type": "query_builder",
+          "sql_query": "WITH grouped_rate AS (\n  \n  SELECT\n    {{time}} AS time,\n    name,\n    avgMerge(value_avg) AS inner_value,\n    'instance.id = ' || COALESCE(metricTag('instance.id'), 'null') || ', ' || 'build.id = ' || COALESCE(metricTag('build.id'), 'null') || ', ' || 'deployment.version = ' || COALESCE(metricTag('deployment.version'), 'null') || ', ' || 'shuttle.project.id = ' || COALESCE(metricTag('shuttle.project.id'), 'null') || ', ' || 'service.name = ' || COALESCE(metricTag('service.name'), 'null') || ', ' || 'shuttle.project.name = ' || COALESCE(metricTag('shuttle.project.name'), 'null') || ', ' || 'shuttle.deployment.env = ' || COALESCE(metricTag('shuttle.deployment.env'), 'null') || ', ' || 'telemetry.sdk.version = ' || COALESCE(metricTag('telemetry.sdk.version'), 'null') || ', ' || 'telemetry.sdk.language = ' || COALESCE(metricTag('telemetry.sdk.language'), 'null') || ', ' || 'telemetry.sdk.name = ' || COALESCE(metricTag('telemetry.sdk.name'), 'null') || ', ' || 'service.version = ' || COALESCE(metricTag('service.version'), 'null') || ', ' || 'shuttle.project.crate.name = ' || COALESCE(metricTag('shuttle.project.crate.name'), 'null') || ', ' || 'message = ' || COALESCE(metricTag('message'), 'null') AS inner_series\n  FROM {{source}}\n  WHERE\n    name IN ('cpu.usage.vcpu')\n    AND time BETWEEN {{start_time}} AND {{end_time}}\n  GROUP BY time, name, inner_series, series_id\n  \n),\narrayJoin([\n  (inner_series, avgIf(inner_value, name = 'cpu.usage.vcpu'))\n]) AS arrayJoinValues\nSELECT\n  time,\n  arrayJoinValues.1 AS series,\n  arrayJoinValues.2 AS value\nFROM grouped_rate\nGROUP BY time, inner_series",
+          "group_by": [
+            {
+              "name": "level",
+              "type": "string",
+              "value": "level"
+            }
+          ],
+          "where_condition": null,
+          "y_axis": [
+            {
+              "type": "float",
+              "value": "cpu.usage.vcpu",
+              "measure": "avg",
+              "value_type": "value"
+            }
+          ],
+          "filters": [],
+          "static_text": null,
+          "default_group_by": "everything"
+        }
+      ],
+      "chart_alerts": []
+    },
+    {
+      "chart_type": "line_chart",
+      "name": "Drag & drop query: avg(memory.usage) by level",
+      "description": null,
+      "x": 6,
+      "y": 7,
+      "w": 6,
+      "h": 8,
+      "transform_with": "// Transform chart data before rendering.\n// Following function is called when new data arrives, and again with `completed = true` after all data arrives.\n// You can transform the data here arbitrarily.\n// Most chart types expect columns 'time', 'value' and optionally 'series' by default.\nasync (existingDataByQuery, newDataByQuery, completed) => {\n  return Object.keys(newDataByQuery).reduce((result, queryIndex) => {\n    result[queryIndex] = result[queryIndex].concat(newDataByQuery[queryIndex]);\n    return result;\n  }, existingDataByQuery);\n}\n",
+      "finalize_with": null,
+      "fake_with": null,
+      "settings": {
+        "unit": "shortened",
+        "fresh": true,
+        "label": "shown_below",
+        "legend": "shown_below",
+        "stacking": "dont_stack",
+        "lat_column": "latitude",
+        "lng_column": "longitude",
+        "time_column": "time",
+        "x_axis_type": "time",
+        "y_axis_scale": "linear",
+        "series_colors": {
+          "instance.id = 07dbdc7d23ef406cb2d56ccd3d059a08-1153448235, build.id = bld_01JW91EYYT792JTVM0PRJ0789K, deployment.version = 2, shuttle.project.id = proj_01JW911KDGA1QXENA3PXZYWAEX, service.name = test-2, shuttle.project.name = test-2, shuttle.deployment.env = null, telemetry.sdk.version = null, telemetry.sdk.language = null, telemetry.sdk.name = null, service.version = null, shuttle.project.crate.name = null, message = null": "#009fe3",
+          "instance.id = f00f584b752e4fec9157f46e8d543ba5-1153448235, build.id = bld_01JW923JJPSW6ZQAY6AHHGCMXN, deployment.version = 3, shuttle.project.id = proj_01JW911KDGA1QXENA3PXZYWAEX, service.name = test-2, shuttle.project.name = test-2, shuttle.deployment.env = null, telemetry.sdk.version = null, telemetry.sdk.language = null, telemetry.sdk.name = null, service.version = null, shuttle.project.crate.name = null, message = null": "#00af79",
+          "instance.id = 04786d96bc3347a3a022df715ae13464-1153448235, build.id = bld_01JEMEBT857HXGSAV4JR5RJD0S, deployment.version = 8, shuttle.project.id = proj_01JE3HDXYJCEANBZB1V6M8F291, service.name = shuttlings-cch24-new, shuttle.project.name = shuttlings-cch24-new, shuttle.deployment.env = null, telemetry.sdk.version = null, telemetry.sdk.language = null, telemetry.sdk.name = null, service.version = null, shuttle.project.crate.name = null, message = null": "#55bfc1"
+        },
+        "series_column": "series",
+        "value_columns": [
+          "value"
+        ],
+        "decimal_places": 2,
+        "point_size_column": "size",
+        "treat_missing_values": "connected",
+        "guessed_series_colors": {
+          "instance.id = 07dbdc7d23ef406cb2d56ccd3d059a08-1153448235, build.id = bld_01JW91EYYT792JTVM0PRJ0789K, deployment.version = 2, shuttle.project.id = proj_01JW911KDGA1QXENA3PXZYWAEX, service.name = test-2, shuttle.project.name = test-2, shuttle.deployment.env = null, telemetry.sdk.version = null, telemetry.sdk.language = null, telemetry.sdk.name = null, service.version = null, shuttle.project.crate.name = null, message = null": "#009fe3",
+          "instance.id = f00f584b752e4fec9157f46e8d543ba5-1153448235, build.id = bld_01JW923JJPSW6ZQAY6AHHGCMXN, deployment.version = 3, shuttle.project.id = proj_01JW911KDGA1QXENA3PXZYWAEX, service.name = test-2, shuttle.project.name = test-2, shuttle.deployment.env = null, telemetry.sdk.version = null, telemetry.sdk.language = null, telemetry.sdk.name = null, service.version = null, shuttle.project.crate.name = null, message = null": "#007bb1",
+          "instance.id = 04786d96bc3347a3a022df715ae13464-1153448235, build.id = bld_01JEMEBT857HXGSAV4JR5RJD0S, deployment.version = 8, shuttle.project.id = proj_01JE3HDXYJCEANBZB1V6M8F291, service.name = shuttlings-cch24-new, shuttle.project.name = shuttlings-cch24-new, shuttle.deployment.env = null, telemetry.sdk.version = null, telemetry.sdk.language = null, telemetry.sdk.name = null, service.version = null, shuttle.project.crate.name = null, message = null": "#005e88"
+        }
+      },
+      "chart_queries": [
+        {
+          "query_type": "query_builder",
+          "sql_query": "WITH grouped_rate AS (\n  \n  SELECT\n    {{time}} AS time,\n    name,\n    avgMerge(value_avg) AS inner_value,\n    'instance.id = ' || COALESCE(metricTag('instance.id'), 'null') || ', ' || 'build.id = ' || COALESCE(metricTag('build.id'), 'null') || ', ' || 'deployment.version = ' || COALESCE(metricTag('deployment.version'), 'null') || ', ' || 'shuttle.project.id = ' || COALESCE(metricTag('shuttle.project.id'), 'null') || ', ' || 'service.name = ' || COALESCE(metricTag('service.name'), 'null') || ', ' || 'shuttle.project.name = ' || COALESCE(metricTag('shuttle.project.name'), 'null') || ', ' || 'shuttle.deployment.env = ' || COALESCE(metricTag('shuttle.deployment.env'), 'null') || ', ' || 'telemetry.sdk.version = ' || COALESCE(metricTag('telemetry.sdk.version'), 'null') || ', ' || 'telemetry.sdk.language = ' || COALESCE(metricTag('telemetry.sdk.language'), 'null') || ', ' || 'telemetry.sdk.name = ' || COALESCE(metricTag('telemetry.sdk.name'), 'null') || ', ' || 'service.version = ' || COALESCE(metricTag('service.version'), 'null') || ', ' || 'shuttle.project.crate.name = ' || COALESCE(metricTag('shuttle.project.crate.name'), 'null') || ', ' || 'message = ' || COALESCE(metricTag('message'), 'null') AS inner_series\n  FROM {{source}}\n  WHERE\n    name IN ('memory.usage')\n    AND time BETWEEN {{start_time}} AND {{end_time}}\n  GROUP BY time, name, inner_series, series_id\n  \n),\narrayJoin([\n  (inner_series, avgIf(inner_value, name = 'memory.usage'))\n]) AS arrayJoinValues\nSELECT\n  time,\n  arrayJoinValues.1 AS series,\n  arrayJoinValues.2 AS value\nFROM grouped_rate\nGROUP BY time, inner_series",
+          "group_by": [
+            {
+              "name": "level",
+              "type": "string",
+              "value": "level"
+            }
+          ],
+          "where_condition": null,
+          "y_axis": [
+            {
+              "type": "float",
+              "value": "memory.usage",
+              "measure": "avg",
+              "value_type": "value"
+            }
+          ],
+          "filters": [],
+          "static_text": null,
+          "default_group_by": "everything"
+        }
+      ],
+      "chart_alerts": []
+    }
+  ],
+  "sections": []
+}
