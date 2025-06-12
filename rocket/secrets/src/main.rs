@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate rocket;
 
-use anyhow::Context;
 use rocket::response::status::BadRequest;
 use rocket::State;
 use shuttle_runtime::SecretStore;
@@ -18,7 +17,7 @@ struct MyState {
 #[shuttle_runtime::main]
 async fn main(#[shuttle_runtime::Secrets] secrets: SecretStore) -> shuttle_rocket::ShuttleRocket {
     // get secret defined in `Secrets.toml` file.
-    let secret = secrets.get("MY_API_KEY").context("secret was not found")?;
+    let secret = secrets.get("MY_API_KEY")?;
 
     let state = MyState { secret };
     let rocket = rocket::build().mount("/", routes![secret]).manage(state);
