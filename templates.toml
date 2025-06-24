@@ -237,6 +237,13 @@ path = "axum/static-files"
 use_cases = ["Web app"]
 tags = ["axum"]
 
+[templates.axum-todo-list]
+title = "Todo list"
+description = "CRUD API, Postgres database, and static file server combined into a classic Todo list app"
+path = "axum/todo-list"
+use_cases = ["Web app", "Storage"]
+tags = ["axum", "postgres", "database"]
+
 [templates.axum-turso]
 title = "Turso"
 description = "Connect to a Turso DB with shuttle-turso"
