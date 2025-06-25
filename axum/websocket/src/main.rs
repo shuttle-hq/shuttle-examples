@@ -37,7 +37,7 @@ struct Response {
 
 #[shuttle_runtime::main]
 async fn main() -> ShuttleAxum {
-    let (tx, rx) = watch::channel(Message::Text("{}".to_string()));
+    let (tx, rx) = watch::channel(Message::Text("{}".into()));
 
     let state = Arc::new(Mutex::new(State {
         clients_count: 0,
@@ -61,7 +61,7 @@ async fn main() -> ShuttleAxum {
             };
             let msg = serde_json::to_string(&response).unwrap();
 
-            if tx.send(Message::Text(msg)).is_err() {
+            if tx.send(Message::Text(msg.into())).is_err() {
                 break;
             }
 
@@ -71,7 +71,7 @@ async fn main() -> ShuttleAxum {
 
     let router = Router::new()
         .route("/websocket", get(websocket_handler))
-        .nest_service("/", ServeDir::new("static"))
+        .fallback_service(ServeDir::new("static"))
         .layer(Extension(state));
 
     Ok(router.into())
