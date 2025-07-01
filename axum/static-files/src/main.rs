@@ -1,4 +1,4 @@
-use shuttle_axum::axum::Router;
+use axum::Router;
 use tower_http::services::ServeDir;
 
 #[shuttle_runtime::main]
