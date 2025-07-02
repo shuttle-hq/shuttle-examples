@@ -209,6 +209,13 @@ path = "axum/oauth2"
 use_cases = ["Web app", "Authentication"]
 tags = ["axum", "oauth"]
 
+[templates.axum-ai-assisted]
+title = "AI Assisted"
+description = "AI-assisted development template"
+path = "axum/ai-assisted"
+use_cases = ["Web app", "AI"]
+tags = ["axum", "ai"]
+
 [templates.axum-openai]
 title = "OpenAI ChatGPT chat"
 description = "Connect your app to OpenAI ChatGPT"
