@@ -1,0 +1,12 @@
+---
+description: 
+globs: *.rs
+alwaysApply: false
+---
+
+- Use explicit error handling with `Result<T, E>` and avoid unwrap() in production code.
+- Prefer borrowing (&T) over owned values (T) in function parameters when possible.
+- Use pattern matching exhaustively and handle all enum variants explicitly.
+- Keep functions small and focused on a single responsibility.
+- Use `derive` macros for common traits like Debug, Clone, PartialEq when appropriate.
+- Leverage the type system to prevent invalid states at compile time.

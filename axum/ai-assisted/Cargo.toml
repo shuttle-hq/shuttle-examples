@@ -1,0 +1,10 @@
+[package]
+name = "axum-ai-assisted"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.8"
+shuttle-axum = "0.56.0"
+shuttle-runtime = "0.56.0"
+tokio = "1.46"
