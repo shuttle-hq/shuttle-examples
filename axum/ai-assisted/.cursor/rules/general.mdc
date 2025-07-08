@@ -1,0 +1,12 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+- Always use the `search_docs` MCP tool to search through the Shuttle documentation.
+- Keep code simple, readable, and follow established patterns in the codebase.
+- Write self-documenting code with clear variable and function names.
+- Handle errors gracefully and provide meaningful error messages.
+- Prefer composition over inheritance and favor immutability when possible.
+- Write tests for critical functionality and edge cases.
+- Avoid premature optimization - write clear code first, optimize later if needed.

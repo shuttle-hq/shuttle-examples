@@ -1,10 +1,10 @@
 [package]
-name = "hello-world"
+name = "axum-ai-assisted"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-actix-web = "4.3.1"
-shuttle-actix-web = "0.56.0"
+axum = "0.8"
+shuttle-axum = "0.56.0"
 shuttle-runtime = "0.56.0"
-tokio = "1.26.0"
+tokio = "1.46"
