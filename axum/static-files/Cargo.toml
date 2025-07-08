@@ -5,8 +5,8 @@ edition = "2021"
 publish = false
 
 [dependencies]
-axum = "0.7.3"
-shuttle-axum = { version = "0.56.0", default-features = false, features = ["axum-0-7"] }
+axum = "0.8"
+shuttle-axum = "0.56.0"
 shuttle-runtime = "0.56.0"
 tokio = "1.28.2"
-tower-http = { version = "0.5.0", features = ["fs"] }
+tower-http = { version = "0.6", features = ["fs"] }
