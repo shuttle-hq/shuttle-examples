@@ -24,7 +24,7 @@ async fn add(
         .write(&path, bs)
         .await
         .map_err(|e| BadRequest(e.to_string()))?;
-    Ok(format!("path {path} written {}B data", length))
+    Ok(format!("path {path} written {length}B data"))
 }
 
 #[get("/<path>")]

@@ -68,7 +68,7 @@ impl EventHandler for Bot {
                             format!("Forecast: {} in {}", forecast.headline.overview, location)
                         }
                         Err(err) => {
-                            format!("Err: {}", err)
+                            format!("Err: {err}")
                         }
                     }
                 }

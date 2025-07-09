@@ -14,7 +14,7 @@ pub(crate) async fn add(pool: &PgPool, note: &str, user_id: i64) -> Result<Strin
         .execute(pool)
         .await?;
 
-    Ok(format!("Added `{}` to your todo list", note))
+    Ok(format!("Added `{note}` to your todo list"))
 }
 
 pub(crate) async fn complete(

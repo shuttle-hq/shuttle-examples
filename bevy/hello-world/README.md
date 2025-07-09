@@ -3,6 +3,7 @@ Example of how you can compile Bevy to WASM and run it on Shuttle.
 ## Instructions
 
 Make sure you have `wasm-bindgen-cli` and the rustup `wasm32-unknown-unknown` compilation target added. If you don't, you can get them by running the following:
+
 ```bash
 cargo install wasm-bindgen-cli
 rustup target add wasm32-unknown-unknown
