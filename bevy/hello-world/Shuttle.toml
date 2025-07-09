@@ -1,9 +1,9 @@
 [deploy]
 include = [
-    "dist/*",
+    "assets/*",
 ]
 
 [build]
 assets = [
-    "dist/*",
+    "assets/*",
 ]

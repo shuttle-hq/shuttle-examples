@@ -5,7 +5,7 @@ use tower_http::services::{ServeDir, ServeFile};
 async fn main() -> shuttle_axum::ShuttleAxum {
     let router = Router::new().nest_service(
         "/",
-        ServeDir::new("dist").not_found_service(ServeFile::new("dist/index.html")),
+        ServeDir::new("assets").not_found_service(ServeFile::new("assets/index.html")),
     );
     Ok(router.into())
 }
