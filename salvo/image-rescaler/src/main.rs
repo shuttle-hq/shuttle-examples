@@ -7,6 +7,11 @@ async fn get_image(req: &mut Request, res: &mut Response) {
     let width = req.param::<u32>("width").unwrap();
     let height = req.param::<u32>("height").unwrap();
 
+    if width > 4000 || height > 4000 {
+        res.stuff(StatusCode::BAD_REQUEST, "Try a smaller image size");
+        return;
+    }
+
     let img = image::load_from_memory_with_format(IMAGE, image::ImageFormat::Png).unwrap();
     let img = img.resize_exact(width, height, image::imageops::FilterType::Triangle);
     let mut buffer = std::io::BufWriter::new(std::io::Cursor::new(Vec::new()));
