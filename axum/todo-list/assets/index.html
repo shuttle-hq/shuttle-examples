@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Todo list app on Shuttle</title>
+        <script src="/script.js" defer></script>
+        <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+        <main>
+            <h1>Todo list app on <a href="https://www.shuttle.dev/" target="_blank">Shuttle</a></h1>
+            <p>This is an example of a CRUD API combined with a static file server with Axum, backed by a Postgres database.</p>
+            <form id="todo-form">
+                <input type="text" id="todo-input" placeholder="Add a new todo" required>
+                <button type="submit">Add Todo</button>
+            </form>
+            <div id="todo-list"></div>
+            <hr/>
+            <h2>What to do next?</h2>
+            <p>To learn more about Shuttle features, check out the <a href="https://docs.shuttle.dev/" target="_blank">docs</a>!</p>
+            <p>
+                This template emits tracing events on each request.
+                Use the <a href="https://docs.shuttle.dev/docs/telemetry/overview" target="_blank">Telemetry feature</a> on Shuttle to export and view them on third-party platforms.
+            </p>
+        </main>
+    </body>
+</html>
