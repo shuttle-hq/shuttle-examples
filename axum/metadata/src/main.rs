@@ -5,7 +5,7 @@ use shuttle_runtime::DeploymentMetadata;
 async fn main(
     #[shuttle_runtime::Metadata] metadata: DeploymentMetadata,
 ) -> shuttle_axum::ShuttleAxum {
-    let router = Router::new().route("/", get(format!("{:?}", metadata)));
+    let router = Router::new().route("/", get(format!("{metadata:?}")));
 
     Ok(router.into())
 }

@@ -57,7 +57,7 @@ pub async fn get_forecast(
     const DAY_REQUEST: &str = "http://dataservice.accuweather.com/forecasts/v1/daily/1day/";
 
     // The URL to call combined with our API_KEY and the place (via the q search parameter)
-    let url = format!("{}?apikey={}&q={}", LOCATION_REQUEST, api_key, place);
+    let url = format!("{LOCATION_REQUEST}?apikey={api_key}&q={place}");
     // Make the request we will call
     let request = client.get(url).build().unwrap();
     // Execute the request and await a JSON result that will be converted to a

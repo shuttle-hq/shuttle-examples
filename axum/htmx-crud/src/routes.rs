@@ -83,10 +83,7 @@ pub async fn delete_todo(
         })
         .is_err()
     {
-        eprintln!(
-            "Record with ID {} was deleted but nobody's listening to the stream!",
-            id
-        );
+        eprintln!("Record with ID {id} was deleted but nobody's listening to the stream!");
     }
 
     Ok(StatusCode::OK)
