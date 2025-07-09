@@ -4,13 +4,13 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = { version = "0.7.3", features = ["ws"] }
-chrono = { version = "0.4.26", features = ["serde"] }
+axum = { version = "0.8", features = ["ws"] }
+chrono = { version = "0.4", features = ["serde"] }
 futures = "0.3.28"
-reqwest = "0.11.23"
-serde = { version = "1.0.163", features = ["derive"] }
-serde_json = "1.0.96"
-shuttle-axum = { version = "0.56.0", default-features = false, features = ["axum-0-7"] }
+reqwest = "0.12"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+shuttle-axum = "0.56.0"
 shuttle-runtime = "0.56.0"
-tokio = "1.28.2"
-tower-http = { version = "0.5.0", features = ["fs"] }
+tokio = "1"
+tower-http = { version = "0.6", features = ["fs"] }
