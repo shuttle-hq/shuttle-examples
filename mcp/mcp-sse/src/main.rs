@@ -1,5 +1,5 @@
-use std::net::SocketAddr;
 use rmcp::transport::sse_server::{SseServer, SseServerConfig};
+use std::net::SocketAddr;
 use tokio_util::sync::CancellationToken;
 
 mod mcp_service;
@@ -30,8 +30,9 @@ impl shuttle_runtime::Service for McpSseService {
         let (sse_server, router) = SseServer::new(config);
 
         // Create TCP listener
-        let listener = tokio::net::TcpListener::bind(addr).await
-            .map_err(|e| shuttle_runtime::Error::Custom(anyhow::anyhow!("Failed to bind: {}", e).into()))?;
+        let listener = tokio::net::TcpListener::bind(addr).await.map_err(|e| {
+            shuttle_runtime::Error::Custom(anyhow::anyhow!("Failed to bind: {}", e).into())
+        })?;
 
         // Setup graceful shutdown
         let ct = sse_server.config.ct.child_token();
