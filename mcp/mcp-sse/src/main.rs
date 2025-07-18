@@ -31,7 +31,7 @@ impl shuttle_runtime::Service for McpSseService {
 
         // Create TCP listener
         let listener = tokio::net::TcpListener::bind(addr).await.map_err(|e| {
-            shuttle_runtime::Error::Custom(anyhow::anyhow!("Failed to bind: {}", e).into())
+            shuttle_runtime::Error::Custom(anyhow::anyhow!("Failed to bind: {}", e))
         })?;
 
         // Setup graceful shutdown
