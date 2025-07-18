@@ -363,6 +363,13 @@ path = "tracing/custom-tracing-subscriber"
 use_cases = ["Web app", "Logging"]
 tags = ["actix-web", "tracing"]
 
+[templates.mcp-sse]
+title = "SSE MCP Server"
+description = "Model Context Protocol server with Server-Sent Events transport"
+path = "mcp/mcp-sse"
+use_cases = ["Web app", "MCP"]
+tags = ["axum", "mcp", "sse"]
+
 
 ## EXAMPLES ##
 
