@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO mcp_clients (client_id, client_secret, client_name, redirect_uris, client_secret_expires_at)\n        VALUES ($1, $2, $3, $4, $5)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "TextArray",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "a149861e30fa51aa8498bb7bde5d9a694ce73c234cc45cbe983c0af4201209e7"
+}

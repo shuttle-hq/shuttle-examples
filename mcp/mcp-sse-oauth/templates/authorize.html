@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorize Application</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 500px;
+            margin: 100px auto;
+            padding: 2rem;
+            background: #f8f9fa;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin: 0 0 1rem 0;
+            color: #1f2937;
+            font-size: 1.5rem;
+        }
+        .app-info {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: #f3f4f6;
+            border-radius: 8px;
+        }
+        .app-info strong {
+            color: #374151;
+        }
+        .scopes {
+            margin: 1rem 0;
+        }
+        .scope-item {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .scope-item:last-child {
+            border-bottom: none;
+        }
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        button {
+            flex: 1;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-authorize {
+            background: #3b82f6;
+            color: white;
+        }
+        .btn-authorize:hover {
+            background: #2563eb;
+        }
+        .btn-deny {
+            background: #e5e7eb;
+            color: #374151;
+        }
+        .btn-deny:hover {
+            background: #d1d5db;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Authorize Application</h1>
+        
+        <div class="app-info">
+            <p><strong>Application:</strong> {{ client_name }}</p>
+            <p><strong>Redirect URI:</strong> {{ redirect_uri }}</p>
+        </div>
+
+        <div class="scopes">
+            <p><strong>Permissions requested:</strong></p>
+            {% for scope in scopes %}
+            <div class="scope-item">{{ scope }}</div>
+            {% endfor %}
+        </div>
+
+        <form method="post" action="/oauth/authorize">
+            <input type="hidden" name="client_id" value="{{ client_id }}">
+            <input type="hidden" name="redirect_uri" value="{{ redirect_uri }}">
+            <input type="hidden" name="code_challenge" value="{{ code_challenge }}">
+            <input type="hidden" name="code_challenge_method" value="{{ code_challenge_method }}">
+            <input type="hidden" name="state" value="{{ state }}">
+            <input type="hidden" name="scope" value="{{ scope }}">
+            
+            <div class="buttons">
+                <button type="submit" name="action" value="deny" class="btn-deny">Deny</button>
+                <button type="submit" name="action" value="authorize" class="btn-authorize">Authorize</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
