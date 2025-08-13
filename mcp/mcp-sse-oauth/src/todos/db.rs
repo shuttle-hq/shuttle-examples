@@ -60,7 +60,7 @@ pub async fn list_todos(
     let param_count = 2;
 
     if let Some(f) = &filter {
-        if let Some(_) = f.completed {
+        if f.completed.is_some() {
             query.push_str(&format!(" AND completed = ${param_count}"));
         }
     }

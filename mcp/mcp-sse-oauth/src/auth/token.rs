@@ -286,7 +286,7 @@ async fn handle_authorization_code_grant(
         .get("JWT_SECRET")
         .expect("JWT_SECRET secret not found");
 
-    let access_token = match generate_access_token(&request.client_id, &scope, &jwt_secret) {
+    let access_token = match generate_access_token(&request.client_id, scope, &jwt_secret) {
         Ok(token) => token,
         Err(e) => {
             error!("Failed to generate access token: {}", e);
@@ -424,7 +424,7 @@ async fn handle_refresh_token_grant(
         .get("JWT_SECRET")
         .expect("JWT_SECRET secret not found");
 
-    let access_token = match generate_access_token(&request.client_id, &scope, &jwt_secret) {
+    let access_token = match generate_access_token(&request.client_id, scope, &jwt_secret) {
         Ok(token) => token,
         Err(e) => {
             error!("Failed to generate access token: {}", e);
