@@ -372,7 +372,7 @@ tags = ["axum", "mcp", "sse"]
 
 [templates.mcp-sse-oauth]
 title = "SSE MCP Server with OAuth"
-description = "Model Context Protocol server with Server-Sent Events transport and OAuth authentication"
+description = "MCP server with SSE transport and OAuth"
 path = "mcp/mcp-sse-oauth"
 use_cases = ["MCP", "AI", "AI Agents"]
 tags = ["axum", "mcp", "sse", "oauth"]
