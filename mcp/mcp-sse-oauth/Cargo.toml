@@ -1,5 +1,5 @@
 [package]
-name = "mcp-sse"
+name = "mcp-sse-oauth"
 version = "0.1.0"
 edition = "2021"
 publish = false
