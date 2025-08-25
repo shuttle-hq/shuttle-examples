@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = "0.7.3"
+axum = "0.8"
 serde = { version = "1.0.188", features = ["derive"] }
-shuttle-axum = { version = "0.56.0", default-features = false, features = ["axum-0-7"] }
+shuttle-axum = "0.56.0"
 shuttle-runtime = "0.56.0"
 shuttle-shared-db = { version = "0.56.0", features = ["postgres", "sqlx"] }
 sqlx = "0.8.2"
