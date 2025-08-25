@@ -52,7 +52,7 @@ async fn main(
             get(endpoints::openai::get_conversation_list),
         )
         .route(
-            "/api/chat/conversations/:id",
+            "/api/chat/conversations/{id}",
             get(endpoints::openai::fetch_conversation_messages)
                 .post(endpoints::openai::send_message),
         )
