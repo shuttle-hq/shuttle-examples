@@ -7,7 +7,8 @@ edition = "2021"
 async-openai = "0.28.0"
 argon2 = "0.5.3"
 axum = "0.8"
-axum-extra = { version = "0.9.4", features = ["cookie", "cookie-private"] }
+axum-extra = { version = "0.10.1", features = ["cookie", "cookie-private"] }
+async-trait = "0.1"
 derive_more = { version = "1.0.0", features = ["full"] }
 jsonwebtoken = "9.3.0"
 serde = { version = "1.0.215", features = ["derive"] }

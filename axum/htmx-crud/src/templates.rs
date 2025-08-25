@@ -1,5 +1,6 @@
 use crate::models;
 use askama::Template;
+use axum::response::{Html, IntoResponse, Response};
 
 #[derive(Template)]
 #[template(path = "index.html")]
@@ -19,4 +20,32 @@ pub struct Records {
 #[template(path = "todo.html")]
 pub struct TodoNewTemplate {
     pub todo: models::Todo,
+}
+
+impl IntoResponse for HelloTemplate {
+    fn into_response(self) -> Response {
+        let rendered = self.render().unwrap_or_default();
+        Html(rendered).into_response()
+    }
+}
+
+impl IntoResponse for StreamTemplate {
+    fn into_response(self) -> Response {
+        let rendered = self.render().unwrap_or_default();
+        Html(rendered).into_response()
+    }
+}
+
+impl IntoResponse for Records {
+    fn into_response(self) -> Response {
+        let rendered = self.render().unwrap_or_default();
+        Html(rendered).into_response()
+    }
+}
+
+impl IntoResponse for TodoNewTemplate {
+    fn into_response(self) -> Response {
+        let rendered = self.render().unwrap_or_default();
+        Html(rendered).into_response()
+    }
 }

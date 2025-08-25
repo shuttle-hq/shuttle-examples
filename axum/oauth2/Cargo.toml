@@ -6,7 +6,8 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.72"
 axum = { version = "0.8", features = ["multipart", "macros"] }
-axum-extra = { version = "0.9.2", features = ["cookie-private"] }
+axum-extra = { version = "0.10.1", features = ["cookie-private"] }
+async-trait = "0.1"
 chrono = { version = "0.4.35", features = ["clock"] }
 oauth2 = "4.4.1"
 reqwest = { version = "0.11.18", features = ["json"] }

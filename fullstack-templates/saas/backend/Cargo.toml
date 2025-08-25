@@ -8,7 +8,7 @@ publish = false
 [dependencies]
 async-stripe = { version = "0.31.0", features = ["runtime-tokio-hyper"] }
 axum = "0.8"
-axum-extra = { version = "0.9.1", features = ["cookie-private"] }
+axum-extra = { version = "0.10.1", features = ["cookie-private"] }
 axum-macros = "0.4.0"
 bcrypt = "0.15.0"
 http = "1.0.0"
