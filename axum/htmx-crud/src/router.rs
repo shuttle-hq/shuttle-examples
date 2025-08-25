@@ -23,7 +23,7 @@ pub fn init_router(db: PgPool) -> Router {
         .route("/stream", get(routes::stream))
         .route("/styles.css", get(routes::styles))
         .route("/todos", get(routes::fetch_todos).post(routes::create_todo))
-        .route("/todos/:id", delete(routes::delete_todo))
+        .route("/todos/{id}", delete(routes::delete_todo))
         .route("/todos/stream", get(routes::handle_stream))
         .with_state(state)
         .layer(Extension(tx))

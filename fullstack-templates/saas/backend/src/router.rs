@@ -33,7 +33,7 @@ pub fn create_api_router(state: AppState) -> Router {
         .route("/", post(get_all_customers))
         .route("/names", post(get_customer_names))
         .route(
-            "/:id",
+            "/{id}",
             post(get_one_customer)
                 .put(edit_customer)
                 .delete(destroy_customer),
@@ -43,7 +43,7 @@ pub fn create_api_router(state: AppState) -> Router {
     let deals_router = Router::new()
         .route("/", post(get_all_deals))
         .route(
-            "/:id",
+            "/{id}",
             post(get_one_deal).put(edit_deal).delete(destroy_deal),
         )
         .route("/create", post(create_deal));

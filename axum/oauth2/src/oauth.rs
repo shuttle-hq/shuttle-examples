@@ -1,9 +1,10 @@
 use axum::{
-    extract::{FromRequest, FromRequestParts, Query, Request, State},
+    extract::{FromRequest, Query, Request, State},
     http::StatusCode,
     response::{IntoResponse, Redirect},
     Extension,
 };
+use async_trait::async_trait;
 use axum_extra::extract::cookie::{Cookie, PrivateCookieJar};
 use chrono::{Duration, Local};
 use oauth2::{basic::BasicClient, reqwest::async_http_client, AuthorizationCode, TokenResponse};
@@ -80,14 +81,13 @@ pub struct UserProfile {
     email: String,
 }
 
-#[axum::async_trait]
+#[async_trait]
 impl FromRequest<AppState> for UserProfile {
     type Rejection = ApiError;
     async fn from_request(req: Request, state: &AppState) -> Result<Self, Self::Rejection> {
         let state = state.to_owned();
         let (mut parts, _body) = req.into_parts();
-        let cookiejar: PrivateCookieJar =
-            PrivateCookieJar::from_request_parts(&mut parts, &state).await?;
+        let cookiejar: PrivateCookieJar = PrivateCookieJar::from_request_parts(&mut parts, &state).await?;
 
         let Some(cookie) = cookiejar.get("sid").map(|cookie| cookie.value().to_owned()) else {
             return Err(ApiError::Unauthorized);

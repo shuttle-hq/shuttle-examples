@@ -1,11 +1,11 @@
 use axum::{
-    async_trait,
     extract::FromRequestParts,
     http::{request::Parts, StatusCode},
     response::{IntoResponse, Response},
     routing::{get, post},
     Json, RequestPartsExt, Router,
 };
+use async_trait::async_trait;
 use axum_extra::{
     headers::{authorization::Bearer, Authorization},
     TypedHeader,

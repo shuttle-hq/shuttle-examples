@@ -3,7 +3,7 @@ use argon2::{
     Argon2,
 };
 use axum::{
-    extract::{FromRequestParts, State},
+    extract::{FromRequest, FromRequestParts, State},
     http::StatusCode,
     response::IntoResponse,
     Json,
@@ -105,7 +105,7 @@ pub struct Claims {
     exp: usize,
 }
 
-#[axum::async_trait]
+#[async_trait]
 impl FromRequestParts<AppState> for Claims {
     type Rejection = (StatusCode, String);
     async fn from_request_parts(

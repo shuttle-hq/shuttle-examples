@@ -13,8 +13,8 @@ name = "standalone"
 path = "src/bin/standalone.rs"
 
 [dependencies]
-axum = "0.7.3"
+axum = "0.8"
 dotenvy = "0.15.7"
-shuttle-axum = { version = "0.56.0", default-features = false, features = ["axum-0-7"] }
+shuttle-axum = "0.56.0"
 shuttle-runtime = "0.56.0"
 tokio = "1.28.2"
