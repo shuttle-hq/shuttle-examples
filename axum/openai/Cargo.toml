@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-async-openai = "0.28.0"
+async-openai = "0.29"
 argon2 = "0.5.3"
 axum = "0.7.4"
 axum-extra = { version = "0.9.4", features = ["cookie", "cookie-private"] }
