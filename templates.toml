@@ -109,14 +109,6 @@ use_cases = ["Discord bot"]
 tags = ["serenity"]
 template = "serenity"
 
-[starters.thruster-hello-world]
-title = "Thruster"
-description = "Web framework"
-path = "thruster/hello-world"
-use_cases = ["Web app"]
-tags = ["thruster"]
-template = "thruster"
-
 [starters.tower-hello-world]
 title = "Tower"
 description = "Modular service library"
