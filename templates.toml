@@ -16,7 +16,6 @@ poise = "https://avatars.githubusercontent.com/u/32077193?v=4"
 rama = "https://avatars.githubusercontent.com/u/87996217?v=4"
 serenity = "https://avatars.githubusercontent.com/u/32077193?v=4"
 salvo = "https://avatars.githubusercontent.com/u/77909452?v=4"
-tide = "https://avatars.githubusercontent.com/u/56456261?v=4"
 tower = "https://avatars.githubusercontent.com/u/26263939?v=4"
 postgres = "https://avatars.githubusercontent.com/u/177543?v=4"
 clerk = "https://avatars.githubusercontent.com/u/49538330?v=4"
@@ -117,14 +116,6 @@ path = "thruster/hello-world"
 use_cases = ["Web app"]
 tags = ["thruster"]
 template = "thruster"
-
-[starters.tide-hello-world]
-title = "Tide"
-description = "Web framework"
-path = "tide/hello-world"
-use_cases = ["Web app"]
-tags = ["tide"]
-template = "tide"
 
 [starters.tower-hello-world]
 title = "Tower"
