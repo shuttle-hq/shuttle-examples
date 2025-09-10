@@ -14,9 +14,7 @@ pub struct AppState {
 }
 
 #[shuttle_runtime::main]
-async fn main(
-    #[shuttle_shared_db::Postgres] pool: sqlx::PgPool,
-) -> shuttle_axum::ShuttleAxum {
+async fn main(#[shuttle_shared_db::Postgres] pool: sqlx::PgPool) -> shuttle_axum::ShuttleAxum {
     sqlx::migrate!("./migrations")
         .run(&pool)
         .await

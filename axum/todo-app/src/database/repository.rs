@@ -1,5 +1,5 @@
-use sqlx::{Pool, Postgres};
 use anyhow::Result;
+use sqlx::{Pool, Postgres};
 
 use crate::models::{Todo, UpdateTodoRequest};
 
@@ -30,9 +30,11 @@ impl TodoRepository {
     }
 
     pub async fn get_all_todos(&self) -> Result<Vec<Todo>> {
-        let rows = sqlx::query!("SELECT id, title, completed, created_at FROM todos ORDER BY created_at DESC")
-            .fetch_all(&self.pool)
-            .await?;
+        let rows = sqlx::query!(
+            "SELECT id, title, completed, created_at FROM todos ORDER BY created_at DESC"
+        )
+        .fetch_all(&self.pool)
+        .await?;
 
         let todos = rows
             .into_iter()
@@ -48,9 +50,12 @@ impl TodoRepository {
     }
 
     pub async fn get_todo_by_id(&self, id: i32) -> Result<Option<Todo>> {
-        let row = sqlx::query!("SELECT id, title, completed, created_at FROM todos WHERE id = $1", id)
-            .fetch_optional(&self.pool)
-            .await?;
+        let row = sqlx::query!(
+            "SELECT id, title, completed, created_at FROM todos WHERE id = $1",
+            id
+        )
+        .fetch_optional(&self.pool)
+        .await?;
 
         if let Some(row) = row {
             Ok(Some(Todo {
@@ -71,8 +76,11 @@ impl TodoRepository {
         }
 
         let existing = existing.unwrap();
-        
-        let new_title = update.title.map(|t| t.trim().to_string()).unwrap_or(existing.title);
+
+        let new_title = update
+            .title
+            .map(|t| t.trim().to_string())
+            .unwrap_or(existing.title);
         let new_completed = update.completed.unwrap_or(existing.completed);
 
         let row = sqlx::query!(
