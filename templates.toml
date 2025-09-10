@@ -251,6 +251,13 @@ path = "axum/todo-list"
 use_cases = ["Web app", "Storage"]
 tags = ["axum", "postgres", "database"]
 
+[templates.axum-todo-app]
+title = "Todo app"
+description = "CRUD Todo application with Postgres database and frontend"
+path = "axum/todo-app"
+use_cases = ["Web app", "Storage"]
+tags = ["axum", "postgres", "database"]
+
 [templates.axum-turso]
 title = "Turso"
 description = "Connect to a Turso DB with shuttle-turso"
