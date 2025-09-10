@@ -18,7 +18,7 @@ pub async fn create_todo(
     payload.validate()
         .map_err(AppError::ValidationError)?;
 
-    let todo = state.repo.create_todo(&payload.title.trim()).await?;
+    let todo = state.repo.create_todo(payload.title.trim()).await?;
     Ok((StatusCode::CREATED, Json(json!(todo))))
 }
 
