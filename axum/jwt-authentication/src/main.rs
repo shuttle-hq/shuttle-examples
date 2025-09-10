@@ -1,5 +1,4 @@
 use axum::{
-    async_trait,
     extract::FromRequestParts,
     http::{request::Parts, StatusCode},
     response::{IntoResponse, Response},
@@ -95,7 +94,6 @@ impl AuthBody {
 
 // implement FromRequestParts for Claims (the JWT struct)
 // FromRequestParts allows us to use Claims without consuming the request
-#[async_trait]
 impl<S> FromRequestParts<S> for Claims
 where
     S: Send + Sync,

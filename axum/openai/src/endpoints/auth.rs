@@ -105,7 +105,6 @@ pub struct Claims {
     exp: usize,
 }
 
-#[axum::async_trait]
 impl FromRequestParts<AppState> for Claims {
     type Rejection = (StatusCode, String);
     async fn from_request_parts(
