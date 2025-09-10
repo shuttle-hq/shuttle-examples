@@ -52,14 +52,13 @@ async fn main(
             get(endpoints::openai::get_conversation_list),
         )
         .route(
-            "/api/chat/conversations/:id",
+            "/api/chat/conversations/{id}",
             get(endpoints::openai::fetch_conversation_messages)
                 .post(endpoints::openai::send_message),
         )
         .route("/api/chat/create", post(endpoints::openai::create_chat))
         .layer(cors)
-        .nest_service(
-            "/",
+        .fallback_service(
             ServeDir::new("frontend/dist")
                 .not_found_service(ServeFile::new("frontend/dist/index.html")),
         )
