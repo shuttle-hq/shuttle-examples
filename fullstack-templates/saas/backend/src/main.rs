@@ -55,8 +55,7 @@ async fn main(
 
     let api_router = create_api_router(state);
 
-    let router = Router::new().nest("/api", api_router).nest_service(
-        "/",
+    let router = Router::new().nest("/api", api_router).fallback_service(
         ServeDir::new("dist").not_found_service(ServeFile::new("dist/index.html")),
     );
 
