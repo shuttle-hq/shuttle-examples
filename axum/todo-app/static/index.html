@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Todo App</h1>
+        
+        <div class="add-todo">
+            <input type="text" id="new-todo-input" placeholder="Add a new todo..." autocomplete="off">
+            <button id="add-todo-btn">Add</button>
+        </div>
+
+        <div class="todo-stats">
+            <span id="total-todos">0 todos</span>
+            <span id="completed-todos">0 completed</span>
+        </div>
+
+        <div class="todo-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="active">Active</button>
+            <button class="filter-btn" data-filter="completed">Completed</button>
+        </div>
+
+        <ul id="todo-list" class="todo-list">
+            <!-- Todos will be dynamically inserted here -->
+        </ul>
+
+        <div id="error-message" class="error-message" style="display: none;"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
