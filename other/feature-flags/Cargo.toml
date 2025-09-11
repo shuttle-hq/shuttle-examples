@@ -5,9 +5,9 @@ edition = "2021"
 publish = false
 
 [dependencies]
-axum = "0.7.3"
-shuttle-axum = { version = "0.56.0", default-features = false, features = ["axum-0-7"] }
-shuttle-runtime = "0.56.0"
+axum = "0.8"
+shuttle-axum = "0.57.0"
+shuttle-runtime = "0.57.0"
 
 [features]
 # Shuttle will disable default features and enable the feature "shuttle" if it exists.

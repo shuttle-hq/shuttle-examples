@@ -5,11 +5,11 @@ edition = "2021"
 
 [dependencies]
 nanoid = "0.4.0"
-opendal = "0.51"
+opendal = "0.54"
 rocket = { version = "0.5.0", features = ["json"] }
 serde = "1.0.148"
-shuttle-rocket = "0.56.0"
-shuttle-runtime = "0.56.0"
-shuttle-shared-db = { version = "0.56.0", features = ["opendal-postgres"] }
+shuttle-rocket = "0.57.0"
+shuttle-runtime = "0.57.0"
+shuttle-shared-db = { version = "0.57.0", features = ["opendal-postgres"] }
 tokio = "1.26.0"
 url = "2.5.4"
