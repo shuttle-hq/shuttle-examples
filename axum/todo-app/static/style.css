@@ -1,0 +1,552 @@
+/* Modern CSS Reset and Base Styles */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding: 20px;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+/* Container with improved glass morphism effect */
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Enhanced header with better typography */
+h1 {
+  text-align: center;
+  margin: 0;
+  padding: 40px 20px 30px;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 50%, #06b6d4 100%);
+  color: white;
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+h1::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+h1:hover::before {
+  left: 100%;
+}
+
+/* Improved add todo section */
+.add-todo {
+  padding: 30px;
+  display: flex;
+  gap: 12px;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border-bottom: 1px solid #e2e8f0;
+}
+
+#new-todo-input {
+  flex: 1;
+  padding: 16px 20px;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  outline: none;
+  transition: all 0.3s ease;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+#new-todo-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+#new-todo-input::placeholder {
+  color: #94a3b8;
+  font-weight: 400;
+}
+
+#add-todo-btn {
+  padding: 16px 28px;
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+#add-todo-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+}
+
+#add-todo-btn:active {
+  transform: translateY(0);
+}
+
+/* Enhanced stats section */
+.todo-stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.todo-stats span {
+  padding: 6px 12px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Modern filter buttons */
+.todo-filters {
+  display: flex;
+  padding: 25px 30px;
+  gap: 8px;
+  border-bottom: 1px solid #e2e8f0;
+  background: white;
+}
+
+.filter-btn {
+  padding: 10px 18px;
+  border: 2px solid #e2e8f0;
+  background: white;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  color: #64748b;
+}
+
+.filter-btn:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: translateY(-1px);
+}
+
+.filter-btn.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Enhanced todo list */
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  min-height: 200px;
+  background: white;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #f1f5f9;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.todo-item:hover {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  transform: translateX(4px);
+}
+
+.todo-item.completed {
+  opacity: 0.7;
+}
+
+.todo-item.completed::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+/* Modern checkbox design */
+.todo-checkbox {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #cbd5e1;
+  border-radius: 8px;
+  margin-right: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+}
+
+.todo-checkbox:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.todo-checkbox.completed {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border-color: #10b981;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.todo-checkbox.completed::after {
+  content: "✓";
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  animation: checkmark 0.3s ease;
+}
+
+@keyframes checkmark {
+  0% {
+    transform: scale(0) rotate(45deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(45deg);
+  }
+  100% {
+    transform: scale(1) rotate(45deg);
+  }
+}
+
+/* Enhanced todo text */
+.todo-text {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  line-height: 1.5;
+}
+
+.todo-text.completed {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+.todo-text.editing {
+  background: white;
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  padding: 8px 12px;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  color: #1e293b;
+  font-weight: 500;
+}
+
+/* Modern action buttons */
+.todo-actions {
+  display: flex;
+  gap: 8px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  transform: translateX(10px);
+}
+
+.todo-item:hover .todo-actions {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.todo-btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+}
+
+.edit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.delete-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+/* Enhanced error message */
+.error-message {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  color: #991b1b;
+  padding: 16px 30px;
+  margin: 20px 30px;
+  border: 1px solid #fecaca;
+  border-left: 4px solid #ef4444;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
+}
+
+/* Beautiful empty state */
+.empty-state {
+  text-align: center;
+  padding: 80px 20px;
+  color: #64748b;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.empty-state::before {
+  content: "✨";
+  display: block;
+  font-size: 64px;
+  margin-bottom: 20px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.empty-state::after {
+  content: "Add your first todo to get started!";
+  display: block;
+  margin-top: 12px;
+  font-size: 14px;
+  color: #94a3b8;
+}
+
+/* Enhanced mobile responsiveness */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+
+  .container {
+    margin: 0;
+    border-radius: 16px;
+    min-height: calc(100vh - 20px);
+  }
+
+  h1 {
+    padding: 30px 20px 25px;
+    font-size: 1.8rem;
+  }
+
+  .add-todo {
+    flex-direction: column;
+    padding: 25px 20px;
+    gap: 16px;
+  }
+
+  #new-todo-input,
+  #add-todo-btn {
+    width: 100%;
+  }
+
+  .todo-filters {
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 20px;
+  }
+
+  .todo-stats {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .todo-item {
+    padding: 16px 20px;
+  }
+
+  .todo-actions {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .empty-state {
+    padding: 60px 20px;
+  }
+
+  .empty-state::before {
+    font-size: 48px;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: rgba(30, 41, 59, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .add-todo {
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    border-color: #475569;
+  }
+
+  #new-todo-input {
+    background: #334155;
+    border-color: #475569;
+    color: #f1f5f9;
+  }
+
+  #new-todo-input::placeholder {
+    color: #64748b;
+  }
+
+  .todo-stats {
+    background: #1e293b;
+    border-color: #475569;
+    color: #94a3b8;
+  }
+
+  .todo-stats span {
+    background: #334155;
+  }
+
+  .todo-filters {
+    background: #1e293b;
+    border-color: #475569;
+  }
+
+  .filter-btn {
+    background: #334155;
+    border-color: #475569;
+    color: #cbd5e1;
+  }
+
+  .filter-btn:hover {
+    background: #475569;
+  }
+
+  .todo-list {
+    background: #1e293b;
+  }
+
+  .todo-item {
+    border-color: #334155;
+  }
+
+  .todo-item:hover {
+    background: linear-gradient(135deg, #334155 0%, #475569 100%);
+  }
+
+  .todo-text {
+    color: #f1f5f9;
+  }
+
+  .todo-checkbox {
+    background: #334155;
+    border-color: #475569;
+  }
+
+  .empty-state {
+    color: #94a3b8;
+  }
+
+  .todo-text.editing {
+    background: #334155;
+    border-color: #60a5fa;
+    color: #f1f5f9;
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+  }
+}
+
+/* Smooth scrolling and focus improvements */
+html {
+  scroll-behavior: smooth;
+}
+
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Loading animation for dynamic content */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.loading {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
