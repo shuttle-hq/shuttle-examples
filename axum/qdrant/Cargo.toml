@@ -4,9 +4,9 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-axum = "0.7.3"
+axum = "0.8"
 qdrant-client = "1.10.1"
-shuttle-axum = { version = "0.56.0", default-features = false, features = ["axum-0-7"] }
-shuttle-qdrant = "0.56.0"
-shuttle-runtime = "0.56.0"
+shuttle-axum = "0.57.0"
+shuttle-qdrant = "0.57.0"
+shuttle-runtime = "0.57.0"
 tokio = "1.26.0"

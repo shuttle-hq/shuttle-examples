@@ -15,8 +15,7 @@ async fn get_image(req: &mut Request, res: &mut Response) {
     let img = image::load_from_memory_with_format(IMAGE, image::ImageFormat::Png).unwrap();
     let img = img.resize_exact(width, height, image::imageops::FilterType::Triangle);
     let mut buffer = std::io::BufWriter::new(std::io::Cursor::new(Vec::new()));
-    img.write_to(&mut buffer, image::ImageOutputFormat::Png)
-        .unwrap();
+    img.write_to(&mut buffer, image::ImageFormat::Png).unwrap();
     let bytes = buffer.into_inner().unwrap().into_inner();
 
     res.add_header("content-type", "image/png", true).unwrap();
