@@ -1,0 +1,15 @@
+[package]
+name = "code-snippet-share"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.8"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+shuttle-axum = "0.57.0"
+shuttle-runtime = "0.57.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1.0", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+nanoid = "0.4"
