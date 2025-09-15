@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO snippets (id, content, language, title, description, created_at, expires_at, view_count, is_public)\n        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\n        ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Text",
+        "Varchar",
+        "Varchar",
+        "Text",
+        "Timestamptz",
+        "Timestamptz",
+        "Int4",
+        "Bool"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "89b5d73a044dbac1f3463535b7d6eb431b51deb808b8b92c547acca53bb6fe55"
+}

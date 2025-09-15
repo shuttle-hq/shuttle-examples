@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM snippets WHERE expires_at IS NOT NULL AND expires_at <= $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "40f717379ce15156cabe7bd200bacf5ddf9c87a872574afeb20289627a897e7a"
+}
