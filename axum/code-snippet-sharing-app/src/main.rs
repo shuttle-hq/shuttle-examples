@@ -8,10 +8,9 @@ use shuttle_axum::axum::{
     routing::{get, post},
     Router,
 };
-use std::collections::HashMap;
-use std::sync::{Arc, Mutex};
+use sqlx::PgPool;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, sqlx::FromRow)]
 struct Snippet {
     id: String,
     content: String,
@@ -20,7 +19,7 @@ struct Snippet {
     description: Option<String>,
     created_at: DateTime<Utc>,
     expires_at: Option<DateTime<Utc>>,
-    view_count: u32,
+    view_count: i32,
     is_public: bool,
 }
 
@@ -48,7 +47,7 @@ struct SnippetFull {
     language: String,
     created_at: DateTime<Utc>,
     expires_at: Option<DateTime<Utc>>,
-    view_count: u32,
+    view_count: i32,
     char_count: usize,
     content: String,
 }
@@ -61,8 +60,8 @@ struct SnippetInfo {
     language: String,
     created_at: DateTime<Utc>,
     expires_at: Option<DateTime<Utc>>,
-    view_count: u32,
-    char_count: usize,
+    view_count: i32,
+    char_count: i32,
 }
 
 #[derive(Serialize)]
@@ -70,8 +69,6 @@ struct CreateSnippetResponse {
     id: String,
     url: String,
 }
-
-type SnippetStore = Arc<Mutex<HashMap<String, Snippet>>>;
 
 // Generate a short, URL-friendly ID
 fn generate_snippet_id() -> String {
@@ -87,7 +84,7 @@ async fn health() -> Json<serde_json::Value> {
 }
 
 async fn create_snippet(
-    State(store): State<SnippetStore>,
+    State(pool): State<PgPool>,
     Json(payload): Json<CreateSnippet>,
 ) -> Result<(StatusCode, Json<CreateSnippetResponse>), StatusCode> {
     let id = generate_snippet_id();
@@ -98,120 +95,188 @@ async fn create_snippet(
         .expires_in_hours
         .map(|hours| now + Duration::hours(hours));
 
-    let snippet = Snippet {
-        id: id.clone(),
-        content: payload.content,
-        language: payload.language,
-        title: payload.title,
-        description: payload.description,
-        created_at: now,
+    let result = sqlx::query!(
+        r#"
+        INSERT INTO snippets (id, content, language, title, description, created_at, expires_at, view_count, is_public)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+        "#,
+        id,
+        payload.content,
+        payload.language,
+        payload.title,
+        payload.description,
+        now,
         expires_at,
-        view_count: 0,
-        is_public: payload.is_public.unwrap_or(true),
-    };
+        0i32,
+        payload.is_public.unwrap_or(true)
+    )
+    .execute(&pool)
+    .await;
 
-    let mut snippets = store.lock().unwrap();
-    snippets.insert(id.clone(), snippet);
-
-    let response = CreateSnippetResponse {
-        id: id.clone(),
-        url: format!("/snippets/{}", id),
-    };
-
-    Ok((StatusCode::CREATED, Json(response)))
+    match result {
+        Ok(_) => {
+            let response = CreateSnippetResponse {
+                id: id.clone(),
+                url: format!("/snippets/{}", id),
+            };
+            Ok((StatusCode::CREATED, Json(response)))
+        }
+        Err(_) => Err(StatusCode::INTERNAL_SERVER_ERROR),
+    }
 }
 
 async fn get_snippet_full(
-    State(store): State<SnippetStore>,
+    State(pool): State<PgPool>,
     Path(id): Path<String>,
 ) -> Result<Json<SnippetFull>, StatusCode> {
-    let mut snippets = store.lock().unwrap();
+    let now = Utc::now();
 
-    match snippets.get_mut(&id) {
-        Some(snippet) => {
-            if let Some(expires_at) = snippet.expires_at {
-                if Utc::now() > expires_at {
-                    snippets.remove(&id);
-                    return Err(StatusCode::NOT_FOUND);
-                }
+    // First, check if snippet exists and is not expired
+    let snippet = sqlx::query_as!(
+        Snippet,
+        r#"
+        SELECT id, content, language, title, description, created_at, expires_at, view_count, is_public
+        FROM snippets
+        WHERE id = $1 AND (expires_at IS NULL OR expires_at > $2)
+        "#,
+        id,
+        now
+    )
+    .fetch_optional(&pool)
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+
+    match snippet {
+        Some(mut snippet) => {
+            // Increment view count
+            let result = sqlx::query!(
+                "UPDATE snippets SET view_count = view_count + 1 WHERE id = $1",
+                id
+            )
+            .execute(&pool)
+            .await;
+
+            if result.is_ok() {
+                snippet.view_count += 1;
             }
 
-            snippet.view_count += 1;
-
             let full = SnippetFull {
-                id: snippet.id.clone(),
-                title: snippet.title.clone(),
-                description: snippet.description.clone(),
-                language: snippet.language.clone(),
+                id: snippet.id,
+                title: snippet.title,
+                description: snippet.description,
+                language: snippet.language,
                 created_at: snippet.created_at,
                 expires_at: snippet.expires_at,
                 view_count: snippet.view_count,
                 char_count: snippet.content.len(),
-                content: snippet.content.clone(),
+                content: snippet.content,
             };
 
             Ok(Json(full))
         }
-        None => Err(StatusCode::NOT_FOUND),
+        None => {
+            // Clean up expired snippets
+            let _ = sqlx::query!(
+                "DELETE FROM snippets WHERE expires_at IS NOT NULL AND expires_at <= $1",
+                now
+            )
+            .execute(&pool)
+            .await;
+
+            Err(StatusCode::NOT_FOUND)
+        }
     }
 }
 
 async fn list_snippets(
-    State(store): State<SnippetStore>,
+    State(pool): State<PgPool>,
     Query(params): Query<ListQuery>,
 ) -> Json<Vec<SnippetInfo>> {
-    let snippets = store.lock().unwrap();
     let now = Utc::now();
+    let limit = params.limit.unwrap_or(20).min(100) as i64;
 
-    let mut snippet_infos: Vec<SnippetInfo> = snippets
-        .values()
-        .filter(|snippet| {
-            // Only show public, non-expired snippets
-            snippet.is_public
-                && snippet.expires_at.is_none_or(|exp| now <= exp)
-                && params
-                    .language
-                    .as_ref()
-                    .is_none_or(|lang| &snippet.language == lang)
-        })
-        .map(|snippet| SnippetInfo {
-            id: snippet.id.clone(),
-            title: snippet.title.clone(),
-            description: snippet.description.clone(),
-            language: snippet.language.clone(),
-            created_at: snippet.created_at,
-            expires_at: snippet.expires_at,
-            view_count: snippet.view_count,
-            char_count: snippet.content.len(),
-        })
-        .collect();
+    let query = match params.language {
+        Some(language) => {
+            sqlx::query_as!(
+                SnippetInfo,
+                r#"
+                SELECT
+                    id,
+                    title,
+                    description,
+                    language,
+                    created_at,
+                    expires_at,
+                    view_count,
+                    LENGTH(content) as "char_count!"
+                FROM snippets
+                WHERE is_public = true
+                    AND (expires_at IS NULL OR expires_at > $1)
+                    AND language = $2
+                ORDER BY created_at DESC
+                LIMIT $3
+                "#,
+                now,
+                language,
+                limit
+            )
+            .fetch_all(&pool)
+            .await
+        }
+        None => {
+            sqlx::query_as!(
+                SnippetInfo,
+                r#"
+                SELECT
+                    id,
+                    title,
+                    description,
+                    language,
+                    created_at,
+                    expires_at,
+                    view_count,
+                    LENGTH(content) as "char_count!"
+                FROM snippets
+                WHERE is_public = true
+                    AND (expires_at IS NULL OR expires_at > $1)
+                ORDER BY created_at DESC
+                LIMIT $2
+                "#,
+                now,
+                limit
+            )
+            .fetch_all(&pool)
+            .await
+        }
+    };
 
-    // Sort by creation date (newest first)
-    snippet_infos.sort_by(|a, b| b.created_at.cmp(&a.created_at));
-
-    // Limit results
-    let limit = params.limit.unwrap_or(20).min(100);
-    snippet_infos.truncate(limit);
-
+    let snippet_infos = query.unwrap_or_else(|_| vec![]);
     Json(snippet_infos)
 }
 
 async fn delete_snippet(
-    State(store): State<SnippetStore>,
+    State(pool): State<PgPool>,
     Path(id): Path<String>,
 ) -> Result<StatusCode, StatusCode> {
-    let mut snippets = store.lock().unwrap();
+    let result = sqlx::query!("DELETE FROM snippets WHERE id = $1", id)
+        .execute(&pool)
+        .await
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    match snippets.remove(&id) {
-        Some(_) => Ok(StatusCode::NO_CONTENT),
-        None => Err(StatusCode::NOT_FOUND),
+    if result.rows_affected() > 0 {
+        Ok(StatusCode::NO_CONTENT)
+    } else {
+        Err(StatusCode::NOT_FOUND)
     }
 }
 
 #[shuttle_runtime::main]
-async fn main() -> shuttle_axum::ShuttleAxum {
-    // Initialize the in-memory store
-    let store: SnippetStore = Arc::new(Mutex::new(HashMap::new()));
+async fn main(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
+    // Run database migrations
+    sqlx::migrate!()
+        .run(&pool)
+        .await
+        .expect("Failed to run migrations");
 
     // Build the router
     let router = Router::new()
@@ -221,7 +286,7 @@ async fn main() -> shuttle_axum::ShuttleAxum {
             "/snippets/{id}",
             get(get_snippet_full).delete(delete_snippet),
         )
-        .with_state(store);
+        .with_state(pool);
 
     Ok(router.into())
 }
