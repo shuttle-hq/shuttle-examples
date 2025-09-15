@@ -248,6 +248,13 @@ path = "axum/turso"
 use_cases = ["Web app", "Storage"]
 tags = ["turso", "axum", "database", "libsql", "sqlite"]
 
+[templates.axum-code-snippet-sharing-app]
+title = "Code Snippet Sharing"
+description = "Share and manage code snippets with expiration and view tracking"
+path = "axum/code-snippet-sharing-app"
+use_cases = ["Web app", "Storage"]
+tags = ["axum", "postgres", "database"]
+
 [templates.axum-websocket]
 title = "Websockets"
 description = "Health monitoring service using websockets"
