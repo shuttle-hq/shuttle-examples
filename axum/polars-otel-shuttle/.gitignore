@@ -1,0 +1,10 @@
+/target
+.shuttle*
+Secrets*.toml
+target/
+**/*.parquet
+data/
+results/
+.DS_Store
+data/
+*.csv

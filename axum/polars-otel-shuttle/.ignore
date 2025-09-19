@@ -1,0 +1,11 @@
+# Local datasets / outputs
+data/**
+results/**
+*.csv
+*.parquet
+*.zip
+
+# Build artifacts & caches
+target/**
+node_modules/**
+**/.DS_Store
