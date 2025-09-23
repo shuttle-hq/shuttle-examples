@@ -7,7 +7,12 @@ fn rss_mb() -> f64 {
     if let Ok(s) = std::fs::read_to_string("/proc/self/status") {
         for line in s.lines() {
             if let Some(val) = line.strip_prefix("VmRSS:") {
-                let kb: f64 = val.split_whitespace().nth(0).unwrap_or("0").parse().unwrap_or(0.0);
+                let kb: f64 = val
+                    .split_whitespace()
+                    .nth(0)
+                    .unwrap_or("0")
+                    .parse()
+                    .unwrap_or(0.0);
                 return kb / 1024.0;
             }
         }
@@ -31,7 +36,10 @@ pub struct PolarsETL {
 
 impl PolarsETL {
     pub fn new() -> Self {
-        Self { df: None, metrics: HashMap::new() }
+        Self {
+            df: None,
+            metrics: HashMap::new(),
+        }
     }
 
     pub fn get_metrics(&self) -> &HashMap<String, f64> {
@@ -64,7 +72,11 @@ impl PolarsETL {
         let t = start.elapsed().as_secs_f64();
         self.metrics.insert("load_time".into(), t);
         bump_peak(&mut self.metrics, "after_load");
-        info!(load_time_s = t, peak_mb = self.metrics.get("peak_memory_mb").cloned().unwrap_or(0.0), "Data scan created");
+        info!(
+            load_time_s = t,
+            peak_mb = self.metrics.get("peak_memory_mb").cloned().unwrap_or(0.0),
+            "Data scan created"
+        );
         Ok(self)
     }
 
@@ -86,7 +98,8 @@ impl PolarsETL {
             let cleaned = df
                 .clone()
                 .filter(
-                    col("pickup_longitude").neq(lit(0.0))
+                    col("pickup_longitude")
+                        .neq(lit(0.0))
                         .and(col("pickup_latitude").neq(lit(0.0)))
                         .and(col("dropoff_longitude").neq(lit(0.0)))
                         .and(col("dropoff_latitude").neq(lit(0.0)))
@@ -107,13 +120,17 @@ impl PolarsETL {
                         lit("coerce"),
                     ),
                 ])
-                .with_columns([
-                    (col("tpep_dropoff_datetime") - col("tpep_pickup_datetime"))
+                .with_columns(
+                    [(col("tpep_dropoff_datetime") - col("tpep_pickup_datetime"))
                         .dt()
                         .total_minutes()
-                        .alias("trip_duration_minutes"),
-                ])
-                .filter(col("trip_duration_minutes").gt(lit(0)).and(col("trip_duration_minutes").lt(lit(480))))
+                        .alias("trip_duration_minutes")],
+                )
+                .filter(
+                    col("trip_duration_minutes")
+                        .gt(lit(0))
+                        .and(col("trip_duration_minutes").lt(lit(480))),
+                )
                 .cache();
 
             self.df = Some(cleaned);
@@ -122,7 +139,11 @@ impl PolarsETL {
         let t = start.elapsed().as_secs_f64();
         self.metrics.insert("clean_time".into(), t);
         bump_peak(&mut self.metrics, "after_clean");
-        info!(clean_time_s = t, peak_mb = self.metrics.get("peak_memory_mb").cloned().unwrap_or(0.0), "Cleaned");
+        info!(
+            clean_time_s = t,
+            peak_mb = self.metrics.get("peak_memory_mb").cloned().unwrap_or(0.0),
+            "Cleaned"
+        );
         Ok(self)
     }
 
@@ -145,8 +166,12 @@ impl PolarsETL {
                     col("trip_distance").count().alias("trip_count"),
                     col("trip_distance").mean().alias("avg_trip_distance"),
                     col("trip_distance").sum().alias("total_trip_distance"),
-                    col("trip_duration_minutes").mean().alias("avg_trip_duration"),
-                    col("trip_duration_minutes").sum().alias("total_trip_duration"),
+                    col("trip_duration_minutes")
+                        .mean()
+                        .alias("avg_trip_duration"),
+                    col("trip_duration_minutes")
+                        .sum()
+                        .alias("total_trip_duration"),
                     col("passenger_count").sum().alias("total_passengers"),
                     col("total_amount").mean().alias("avg_total_amount"),
                     col("total_amount").sum().alias("total_revenue"),
@@ -159,7 +184,9 @@ impl PolarsETL {
                 .agg([
                     col("trip_distance").count().alias("trip_count"),
                     col("trip_distance").mean().alias("avg_trip_distance"),
-                    col("trip_duration_minutes").mean().alias("avg_trip_duration"),
+                    col("trip_duration_minutes")
+                        .mean()
+                        .alias("avg_trip_duration"),
                     col("total_amount").mean().alias("avg_total_amount"),
                 ])
                 .collect()?;
@@ -180,7 +207,11 @@ impl PolarsETL {
         let t = start.elapsed().as_secs_f64();
         self.metrics.insert("aggregate_time".into(), t);
         bump_peak(&mut self.metrics, "after_aggregate");
-        info!(aggregate_time_s = t, peak_mb = self.metrics.get("peak_memory_mb").cloned().unwrap_or(0.0), "Aggregations done");
+        info!(
+            aggregate_time_s = t,
+            peak_mb = self.metrics.get("peak_memory_mb").cloned().unwrap_or(0.0),
+            "Aggregations done"
+        );
         Ok(self)
     }
 
@@ -197,17 +228,42 @@ impl PolarsETL {
                     col("tpep_pickup_datetime").dt().weekday().alias("weekday"),
                 ])
                 .select([
-                    col("trip_distance").count().cast(DataType::Int64).alias("rows_after_cleaning"),
-                    col("trip_distance").gt(lit(10.0)).cast(DataType::Int64).sum().alias("long_trips_count"),
-                    col("total_amount").gt(lit(50.0)).cast(DataType::Int64).sum().alias("expensive_trips_count"),
-                    (col("hour").eq(lit(7)).or(col("hour").eq(lit(8))).or(col("hour").eq(lit(9)))
-                        .or(col("hour").eq(lit(17))).or(col("hour").eq(lit(18))).or(col("hour").eq(lit(19))))
-                        .cast(DataType::Int64).sum().alias("rush_hour_trips_count"),
-                    col("weekday").gt_eq(lit(6)).cast(DataType::Int64).sum().alias("weekend_trips_count"),
-                    (col("trip_distance").gt(lit(5.0))
+                    col("trip_distance")
+                        .count()
+                        .cast(DataType::Int64)
+                        .alias("rows_after_cleaning"),
+                    col("trip_distance")
+                        .gt(lit(10.0))
+                        .cast(DataType::Int64)
+                        .sum()
+                        .alias("long_trips_count"),
+                    col("total_amount")
+                        .gt(lit(50.0))
+                        .cast(DataType::Int64)
+                        .sum()
+                        .alias("expensive_trips_count"),
+                    (col("hour")
+                        .eq(lit(7))
+                        .or(col("hour").eq(lit(8)))
+                        .or(col("hour").eq(lit(9)))
+                        .or(col("hour").eq(lit(17)))
+                        .or(col("hour").eq(lit(18)))
+                        .or(col("hour").eq(lit(19))))
+                    .cast(DataType::Int64)
+                    .sum()
+                    .alias("rush_hour_trips_count"),
+                    col("weekday")
+                        .gt_eq(lit(6))
+                        .cast(DataType::Int64)
+                        .sum()
+                        .alias("weekend_trips_count"),
+                    (col("trip_distance")
+                        .gt(lit(5.0))
                         .and(col("total_amount").gt(lit(30.0)))
                         .and(col("passenger_count").gt_eq(lit(2))))
-                        .cast(DataType::Int64).sum().alias("premium_trips_count"),
+                    .cast(DataType::Int64)
+                    .sum()
+                    .alias("premium_trips_count"),
                 ])
                 .collect()?;
 
@@ -215,12 +271,30 @@ impl PolarsETL {
                 Ok(counts.column(name)?.i64()?.get(0).unwrap_or(0))
             };
 
-            self.metrics.insert("rows_after_cleaning".into(), get_i64("rows_after_cleaning")? as f64);
-            self.metrics.insert("long_trips_count".into(),     get_i64("long_trips_count")? as f64);
-            self.metrics.insert("expensive_trips_count".into(), get_i64("expensive_trips_count")? as f64);
-            self.metrics.insert("rush_hour_trips_count".into(), get_i64("rush_hour_trips_count")? as f64);
-            self.metrics.insert("weekend_trips_count".into(),   get_i64("weekend_trips_count")? as f64);
-            self.metrics.insert("premium_trips_count".into(),   get_i64("premium_trips_count")? as f64);
+            self.metrics.insert(
+                "rows_after_cleaning".into(),
+                get_i64("rows_after_cleaning")? as f64,
+            );
+            self.metrics.insert(
+                "long_trips_count".into(),
+                get_i64("long_trips_count")? as f64,
+            );
+            self.metrics.insert(
+                "expensive_trips_count".into(),
+                get_i64("expensive_trips_count")? as f64,
+            );
+            self.metrics.insert(
+                "rush_hour_trips_count".into(),
+                get_i64("rush_hour_trips_count")? as f64,
+            );
+            self.metrics.insert(
+                "weekend_trips_count".into(),
+                get_i64("weekend_trips_count")? as f64,
+            );
+            self.metrics.insert(
+                "premium_trips_count".into(),
+                get_i64("premium_trips_count")? as f64,
+            );
 
             info!(
                 long = self.metrics["long_trips_count"],
@@ -232,7 +306,11 @@ impl PolarsETL {
         let t = start.elapsed().as_secs_f64();
         self.metrics.insert("sort_filter_time".into(), t);
         bump_peak(&mut self.metrics, "after_sort_filter");
-        info!(sort_filter_time_s = t, peak_mb = self.metrics.get("peak_memory_mb").cloned().unwrap_or(0.0), "Sort & filter done");
+        info!(
+            sort_filter_time_s = t,
+            peak_mb = self.metrics.get("peak_memory_mb").cloned().unwrap_or(0.0),
+            "Sort & filter done"
+        );
         Ok(self)
     }
 

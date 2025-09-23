@@ -4,8 +4,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilte
 
 pub fn init_tracing(service_name: &str) {
     // JSON logs with RFC3339 timestamps
-    let env_filter =
-        EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
+    let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
 
     let fmt_layer = tracing_subscriber::fmt::layer()
         .with_ansi(false)
@@ -18,7 +17,9 @@ pub fn init_tracing(service_name: &str) {
         .with_timer(tracing_subscriber::fmt::time::UtcTime::rfc_3339());
 
     // Base registry (logs only)
-    let mut registry = tracing_subscriber::registry().with(env_filter).with(fmt_layer);
+    let mut registry = tracing_subscriber::registry()
+        .with(env_filter)
+        .with(fmt_layer);
 
     // If you compile with `--features otel-otlp`, add an OTLP span layer too.
     #[cfg(feature = "otel-otlp")]
@@ -32,15 +33,17 @@ pub fn init_tracing(service_name: &str) {
 }
 
 #[cfg(feature = "otel-otlp")]
-fn build_otel_layer<S>(service_name: &str) -> Option<tracing_opentelemetry::OpenTelemetryLayer<S, sdktrace::Tracer>>
+fn build_otel_layer<S>(
+    service_name: &str,
+) -> Option<tracing_opentelemetry::OpenTelemetryLayer<S, sdktrace::Tracer>>
 where
     S: tracing::Subscriber + for<'a> tracing_subscriber::registry::LookupSpan<'a>,
 {
     use opentelemetry_otlp::Protocol;
 
     // Read endpoint/headers from env (works for BetterStack or any OTLP endpoint)
-    let endpoint =
-        std::env::var("OTEL_EXPORTER_OTLP_ENDPOINT").unwrap_or_else(|_| "http://localhost:4318".into());
+    let endpoint = std::env::var("OTEL_EXPORTER_OTLP_ENDPOINT")
+        .unwrap_or_else(|_| "http://localhost:4318".into());
 
     // Headers in the standard comma-separated form: k1=v1,k2=v2
     let headers = std::env::var("OTEL_EXPORTER_OTLP_HEADERS").ok();
@@ -49,9 +52,7 @@ where
     // Resource (service name etc.)
     let resource = Resource::builder()
         .with_service_name(service_name.to_string())
-        .with_attributes(vec![
-            KeyValue::new("telemetry.sdk.language", "rust"),
-        ])
+        .with_attributes(vec![KeyValue::new("telemetry.sdk.language", "rust")])
         .build();
 
     // Build an OTLP/HTTP span exporter (0.30 API)
@@ -94,6 +95,5 @@ fn parse_headers(input: Option<&str>) -> std::collections::HashMap<String, Strin
 /// Call this on shutdown if you want to block until spans are exported.
 pub fn shutdown_tracing() {
     // No-op for opentelemetry 0.30.
-   // The tracer provider will flush on drop when the process exits.
+    // The tracer provider will flush on drop when the process exits.
 }
-
