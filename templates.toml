@@ -374,6 +374,14 @@ path = "mcp/mcp-sse-oauth"
 use_cases = ["MCP", "AI", "AI Agents"]
 tags = ["axum", "mcp", "sse", "oauth"]
 
+[templates.polars-otel-shuttle]
+title = "Polars ETL with OpenTelemetry"
+description = "An Axum + Polars ETL pipeline instrumented with OpenTelemetry, deployed on Shuttle."
+path = "axum/polars-otel-shuttle"
+use_cases = ["ETL", "Data Engineering", "Observability"]
+tags = ["axum", "polars", "opentelemetry", "etl"]
+
+
 
 ## EXAMPLES ##
 
