@@ -2,13 +2,10 @@ mod etl;
 mod observability;
 
 use axum::{extract::Query, http::StatusCode, response::Json, routing::get, Router};
-use etl::PolarsETL;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::path::Path;
 use std::time::Instant;
 use tower_http::{cors::CorsLayer, trace::TraceLayer};
-use tracing::info;
 
 //
 // =============== 1) LOCAL CLI BENCH (feature: bench-cli) ===============

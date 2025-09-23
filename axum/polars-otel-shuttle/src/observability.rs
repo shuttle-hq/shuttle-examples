@@ -1,5 +1,3 @@
-use opentelemetry::KeyValue;
-use opentelemetry_sdk::{trace as sdktrace, Resource};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
 pub fn init_tracing(service_name: &str) {
@@ -17,7 +15,7 @@ pub fn init_tracing(service_name: &str) {
         .with_timer(tracing_subscriber::fmt::time::UtcTime::rfc_3339());
 
     // Base registry (logs only)
-    let mut registry = tracing_subscriber::registry()
+    let registry = tracing_subscriber::registry()
         .with(env_filter)
         .with(fmt_layer);
 
