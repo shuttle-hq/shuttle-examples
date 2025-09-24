@@ -37,6 +37,7 @@ pub struct PolarsETL {
     metrics: HashMap<String, f64>,
 }
 
+#[allow(dead_code)]
 impl PolarsETL {
     pub fn new() -> Self {
         Self {
