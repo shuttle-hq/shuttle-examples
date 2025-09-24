@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use std::time::Instant;
 use tracing::{info, instrument};
 
+#[allow(dead_code)]
 fn rss_mb() -> f64 {
     if let Ok(s) = std::fs::read_to_string("/proc/self/status") {
         for line in s.lines() {
@@ -20,6 +21,7 @@ fn rss_mb() -> f64 {
     0.0
 }
 
+#[allow(dead_code)]
 fn bump_peak(metrics: &mut HashMap<String, f64>, label: &str) {
     let m = rss_mb();
     metrics.insert(format!("{}_memory_mb", label), m);
@@ -29,6 +31,7 @@ fn bump_peak(metrics: &mut HashMap<String, f64>, label: &str) {
     }
 }
 
+#[allow(dead_code)]
 pub struct PolarsETL {
     df: Option<LazyFrame>,
     metrics: HashMap<String, f64>,
@@ -92,7 +95,6 @@ impl PolarsETL {
                 strict: false,
                 exact: false,
                 cache: true,
-                ..Default::default()
             };
 
             let cleaned = df

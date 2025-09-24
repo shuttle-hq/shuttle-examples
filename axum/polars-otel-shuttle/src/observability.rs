@@ -1,6 +1,7 @@
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt, EnvFilter};
 
-pub fn init_tracing(service_name: &str) {
+#[allow(dead_code)]
+pub fn init_tracing(_service_name: &str) {
     // JSON logs with RFC3339 timestamps
     let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
 
@@ -91,6 +92,7 @@ fn parse_headers(input: Option<&str>) -> std::collections::HashMap<String, Strin
 }
 
 /// Call this on shutdown if you want to block until spans are exported.
+#[allow(dead_code)]
 pub fn shutdown_tracing() {
     // No-op for opentelemetry 0.30.
     // The tracer provider will flush on drop when the process exits.

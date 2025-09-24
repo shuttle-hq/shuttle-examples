@@ -95,7 +95,7 @@ async fn shuttle_main() -> shuttle_axum::ShuttleAxum {
 #[derive(Deserialize)]
 struct BenchmarkQuery {
     #[serde(default)]
-    sample_size: Option<usize>,
+    _sample_size: Option<usize>,
 }
 
 #[derive(Serialize)]
