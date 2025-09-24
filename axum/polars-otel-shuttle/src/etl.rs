@@ -8,7 +8,8 @@ fn rss_mb() -> f64 {
         for line in s.lines() {
             if let Some(val) = line.strip_prefix("VmRSS:") {
                 let kb: f64 = val
-                    .split_whitespace().next()
+                    .split_whitespace()
+                    .next()
                     .unwrap_or("0")
                     .parse()
                     .unwrap_or(0.0);
