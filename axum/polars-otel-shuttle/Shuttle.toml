@@ -1,2 +1,0 @@
-name = "polars-otel-shuttle"
-# Shuttle uses your #[shuttle_runtime::main] entry point in src/main.rs

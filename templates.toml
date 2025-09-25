@@ -27,7 +27,6 @@ openai = "https://avatars.githubusercontent.com/u/14957082?v=4"
 # fallback
 shuttle = "https://avatars.githubusercontent.com/u/54710151?v=4"
 
-
 ## OFFICIAL STARTERS ##
 
 [starters.actix-web-hello-world]
@@ -381,8 +380,6 @@ path = "mcp/mcp-sse-oauth"
 use_cases = ["MCP", "AI", "AI Agents"]
 tags = ["axum", "mcp", "sse", "oauth"]
 
-
-
 ## EXAMPLES ##
 
 [examples.metadata]
@@ -427,11 +424,9 @@ path = "other/standalone-binary"
 use_cases = []
 tags = ["diy", "axum"]
 
-
 ## TUTORIALS ##
 
 [tutorials]
-
 
 ## COMMUNITY TEMPLATES ##
 
@@ -479,5 +474,3 @@ use_cases = ["Web app"]
 tags = ["rocket", "yew"]
 author = "wiseaidev"
 repo = "https://github.com/wiseaidev/rocket-yew-starter-pack"
-
-
