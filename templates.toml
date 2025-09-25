@@ -241,6 +241,13 @@ path = "axum/todo-app"
 use_cases = ["Web app", "Storage"]
 tags = ["axum", "postgres", "database"]
 
+[templates.axum-polars-otel-shuttle]
+title = "Polars ETL with OpenTelemetry"
+description = "ETL pipeline with Polars and Open Telemetry monitoring"
+path = "axum/polars-otel-shuttle"
+use_cases = ["ETL", "Data Engineering", "Observability"]
+tags = ["axum", "polars", "opentelemetry", "etl"]
+
 [templates.axum-turso]
 title = "Turso"
 description = "Connect to a Turso DB with shuttle-turso"
@@ -375,6 +382,7 @@ use_cases = ["MCP", "AI", "AI Agents"]
 tags = ["axum", "mcp", "sse", "oauth"]
 
 
+
 ## EXAMPLES ##
 
 [examples.metadata]
@@ -471,3 +479,5 @@ use_cases = ["Web app"]
 tags = ["rocket", "yew"]
 author = "wiseaidev"
 repo = "https://github.com/wiseaidev/rocket-yew-starter-pack"
+
+
