@@ -12,11 +12,13 @@ An ETL pipeline using Polars for data processing and OpenTelemetry for observabi
 ## Running locally
 
 **ETL benchmark:**
+
 ```bash
 RUST_LOG=info cargo run --release --features bench-cli
 ```
 
 **Web service:**
+
 ```bash
 cargo run --release
 ```
@@ -38,6 +40,7 @@ shuttle deploy
 ## Observability
 
 The service emits OpenTelemetry metrics:
+
 - `monotonic_counter.http_requests_total` - Request counts
 - `histogram.request_duration_ms` - Request latency
 - `histogram.*_time_ms` - ETL stage timings
@@ -48,8 +51,10 @@ When deployed on Shuttle with Better Stack integration enabled, these automatica
 ## Configuration
 
 **Environment variables:**
+
 - `DATA_PATH` - Path to CSV file (default: `data/yellow_tripdata_2015-01.csv`)
 
 **Features:**
+
 - `bench-cli` - Enables local ETL benchmark
 - `otel-otlp` - Enables OTLP export (for non-Shuttle deployments)
