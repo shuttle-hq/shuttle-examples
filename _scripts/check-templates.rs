@@ -3,7 +3,9 @@
 //! ```cargo
 //! [dependencies]
 //! shuttle-common = "*" # always use latest version
-//! toml = "0.8"
+//! # for local use
+//! # shuttle-common = { path = "../../common" }
+//! toml = "0.9"
 //! ignore = "0.4"
 //! ```
 
@@ -12,6 +14,8 @@ use shuttle_common::templates::TemplatesSchema;
 fn main() {
     let s = std::fs::read_to_string("templates.toml").expect("to find file");
     let schema: TemplatesSchema = toml::from_str(&s).expect("to parse toml file");
+
+    let print_template_repos = std::env::args().any(|a| a == "--list-template-repos");
 
     let (tx, rx) = std::sync::mpsc::channel::<String>();
 
@@ -70,7 +74,7 @@ fn main() {
             std::process::exit(1);
         }
 
-        let path = t.path.unwrap_or_default();
+        let path = t.path.expect("template to have a path field");
 
         if !set.insert(path.clone()) {
             eprintln!("Path '{}' referenced in two places", path);
@@ -84,6 +88,10 @@ fn main() {
             );
             std::process::exit(1);
         }
+
+        if print_template_repos && t.has_template_repo.is_some_and(|t| t) {
+            println!("{}|{}", name, path);
+        }
     }
 
     if !manifests.is_empty() {
@@ -94,5 +102,5 @@ fn main() {
         std::process::exit(1);
     }
 
-    println!("Template definitions verified ✅")
+    eprintln!("Template definitions verified ✅")
 }

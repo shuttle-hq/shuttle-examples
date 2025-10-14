@@ -10,8 +10,9 @@ DIRS=$(find . -name Cargo.toml -exec dirname {} \; | sort | awk -v from="$FROM" 
 
 # Loop through each directory and run cargo fmt and cargo clippy, exit on failure
 for dir in $DIRS; do
+    # skip workspace roots
     grep "\[workspace\]" "$dir/Cargo.toml" > /dev/null && continue
- 
+
     echo "Checking $dir"
     cargo fmt --all --manifest-path "$dir/Cargo.toml" -- --check
     cargo clippy --no-deps --manifest-path "$dir/Cargo.toml" -- -D warnings
