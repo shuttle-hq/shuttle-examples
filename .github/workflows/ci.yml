@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [ "main", "develop" ]
+    branches: ["main", "develop"]
   pull_request:
-    branches: [ "main", "develop" ]
+    branches: ["main", "develop"]
   workflow_dispatch:
 
 env:
@@ -15,15 +15,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - uses: taiki-e/install-action@v2
-      with:
-        tool: cargo-binstall
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-binstall
 
-    - run: cargo binstall -y rust-script@0.34.0
+      - run: cargo binstall -y rust-script@0.34.0
 
-    - run: rust-script _scripts/check-templates.rs
+      - run: rust-script _scripts/check-templates.rs
 
   fmt-clippy:
     strategy:
@@ -34,36 +34,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Clone the Shuttle main repository
-      if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
-      run: |
-        git clone --depth 1 --branch main https://github.com/shuttle-hq/shuttle.git /home/runner/shuttle
-        cd /home/runner/shuttle
-        git log -1 --format='%H'
+      - name: Clone the Shuttle main repository
+        if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
+        run: |
+          git clone --depth 1 --branch main https://github.com/shuttle-hq/shuttle.git /home/runner/shuttle
+          cd /home/runner/shuttle
+          git log -1 --format='%H'
 
-    - name: Apply patches
-      if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
-      run: /home/runner/shuttle/scripts/apply-patches.sh .cargo/config.toml /home/runner/shuttle
+      - name: Apply patches
+        if: ${{ github.ref == 'refs/heads/develop' || github.base_ref == 'develop' }}
+        run: /home/runner/shuttle/scripts/apply-patches.sh .cargo/config.toml /home/runner/shuttle
 
-    - name: Install sccache
-      run: |
-        SCCACHE_VERSION='v0.7.7'
-        curl -L https://github.com/mozilla/sccache/releases/download/$SCCACHE_VERSION/sccache-$SCCACHE_VERSION-x86_64-unknown-linux-musl.tar.gz \
-          | tar -xOz sccache-$SCCACHE_VERSION-x86_64-unknown-linux-musl/sccache \
-          > /home/runner/.cargo/bin/sccache \
-          && chmod +x /home/runner/.cargo/bin/sccache
+      - name: Install sccache
+        run: |
+          SCCACHE_VERSION='v0.7.7'
+          curl -L https://github.com/mozilla/sccache/releases/download/$SCCACHE_VERSION/sccache-$SCCACHE_VERSION-x86_64-unknown-linux-musl.tar.gz \
+            | tar -xOz sccache-$SCCACHE_VERSION-x86_64-unknown-linux-musl/sccache \
+            > /home/runner/.cargo/bin/sccache \
+            && chmod +x /home/runner/.cargo/bin/sccache
 
-    # bevy dependency
-    - run: sudo apt install -y libasound2-dev libudev-dev
+      # bevy dependency
+      - run: sudo apt update && sudo apt install -y libasound2-dev libudev-dev
 
-    - name: Check formatting and Clippy
-      shell: bash
-      run: _scripts/ci.sh ${{ matrix.from-to }}
-      env:
-        RUSTC_WRAPPER: /home/runner/.cargo/bin/sccache
-        CARGO_TARGET_DIR: /tmp/target
+      - name: Check formatting and Clippy
+        shell: bash
+        run: _scripts/ci.sh ${{ matrix.from-to }}
+        env:
+          RUSTC_WRAPPER: /home/runner/.cargo/bin/sccache
+          CARGO_TARGET_DIR: /tmp/target
 
-    - name: Show sccache stats
-      run: /home/runner/.cargo/bin/sccache --show-stats
+      - name: Show sccache stats
+        run: /home/runner/.cargo/bin/sccache --show-stats
