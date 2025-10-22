@@ -24,12 +24,6 @@ pub struct SalesPerDayInfo {
     sales_total: i64,
 }
 
-#[derive(Deserialize, Serialize, sqlx::FromRow)]
-pub struct CustomerInfo {
-    status: String,
-    recordcount: i32,
-}
-
 #[derive(Deserialize)]
 pub struct UserRequest {
     pub email: String,
