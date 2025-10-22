@@ -51,6 +51,12 @@ This template ([repo](https://github.com/$OWNER/$NAME)) is a synced replica from
 " >> README.md
 
 git add .
+
+# exceptions
+if [ "$NAME" = "loco-hello-world" ]; then
+    git add -f config/production.yaml
+fi
+
 git commit -am "Sync $NAME with shuttle-hq/shuttle-examples repo"
 
 git remote add origin git@github.com:$OWNER/$NAME.git
