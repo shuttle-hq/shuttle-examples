@@ -390,6 +390,13 @@ path = "mcp/mcp-sse-oauth"
 use_cases = ["MCP", "AI", "AI Agents"]
 tags = ["axum", "mcp", "sse", "oauth"]
 
+[templates.mcp-http-stream]
+title = "Streamable HTTP MCP Server"
+description = "Model Context Protocol server with HTTP streaming transport"
+path = "mcp/http-stream-mcp"
+use_cases = ["MCP", "AI", "AI Agents"]
+tags = ["axum", "mcp", "http-stream"]
+
 ## EXAMPLES ##
 
 [examples.metadata]
