@@ -1,7 +1,8 @@
 use rmcp::{
+    ErrorData as McpError, ServerHandler,
     handler::server::{router::tool::ToolRouter, wrapper::Parameters},
     model::*,
-    schemars, tool, tool_handler, tool_router, ErrorData as McpError, ServerHandler,
+    schemars, tool, tool_handler, tool_router,
 };
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
