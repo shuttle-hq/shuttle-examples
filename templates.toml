@@ -390,6 +390,19 @@ path = "mcp/mcp-sse-oauth"
 use_cases = ["MCP", "AI", "AI Agents"]
 tags = ["axum", "mcp", "sse", "oauth"]
 
+[templates.iad-todos]
+title = "Rust Todo List with IaD Postgres"
+description = "Todo list with a Postgres database provisioned by Infrastructure as Data"
+path = "iad/todos"
+use_cases = ["Web app", "IaD", "Storage"]
+tags = ["axum", "postgres", "database", "iad"]
+
+[templates.iad-upload-manager]
+title = "Rust API using AWS RDS Postgres for IaD"
+description = "Upload manager API to manage S3 artifacts with AWS RDS Postgres database"
+path = "iad/upload-manager"
+use_cases = ["Web app", "IaD", "Storage"]
+tags = ["axum", "postgres", "database", "iad"]
 [templates.mcp-http-stream]
 title = "Streamable HTTP MCP Server"
 description = "Model Context Protocol server with HTTP streaming transport"

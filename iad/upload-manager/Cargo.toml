@@ -1,0 +1,16 @@
+[package]
+name = "upload-manager"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+axum = "0.8"
+shuttle-axum = "0.57.0"
+shuttle-runtime = "0.57.0"
+shuttle-aws-rds = { version = "0.57.0", features = ["postgres"] }
+tokio = { version = "1.28.2", features = ["full"] }
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "chrono", "uuid"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.0", features = ["serde", "v4"] }
