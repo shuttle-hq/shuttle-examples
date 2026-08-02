@@ -16,6 +16,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
 
     - name: Install wasm32-wasi target
       run: rustup target add wasm32-wasi
@@ -43,6 +45,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        persist-credentials: false
 
     - name: Install wasm32-wasi target
       run: rustup target add wasm32-wasi
